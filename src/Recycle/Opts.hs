@@ -52,7 +52,8 @@ data GenerateIcsOpts = GenerateIcsOpts
   }
 
 data CollectionQuery = CollectionQuery
-  { collectionQueryLangCode         :: LangCode
+  { collectionQueryDateRange        :: DateRange
+  , collectionQueryLangCode         :: LangCode
   , collectionQueryFractionEncoding :: FractionEncoding
   , collectionQueryZipcode          :: ZipcodeId
   , collectionQueryStreet           :: StreetId
@@ -68,7 +69,8 @@ pGenerateIcsOpts = do
 
 pCollectionQuery :: Parser CollectionQuery
 pCollectionQuery = do
-  collectionQueryLangCode <-
+  collectionQueryDateRange <- pDateRange
+  collectionQueryLangCode  <-
     option (maybeReader $ readMaybe . map Char.toUpper)
     $  long "language"
     <> short 'L'
@@ -94,6 +96,27 @@ pCollectionQuery = do
   collectionQueryStreet      <- pStreetId
   collectionQueryHouseNumber <- pHouseNumber
   pure CollectionQuery { .. }
+
+pDateRange :: Parser DateRange
+pDateRange =
+  AbsoluteDateRange
+    <$> do
+          rangeFrom <- option auto $ mconcat
+            [long "absolute-from", help "Start date to fetch collections"]
+          rangeTo <- option auto
+            $ mconcat [long "absolute-to", help "End date to fetch collections"]
+          pure Range { .. }
+    <|> RelativeDateRange
+    <$> do
+          rangeFrom <-
+            option auto
+              $ mconcat
+                  [ long "relative-from"
+                  , help "Days before today to fetch collections"
+                  ]
+          rangeTo <- option auto $ mconcat
+            [long "relative-to", help "Days before today to fetch collections"]
+          pure Range { .. }
 
 data ApiClientOpts = ApiClientOpts
   { consumer   :: Consumer

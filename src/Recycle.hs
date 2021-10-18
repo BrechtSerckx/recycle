@@ -42,16 +42,23 @@ main = do
         Just f  -> BSL.writeFile f bs
         Nothing -> BSL.putStr bs
 
+calculateDateRange :: HasTime m => DateRange -> m (Range Day)
+calculateDateRange = \case
+  AbsoluteDateRange r        -> pure r
+  RelativeDateRange relRange -> do
+    today <- localDay . zonedTimeToLocalTime <$> getZonedTime
+    pure Range { rangeFrom = addDays (rangeFrom relRange) today
+               , rangeTo   = addDays (rangeTo relRange) today
+               }
+
 runCollectionQuery
   :: (HasRecycleClient m, HasTime m) => CollectionQuery -> m VCalendar
 runCollectionQuery CollectionQuery {..} = do
-  today <- localDay . zonedTimeToLocalTime <$> getZonedTime
-  let fromDay  = addDays (negate 0) today
-      untilDay = addDays 14 today
+  range       <- calculateDateRange collectionQueryDateRange
   collections <- getCollections collectionQueryZipcode
                                 collectionQueryStreet
                                 collectionQueryHouseNumber
-                                (Range fromDay untilDay)
+                                range
   -- for_ collections $ liftIO . print
 
   pure $ mkVCalendar collectionQueryLangCode

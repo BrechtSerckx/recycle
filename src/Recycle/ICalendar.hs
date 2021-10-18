@@ -3,8 +3,10 @@ module Recycle.ICalendar
   ( mkVCalendar
   , printVCalendar
   , VCalendar
+  , DateRange(..)
   , FractionEncoding(..)
-  ) where
+  )
+where
 
 import           Control.Applicative
 import           Data.Bifunctor
@@ -17,12 +19,12 @@ import qualified Data.Map                      as Map
 import qualified Data.Set                      as Set
 import           Data.Text                      ( Text )
 import qualified Data.Text.Lazy                as TL
-import           Data.Time                      ( UTCTime )
+import           Data.Time
 import           Data.Version                   ( Version(..) )
 import           Web.HttpApiData                ( FromHttpApiData(..) )
 
 import           Text.ICalendar.Printer
-import           Text.ICalendar.Types
+import           Text.ICalendar.Types    hiding ( Range )
 
 import           Recycle.Types
 
@@ -30,6 +32,8 @@ getByLangCode :: LangCode -> Map.Map LangCode a -> Maybe (LangCode, a)
 getByLangCode lc m =
   ((lc, ) <$> Map.lookup lc m) <|> ((EN, ) <$> Map.lookup EN m) <|> headMay
     (Map.toList m)
+
+data DateRange = AbsoluteDateRange (Range Day) | RelativeDateRange (Range Integer)
 
 data FractionEncoding
   = EncodeFractionAsVEvent
@@ -45,7 +49,7 @@ instance FromHttpApiData FractionEncoding where
 mkVCalendar
   :: LangCode
   -> FractionEncoding
-  -> [CollectionEvent (Union '[FullFraction , Event])]
+  -> [CollectionEvent (Union '[FullFraction, Event])]
   -> VCalendar
 mkVCalendar langCode fractionEncoding ces =
   let (collections, events) = partitionCollectionEvents ces
