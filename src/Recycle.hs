@@ -5,6 +5,7 @@ where
 
 import           Control.Monad.IO.Class         ( liftIO )
 import           Data.IORef                     ( newIORef )
+import qualified Data.ByteString.Lazy.Char8    as BSL
 import           Data.Foldable                  ( for_ )
 import           Data.Time               hiding ( getZonedTime )
 import           Network.HTTP.Client.TLS        ( newTlsManagerWith
@@ -20,6 +21,7 @@ import qualified Data.Text                     as T
 
 import           Recycle.Class
 import           Recycle.AppM
+import           Recycle.ICalendar
 import           Recycle.Types
 
 main :: IO ()
@@ -60,3 +62,7 @@ main = do
                                   (HouseNumber 73)
                                   (Range fromDay untilDay)
     for_ collections $ liftIO . print
+
+    let langCode  = EN
+        vCalendar = mkVCalendar langCode EncodeFractionAsVTodo collections
+    liftIO . BSL.putStr $ printVCalendar vCalendar

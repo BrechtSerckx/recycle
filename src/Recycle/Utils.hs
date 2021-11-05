@@ -5,6 +5,7 @@ module Recycle.Utils
   ( PascalToCamel
   , LangCode
   , Union
+  , headMay
   , module Data.SOP
   , module Export
   ) where
@@ -50,3 +51,8 @@ langCodeJSONKeyOptions =
 
 instance FromHttpApiData LangCode where
   parseUrlPiece = parseBoundedTextData . T.toUpper
+
+headMay :: [a] -> Maybe a
+headMay = \case
+  []    -> Nothing
+  x : _ -> Just x

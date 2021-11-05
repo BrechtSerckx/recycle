@@ -13,6 +13,7 @@ let
     servant-client = superh.callCabal2nixWithOptions "servant" sources.servant "--subpath servant-client" {};
     servant-server = hlib.dontCheck(superh.callCabal2nixWithOptions "servant" sources.servant "--subpath servant-server" {});
     typerep-map = hlib.dontCheck(superh.typerep-map);
+    iCalendar = superh.callCabal2nix "iCalendar" sources.iCalendar {};
   };
 in {
   haskellPackages = super.haskellPackages.override (old: {

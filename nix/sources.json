@@ -11,6 +11,19 @@
         "url": "https://github.com/fumieval/deriving-aeson/archive/3f8ab60afa4491af62f22095bada9ea61e2ec95a.tar.gz",
         "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
     },
+    "iCalendar": {
+        "branch": "update-bounds",
+        "description": "iCalendar data types, parser, and printer.",
+        "homepage": null,
+        "owner": "markus1189",
+        "ref": "update-bounds",
+        "repo": "iCalendar",
+        "rev": "a3b17449f7f3ab66f01ab77fde2e667d4e93e265",
+        "sha256": "1b65mjyafbi5dzvai7iy23c8dncs6k4fw093v905v2rbvds5zgx7",
+        "type": "tarball",
+        "url": "https://github.com/markus1189/iCalendar/archive/a3b17449f7f3ab66f01ab77fde2e667d4e93e265.tar.gz",
+        "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
+    },
     "niv": {
         "branch": "master",
         "description": "Easy dependency management for Nix recycles",
