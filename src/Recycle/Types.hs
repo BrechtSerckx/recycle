@@ -1,11 +1,13 @@
 {-# LANGUAGE DataKinds #-}
 module Recycle.Types
-  ( module Recycle.Types.Error
+  ( module Recycle.Types.Geo
+  , module Recycle.Types.Error
   , module Recycle.Utils
   , AccessToken(..)
   , AuthResult(..)
   , Consumer(..)
   , AuthSecret(..)
+  , SearchQuery(..)
   )
 where
 
@@ -20,10 +22,16 @@ import           Deriving.Aeson                 ( CustomJSON(..)
                                                 , StripPrefix
                                                 )
 import           GHC.Generics                   ( Generic )
-import           Web.HttpApiData                ( ToHttpApiData )
+import           Web.HttpApiData                ( FromHttpApiData
+                                                , ToHttpApiData
+                                                )
 
 import           Recycle.Types.Error
+import           Recycle.Types.Geo
 import           Recycle.Utils
+
+newtype SearchQuery = SearchQuery Text
+  deriving newtype (FromHttpApiData, ToHttpApiData, IsString)
 
 -- | `X-Consumer` header value
 newtype Consumer = Consumer Text

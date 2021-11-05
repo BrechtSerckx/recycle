@@ -56,8 +56,8 @@ newtype RecycleM a = RecycleM
       via MonadUnliftIO ApiError InnerM
     deriving HasRecycleAuth
       via RecycleAuthT RecycleM
-    -- deriving HasRecycleClient
-    --   via RecycleClientT RecycleM
+    deriving HasRecycleClient
+      via RecycleClientT RecycleM
 
 instance HasLog Env Message RecycleM where
   logActionL = fieldLens @"logAction" @Env

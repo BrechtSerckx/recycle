@@ -1,0 +1,45 @@
+{
+  "items": [
+    {
+      "city": {
+        "names": {
+          "nl": "Leuven",
+          "fr": "Louvain",
+          "de": "Löwen",
+          "en": "Leuven"
+        },
+        "zipcodes": [
+          "3000-24062",
+          "3001-24062",
+          "3010-24062",
+          "3012-24062",
+          "3018-24062"
+        ],
+        "createdAt": "2020-07-13T22:00:01.034Z",
+        "name": "Leuven",
+        "updatedAt": "2020-09-21T22:15:05.605Z",
+        "id": "24062"
+      },
+      "code": "3000",
+      "createdAt": "2020-07-13T22:00:01.034Z",
+      "names": [
+        {
+          "nl": "Leuven",
+          "fr": "Louvain",
+          "de": "Löwen",
+          "en": "Leuven"
+        }
+      ],
+      "updatedAt": "2020-09-21T22:15:05.604Z",
+      "id": "3000-24062",
+      "available": true
+    }
+  ],
+  "total": 1,
+  "pages": 1,
+  "page": 1,
+  "size": 20,
+  "self": "https://awe-in-wa-recycle-datatank.azurewebsites.net/v1/zipcodes?q=3000&page=1&size=20",
+  "first": "https://awe-in-wa-recycle-datatank.azurewebsites.net/v1/zipcodes?q=3000&page=1&size=20",
+  "last": "https://awe-in-wa-recycle-datatank.azurewebsites.net/v1/zipcodes?q=3000&page=1&size=20"
+}

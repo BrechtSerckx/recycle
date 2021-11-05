@@ -16,6 +16,7 @@ import           Test.Hspec.QuickCheck
 import qualified Test.QuickCheck               as QC
 
 import           Recycle.API
+import           Recycle.Types
 import           Recycle.Utils
 
 main :: IO ()
@@ -25,4 +26,14 @@ spec = describe "API responses" $ do
   it "parses a normal `AuthResult` response"
     $               eitherDecode @AuthResult
                       (BSL.fromStrict $(embedFile "test/responses/authResult.json"))
+    `shouldSatisfy` isRight
+
+  it "parses translations"
+    $          eitherDecode @(Map.Map LangCode Text)
+                 "{ \"en\": \"english\", \"nl\": \"nederlands\"}"
+    `shouldBe` Right (Map.fromList [(EN, "english"), (NL, "nederlands")])
+
+  it "parses a normal `Zipcodes` response"
+    $               eitherDecode @(SingObject "items" [FullZipcode])
+                      (BSL.fromStrict $(embedFile "test/responses/zipcodes.json"))
     `shouldSatisfy` isRight

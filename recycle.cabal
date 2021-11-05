@@ -54,6 +54,7 @@ library
     Recycle.Class
     Recycle.Types
     Recycle.Types.Error
+    Recycle.Types.Geo
     Recycle.Utils
   build-depends:
       base >=4.7 && <5

@@ -34,5 +34,13 @@ main = do
   authResult <- newIORef Nothing
   let env = Env { .. }
   flip runRecycle env $ do
+
     AuthResult accessToken _ <- getAuthResult
     liftIO . putStrLn $ "Access Token: " <> show accessToken
+
+    zipcodes <- searchZipcodes (Just "3000")
+    zipcode  <- case zipcodes of
+      []    -> error "No zip codes found"
+      x : _ -> pure x
+
+    liftIO . putStrLn $ "Zip Code: " <> show zipcode

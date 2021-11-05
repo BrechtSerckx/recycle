@@ -6,6 +6,8 @@ module Recycle.Class
   , RecycleAuthT(..)
   , getAccessToken
   , setAccessToken
+  , HasRecycleClient(..)
+  , RecycleClientT(..)
   )
 where
 import           Capability.Error
@@ -15,11 +17,13 @@ import           Colog                   hiding ( I )
 import           Control.Monad.IO.Class         ( MonadIO(..) )
 import qualified Control.Monad.Reader          as Mtl
 import           Control.Monad.Trans
+import           Data.Aeson.Extra.SingObject    ( SingObject(..) )
 import           Data.Time               hiding ( getZonedTime
                                                 , getCurrentTime
                                                 )
 import qualified Data.Text                     as T
 import qualified Data.Time                     as Time
+import           Servant.API
 
 import qualified Recycle.API                   as API
 import           Recycle.Types
@@ -96,6 +100,47 @@ setAccessToken authResultAccessToken = do
   currentTime <- getCurrentTime
   let authResultExpiresAt = nominalDay `addUTCTime` currentTime
   setAuthResult AuthResult { .. }
+
+class Monad m => HasRecycleClient m where
+  searchZipcodes :: Maybe SearchQuery -> m [FullZipcode]
+
+newtype RecycleClientT m a = RecycleClientT { runRecycleClientT :: m a }
+  deriving newtype (Functor, Applicative, Monad)
+
+instance MonadTrans RecycleClientT where
+  lift = RecycleClientT
+
+instance
+  ( Monad m
+  , HasReader "consumer" Consumer m
+  , HasRecycleAuth m
+  , HasThrow "ApiError" ApiError m
+  , API.HasServantClient m
+  , Mtl.MonadReader env m
+  , HasLog env Message m
+  ) => HasRecycleClient (RecycleClientT m) where
+  searchZipcodes mQ = do
+    lift . logInfo $ "Searching zipcodes: " <> maybe "<all>" unSearchQuery mQ
+    SingObject zipcodes <- runRecycleOp
+      $ \consumer accessToken -> API.searchZipcodes consumer accessToken mQ
+    pure zipcodes
+
+runRecycleOp
+  :: ( Monad m
+     , HasReader "consumer" Consumer m
+     , HasRecycleAuth m
+     , HasThrow "ApiError" ApiError m
+     , API.HasServantClient m
+     )
+  => (  Consumer
+     -> AccessToken
+     -> m (Union '[WithStatus 200 a, WithStatus err ApiError])
+     )
+  -> RecycleClientT m a
+runRecycleOp op = do
+  consumer    <- lift $ ask @"consumer"
+  accessToken <- lift $ getAccessToken
+  lift $ API.liftApiError =<< op consumer accessToken
 
 class Monad m => HasTime m where
   getCurrentTime :: m UTCTime

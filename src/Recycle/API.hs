@@ -1,10 +1,12 @@
 {-# LANGUAGE EmptyCase #-}
 {-# LANGUAGE DataKinds #-}
+{-# LANGUAGE NoMonomorphismRestriction #-}
 {-# LANGUAGE TypeOperators #-}
 {-# LANGUAGE UndecidableInstances #-}
 module Recycle.API
   ( RecycleAPI
   , getAccessToken
+  , searchZipcodes
   , liftApiError
   , HasServantClient(..)
   , ServantClientT(..)
@@ -15,6 +17,7 @@ import           Control.Monad.Trans
 import           Capability.Reader
 import           Capability.Error
 import           Control.Monad.IO.Class         ( MonadIO(..) )
+import           Data.Aeson.Extra.SingObject    ( SingObject )
 import           Data.Proxy                     ( Proxy(..) )
 import           Data.SOP                       ( I(..)
                                                 , NS(..)
@@ -39,6 +42,11 @@ type RecycleAPI
       :> Header' '[Required] "X-Consumer" Consumer
       :> Header' '[Required] "X-Secret" AuthSecret
       :> UVerb 'GET '[JSON] '[WithStatus 200 AuthResult, WithStatus 401 ApiError]
+    :<|> "zipcodes"
+      :> Header' '[Required] "X-Consumer" Consumer
+      :> Header' '[Required] "Authorization" AccessToken
+      :> QueryParam' '[Optional] "q" SearchQuery
+      :> UVerb 'GET '[JSON] '[WithStatus 200 (SingObject "items" [FullZipcode]), WithStatus 401 ApiError]
      )
 
 getAccessToken
@@ -46,7 +54,19 @@ getAccessToken
   => Consumer
   -> AuthSecret
   -> m (NS I '[WithStatus 200 AuthResult, WithStatus 401 ApiError])
-getAccessToken =
+searchZipcodes
+  :: HasServantClient m
+  => Consumer
+  -> AccessToken
+  -> Maybe SearchQuery
+  -> m
+       ( NS
+           I
+           '[WithStatus 200 (SingObject "items" [FullZipcode]), WithStatus
+             401
+             ApiError]
+       )
+getAccessToken :<|> searchZipcodes =
   hoistClient (Proxy @RecycleAPI) runClient (client $ Proxy @RecycleAPI)
 
 class Monad m => HasServantClient m where
@@ -70,7 +90,6 @@ instance
     case eRes of
       Left  err -> lift $ throw @"ClientError" err
       Right a   -> pure a
-
 
 liftApiError
   :: HasThrow "ApiError" ApiError m
