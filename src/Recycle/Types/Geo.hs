@@ -7,7 +7,9 @@ module Recycle.Types.Geo
   , FullZipcode(..)
   , StreetId(..)
   , Street(..)
-  ) where
+  , HouseNumber(..)
+  )
+where
 
 import           Data.Aeson                     ( FromJSON
                                                 , ToJSON
@@ -21,6 +23,7 @@ import           Deriving.Aeson                 ( CustomJSON(CustomJSON)
                                                 , StripPrefix
                                                 )
 import           GHC.Generics                   ( Generic )
+import           GHC.Natural                    ( Natural )
 import           Web.HttpApiData                ( FromHttpApiData
                                                 , ToHttpApiData
                                                 )
@@ -96,3 +99,8 @@ data Street = Street
   deriving (FromJSON, ToJSON) via CustomJSON
     '[FieldLabelModifier (StripPrefix "street", PascalToCamel)]
     Street
+
+-- * House number
+
+newtype HouseNumber = HouseNumber { unHouseNumber :: Natural}
+  deriving newtype (Show, Read, FromHttpApiData, ToHttpApiData)

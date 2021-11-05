@@ -104,6 +104,12 @@ setAccessToken authResultAccessToken = do
 class Monad m => HasRecycleClient m where
   searchZipcodes :: Maybe SearchQuery -> m [FullZipcode]
   searchStreets :: Maybe ZipcodeId -> Maybe SearchQuery -> m [Street]
+  getCollections
+    :: ZipcodeId
+    -> StreetId
+    -> HouseNumber
+    -> Range Day
+    -> m [CollectionEvent (Union '[FullFraction, Event])]
 
 newtype RecycleClientT m a = RecycleClientT { runRecycleClientT :: m a }
   deriving newtype (Functor, Applicative, Monad)
@@ -135,6 +141,28 @@ instance
     SingObject streets <- runRecycleOp $ \consumer accessToken ->
       API.searchStreets consumer accessToken mZipcode mQ
     pure streets
+  getCollections zipcode street houseNumber Range {..} = do
+    lift
+      .  logInfo
+      $  "Fetching collections for "
+      <> unZipcodeId zipcode
+      <> ", "
+      <> unStreetId street
+      <> ", "
+      <> T.pack (show $ unHouseNumber houseNumber)
+      <> " from "
+      <> T.pack (show rangeFrom)
+      <> " to "
+      <> T.pack (show rangeTo)
+    SingObject collections <- runRecycleOp $ \consumer accessToken ->
+      API.getCollections consumer
+                         accessToken
+                         zipcode
+                         street
+                         houseNumber
+                         rangeFrom
+                         rangeTo
+    pure collections
 
 runRecycleOp
   :: ( Monad m

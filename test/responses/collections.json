@@ -1,0 +1,931 @@
+{
+  "items": [
+    {
+      "type": "collection",
+      "timestamp": "2021-09-15T00:00:00.000Z",
+      "fraction": {
+        "national": true,
+        "nationalRef": "5d610b87173c063cc0400103",
+        "datatankRef": null,
+        "name": {
+          "nl": "PMD",
+          "fr": "PMC",
+          "en": "PMD",
+          "de": "PMD"
+        },
+        "color": "#60b1df",
+        "variations": [],
+        "organisation": "5e27908010cfeaa15c9cee93",
+        "createdAt": "2020-02-20T13:08:32.883Z",
+        "updatedAt": "2021-09-30T15:16:36.595Z",
+        "logo": {
+          "regular": {
+            "1x": "5ef36735da06b266d294b3b9",
+            "2x": "5ef36735da06b298a894b3ba",
+            "3x": "5ef36735da06b23db894b3bb"
+          },
+          "reversed": {
+            "1x": "5ef36735da06b25d5e94b3bc",
+            "2x": "5ef36735da06b2a1a594b3bd",
+            "3x": "5ef36735da06b2093194b3be"
+          },
+          "_id": "5d610b86162c063cc0400125",
+          "name": {
+            "nl": "PMD",
+            "fr": "PMC",
+            "de": "PMD",
+            "en": "PMD"
+          },
+          "createdAt": "2020-02-20T13:08:25.556Z",
+          "updatedAt": "2020-06-24T14:46:14.194Z",
+          "__v": 0,
+          "id": "5d610b86162c063cc0400125"
+        },
+        "id": "5e4e84d1bab65e9819d714d2"
+      },
+      "id": "5fed8c315214976fcf25764d"
+    },
+    {
+      "type": "collection",
+      "timestamp": "2021-09-17T00:00:00.000Z",
+      "fraction": {
+        "national": false,
+        "nationalRef": null,
+        "datatankRef": null,
+        "name": {
+          "nl": "Gft",
+          "fr": "Gft",
+          "en": "Gft",
+          "de": "Gft"
+        },
+        "logo": {
+          "regular": {
+            "1x": "5ef36735da06b2747894b353",
+            "2x": "5ef36735da06b2a9b994b354",
+            "3x": "5ef36735da06b273b894b355"
+          },
+          "reversed": {
+            "1x": "5ef36735da06b276b594b356",
+            "2x": "5ef36735da06b2002c94b357",
+            "3x": "5ef36735da06b22deb94b358"
+          },
+          "_id": "5d610b86162c063cc0400108",
+          "name": {
+            "nl": "Groente-, fruit-, tuinafval",
+            "fr": "Déchets biodégradables",
+            "de": "Bioabfall",
+            "en": "Biodegradable waste"
+          },
+          "createdAt": "2020-02-20T13:08:25.591Z",
+          "updatedAt": "2020-06-24T14:46:14.173Z",
+          "__v": 0,
+          "id": "5d610b86162c063cc0400108"
+        },
+        "color": "#C7D33B",
+        "variations": [],
+        "organisation": "5e27908010cfeaa15c9cee93",
+        "createdAt": "2020-06-03T13:27:30.273Z",
+        "updatedAt": "2021-06-01T14:18:19.079Z",
+        "id": "5ed7a542a2124463cc8814e6"
+      },
+      "id": "5fed885b433c054abf05a1c8"
+    },
+    {
+      "event": {
+        "title": {
+          "nl": "Repair Café",
+          "fr": "Repair Café",
+          "en": "Repair Café",
+          "de": "Repair Café"
+        },
+        "introduction": {
+          "nl": "Repair Café in MAAKbar",
+          "fr": "Repair Café in MAAKbar",
+          "en": "Repair Café in MAAKbar",
+          "de": "Repair Café in MAAKbar"
+        },
+        "description": {
+          "nl": "Elke derde zaterdag van de maand tussen 14.00 en 17.00 uur in de Diestsestraat 142 in Leuven.",
+          "fr": "Elke derde zaterdag van de maand tussen 14.00 en 17.00 uur in de Diestsestraat 142 in Leuven.",
+          "en": "Elke derde zaterdag van de maand tussen 14.00 en 17.00 uur in de Diestsestraat 142 in Leuven.",
+          "de": "Elke derde zaterdag van de maand tussen 14.00 en 17.00 uur in de Diestsestraat 142 in Leuven."
+        },
+        "externalLink": {
+          "nl": "https://www.maakbaarleuven.be/",
+          "fr": "https://www.maakbaarleuven.be/",
+          "en": "https://www.maakbaarleuven.be/",
+          "de": "https://www.maakbaarleuven.be/"
+        }
+      },
+      "type": "event",
+      "timestamp": "2021-09-18T00:00:00.000Z",
+      "id": "5fed94cf5214974871257660",
+      "fraction": {
+        "variations": []
+      }
+    },
+    {
+      "type": "collection",
+      "timestamp": "2021-09-21T00:00:00.000Z",
+      "fraction": {
+        "national": false,
+        "nationalRef": null,
+        "datatankRef": null,
+        "name": {
+          "nl": "Huisvuil",
+          "fr": "Huisvuil",
+          "en": "Huisvuil",
+          "de": "Huisvuil"
+        },
+        "logo": {
+          "regular": {
+            "1x": "5ef36735da06b20c7694b36b",
+            "2x": "5ef36735da06b2d02c94b36c",
+            "3x": "5ef36735da06b22b5194b36d"
+          },
+          "reversed": {
+            "1x": "5ef36735da06b2487294b36e",
+            "2x": "5ef36735da06b24ac194b36f",
+            "3x": "5ef36735da06b25e9e94b370"
+          },
+          "_id": "5d610b86162c063cc0400112",
+          "name": {
+            "nl": "Restafval zak",
+            "fr": "Déchets non recyclables sac",
+            "de": "Restabfall tasche",
+            "en": "Non-recyclable waste bag"
+          },
+          "createdAt": "2020-02-20T13:08:25.556Z",
+          "updatedAt": "2020-06-24T14:46:14.409Z",
+          "__v": 0,
+          "id": "5d610b86162c063cc0400112"
+        },
+        "color": "#5C6B6F",
+        "variations": [],
+        "organisation": "5e27908010cfeaa15c9cee93",
+        "createdAt": "2020-06-02T10:47:22.808Z",
+        "updatedAt": "2020-06-03T13:29:58.827Z",
+        "id": "5ed62e3a8e14e7d3a0c5fbc9"
+      },
+      "id": "5fed884b52149726e7257613"
+    },
+    {
+      "type": "collection",
+      "timestamp": "2021-09-22T00:00:00.000Z",
+      "fraction": {
+        "national": true,
+        "nationalRef": "5d610b87173c063cc0400102",
+        "datatankRef": null,
+        "name": {
+          "nl": "Papier-karton",
+          "fr": "Papiers-cartons",
+          "en": "Paper-cardboard",
+          "de": "Papier-Karton"
+        },
+        "color": "#F2B03B",
+        "variations": [],
+        "organisation": "5e27908010cfeaa15c9cee93",
+        "createdAt": "2020-02-20T13:08:32.882Z",
+        "updatedAt": "2021-10-13T14:18:48.968Z",
+        "logo": {
+          "regular": {
+            "1x": "5ef36735da06b20dfd94b3ad",
+            "2x": "5ef36735da06b24a1f94b3ae",
+            "3x": "5ef36735da06b2849594b3af"
+          },
+          "reversed": {
+            "1x": "5ef36735da06b26c9f94b3b0",
+            "2x": "5ef36735da06b250e694b3b1",
+            "3x": "5ef36735da06b254a894b3b2"
+          },
+          "_id": "5d610b86162c063cc0400123",
+          "name": {
+            "nl": "Papier",
+            "fr": "Papier",
+            "de": "Papier",
+            "en": "Paper"
+          },
+          "createdAt": "2020-02-20T13:08:25.567Z",
+          "updatedAt": "2020-06-24T14:46:14.194Z",
+          "__v": 0,
+          "id": "5d610b86162c063cc0400123"
+        },
+        "id": "5e4e84d1bab65e00d0d7148d"
+      },
+      "id": "5fed8c1b52149774ad257638"
+    },
+    {
+      "exception": {
+        "reason": {
+          "name": {
+            "nl": "Feestdag",
+            "fr": "Jour férié",
+            "de": "Feiertag",
+            "en": "Public holiday"
+          },
+          "createdAt": "2020-02-03T11:06:44.291Z",
+          "updatedAt": "2020-03-03T16:17:29.678Z",
+          "id": "5d610b87162c063cc0400102"
+        },
+        "replaces": {
+          "exception": {
+            "replacedBy": "5fed95b9521497a81f257661"
+          },
+          "type": "collection",
+          "timestamp": "2021-09-24T00:00:00.000Z",
+          "fraction": "5ed7a542a2124463cc8814e6",
+          "group": "5eaac04536fe0b3bec4bf9be",
+          "organisation": "5e27908010cfeaa15c9cee93",
+          "createdAt": "2020-12-31T08:14:19.183Z",
+          "updatedAt": "2020-12-31T09:11:21.184Z",
+          "id": "5fed885b433c0559d305a1c9"
+        }
+      },
+      "type": "collection",
+      "timestamp": "2021-09-22T00:00:00.000Z",
+      "fraction": {
+        "national": false,
+        "nationalRef": null,
+        "datatankRef": null,
+        "name": {
+          "nl": "Gft",
+          "fr": "Gft",
+          "en": "Gft",
+          "de": "Gft"
+        },
+        "logo": {
+          "regular": {
+            "1x": "5ef36735da06b2747894b353",
+            "2x": "5ef36735da06b2a9b994b354",
+            "3x": "5ef36735da06b273b894b355"
+          },
+          "reversed": {
+            "1x": "5ef36735da06b276b594b356",
+            "2x": "5ef36735da06b2002c94b357",
+            "3x": "5ef36735da06b22deb94b358"
+          },
+          "_id": "5d610b86162c063cc0400108",
+          "name": {
+            "nl": "Groente-, fruit-, tuinafval",
+            "fr": "Déchets biodégradables",
+            "de": "Bioabfall",
+            "en": "Biodegradable waste"
+          },
+          "createdAt": "2020-02-20T13:08:25.591Z",
+          "updatedAt": "2020-06-24T14:46:14.173Z",
+          "__v": 0,
+          "id": "5d610b86162c063cc0400108"
+        },
+        "color": "#C7D33B",
+        "variations": [],
+        "organisation": "5e27908010cfeaa15c9cee93",
+        "createdAt": "2020-06-03T13:27:30.273Z",
+        "updatedAt": "2021-06-01T14:18:19.079Z",
+        "id": "5ed7a542a2124463cc8814e6"
+      },
+      "id": "5fed95b9521497a81f257661"
+    },
+    {
+      "exception": {
+        "replacedBy": {
+          "exception": {
+            "reason": {
+              "name": {
+                "nl": "Feestdag",
+                "fr": "Jour férié",
+                "de": "Feiertag",
+                "en": "Public holiday"
+              },
+              "createdAt": "2020-02-03T11:06:44.291Z",
+              "updatedAt": "2020-03-03T16:17:29.678Z",
+              "id": "5d610b87162c063cc0400102"
+            },
+            "replaces": "5fed885b433c0559d305a1c9"
+          },
+          "type": "collection",
+          "timestamp": "2021-09-22T00:00:00.000Z",
+          "fraction": "5ed7a542a2124463cc8814e6",
+          "group": "5eaac04536fe0b3bec4bf9be",
+          "organisation": "5e27908010cfeaa15c9cee93",
+          "createdAt": "2020-12-31T09:11:21.179Z",
+          "updatedAt": "2020-12-31T09:11:21.179Z",
+          "id": "5fed95b9521497a81f257661"
+        }
+      },
+      "type": "collection",
+      "timestamp": "2021-09-24T00:00:00.000Z",
+      "fraction": {
+        "national": false,
+        "nationalRef": null,
+        "datatankRef": null,
+        "name": {
+          "nl": "Gft",
+          "fr": "Gft",
+          "en": "Gft",
+          "de": "Gft"
+        },
+        "logo": {
+          "regular": {
+            "1x": "5ef36735da06b2747894b353",
+            "2x": "5ef36735da06b2a9b994b354",
+            "3x": "5ef36735da06b273b894b355"
+          },
+          "reversed": {
+            "1x": "5ef36735da06b276b594b356",
+            "2x": "5ef36735da06b2002c94b357",
+            "3x": "5ef36735da06b22deb94b358"
+          },
+          "_id": "5d610b86162c063cc0400108",
+          "name": {
+            "nl": "Groente-, fruit-, tuinafval",
+            "fr": "Déchets biodégradables",
+            "de": "Bioabfall",
+            "en": "Biodegradable waste"
+          },
+          "createdAt": "2020-02-20T13:08:25.591Z",
+          "updatedAt": "2020-06-24T14:46:14.173Z",
+          "__v": 0,
+          "id": "5d610b86162c063cc0400108"
+        },
+        "color": "#C7D33B",
+        "variations": [],
+        "organisation": "5e27908010cfeaa15c9cee93",
+        "createdAt": "2020-06-03T13:27:30.273Z",
+        "updatedAt": "2021-06-01T14:18:19.079Z",
+        "id": "5ed7a542a2124463cc8814e6"
+      },
+      "id": "5fed885b433c0559d305a1c9"
+    },
+    {
+      "type": "collection",
+      "timestamp": "2021-09-28T00:00:00.000Z",
+      "fraction": {
+        "national": false,
+        "nationalRef": null,
+        "datatankRef": null,
+        "name": {
+          "nl": "Huisvuil",
+          "fr": "Huisvuil",
+          "en": "Huisvuil",
+          "de": "Huisvuil"
+        },
+        "logo": {
+          "regular": {
+            "1x": "5ef36735da06b20c7694b36b",
+            "2x": "5ef36735da06b2d02c94b36c",
+            "3x": "5ef36735da06b22b5194b36d"
+          },
+          "reversed": {
+            "1x": "5ef36735da06b2487294b36e",
+            "2x": "5ef36735da06b24ac194b36f",
+            "3x": "5ef36735da06b25e9e94b370"
+          },
+          "_id": "5d610b86162c063cc0400112",
+          "name": {
+            "nl": "Restafval zak",
+            "fr": "Déchets non recyclables sac",
+            "de": "Restabfall tasche",
+            "en": "Non-recyclable waste bag"
+          },
+          "createdAt": "2020-02-20T13:08:25.556Z",
+          "updatedAt": "2020-06-24T14:46:14.409Z",
+          "__v": 0,
+          "id": "5d610b86162c063cc0400112"
+        },
+        "color": "#5C6B6F",
+        "variations": [],
+        "organisation": "5e27908010cfeaa15c9cee93",
+        "createdAt": "2020-06-02T10:47:22.808Z",
+        "updatedAt": "2020-06-03T13:29:58.827Z",
+        "id": "5ed62e3a8e14e7d3a0c5fbc9"
+      },
+      "id": "5fed884b5214972f51257614"
+    },
+    {
+      "type": "collection",
+      "timestamp": "2021-09-29T00:00:00.000Z",
+      "fraction": {
+        "national": true,
+        "nationalRef": "5d610b87173c063cc0400103",
+        "datatankRef": null,
+        "name": {
+          "nl": "PMD",
+          "fr": "PMC",
+          "en": "PMD",
+          "de": "PMD"
+        },
+        "color": "#60b1df",
+        "variations": [],
+        "organisation": "5e27908010cfeaa15c9cee93",
+        "createdAt": "2020-02-20T13:08:32.883Z",
+        "updatedAt": "2021-09-30T15:16:36.595Z",
+        "logo": {
+          "regular": {
+            "1x": "5ef36735da06b266d294b3b9",
+            "2x": "5ef36735da06b298a894b3ba",
+            "3x": "5ef36735da06b23db894b3bb"
+          },
+          "reversed": {
+            "1x": "5ef36735da06b25d5e94b3bc",
+            "2x": "5ef36735da06b2a1a594b3bd",
+            "3x": "5ef36735da06b2093194b3be"
+          },
+          "_id": "5d610b86162c063cc0400125",
+          "name": {
+            "nl": "PMD",
+            "fr": "PMC",
+            "de": "PMD",
+            "en": "PMD"
+          },
+          "createdAt": "2020-02-20T13:08:25.556Z",
+          "updatedAt": "2020-06-24T14:46:14.194Z",
+          "__v": 0,
+          "id": "5d610b86162c063cc0400125"
+        },
+        "id": "5e4e84d1bab65e9819d714d2"
+      },
+      "id": "5fed8c31521497accb25764e"
+    },
+    {
+      "type": "collection",
+      "timestamp": "2021-10-01T00:00:00.000Z",
+      "fraction": {
+        "national": false,
+        "nationalRef": null,
+        "datatankRef": null,
+        "name": {
+          "nl": "Gft",
+          "fr": "Gft",
+          "en": "Gft",
+          "de": "Gft"
+        },
+        "logo": {
+          "regular": {
+            "1x": "5ef36735da06b2747894b353",
+            "2x": "5ef36735da06b2a9b994b354",
+            "3x": "5ef36735da06b273b894b355"
+          },
+          "reversed": {
+            "1x": "5ef36735da06b276b594b356",
+            "2x": "5ef36735da06b2002c94b357",
+            "3x": "5ef36735da06b22deb94b358"
+          },
+          "_id": "5d610b86162c063cc0400108",
+          "name": {
+            "nl": "Groente-, fruit-, tuinafval",
+            "fr": "Déchets biodégradables",
+            "de": "Bioabfall",
+            "en": "Biodegradable waste"
+          },
+          "createdAt": "2020-02-20T13:08:25.591Z",
+          "updatedAt": "2020-06-24T14:46:14.173Z",
+          "__v": 0,
+          "id": "5d610b86162c063cc0400108"
+        },
+        "color": "#C7D33B",
+        "variations": [],
+        "organisation": "5e27908010cfeaa15c9cee93",
+        "createdAt": "2020-06-03T13:27:30.273Z",
+        "updatedAt": "2021-06-01T14:18:19.079Z",
+        "id": "5ed7a542a2124463cc8814e6"
+      },
+      "id": "5fed885b433c0554a005a1ca"
+    },
+    {
+      "type": "collection",
+      "timestamp": "2021-10-05T00:00:00.000Z",
+      "fraction": {
+        "national": false,
+        "nationalRef": null,
+        "datatankRef": null,
+        "name": {
+          "nl": "Huisvuil",
+          "fr": "Huisvuil",
+          "en": "Huisvuil",
+          "de": "Huisvuil"
+        },
+        "logo": {
+          "regular": {
+            "1x": "5ef36735da06b20c7694b36b",
+            "2x": "5ef36735da06b2d02c94b36c",
+            "3x": "5ef36735da06b22b5194b36d"
+          },
+          "reversed": {
+            "1x": "5ef36735da06b2487294b36e",
+            "2x": "5ef36735da06b24ac194b36f",
+            "3x": "5ef36735da06b25e9e94b370"
+          },
+          "_id": "5d610b86162c063cc0400112",
+          "name": {
+            "nl": "Restafval zak",
+            "fr": "Déchets non recyclables sac",
+            "de": "Restabfall tasche",
+            "en": "Non-recyclable waste bag"
+          },
+          "createdAt": "2020-02-20T13:08:25.556Z",
+          "updatedAt": "2020-06-24T14:46:14.409Z",
+          "__v": 0,
+          "id": "5d610b86162c063cc0400112"
+        },
+        "color": "#5C6B6F",
+        "variations": [],
+        "organisation": "5e27908010cfeaa15c9cee93",
+        "createdAt": "2020-06-02T10:47:22.808Z",
+        "updatedAt": "2020-06-03T13:29:58.827Z",
+        "id": "5ed62e3a8e14e7d3a0c5fbc9"
+      },
+      "id": "5fed884b5214970251257615"
+    },
+    {
+      "type": "collection",
+      "timestamp": "2021-10-06T00:00:00.000Z",
+      "fraction": {
+        "national": true,
+        "nationalRef": "5d610b87173c063cc0400102",
+        "datatankRef": null,
+        "name": {
+          "nl": "Papier-karton",
+          "fr": "Papiers-cartons",
+          "en": "Paper-cardboard",
+          "de": "Papier-Karton"
+        },
+        "color": "#F2B03B",
+        "variations": [],
+        "organisation": "5e27908010cfeaa15c9cee93",
+        "createdAt": "2020-02-20T13:08:32.882Z",
+        "updatedAt": "2021-10-13T14:18:48.968Z",
+        "logo": {
+          "regular": {
+            "1x": "5ef36735da06b20dfd94b3ad",
+            "2x": "5ef36735da06b24a1f94b3ae",
+            "3x": "5ef36735da06b2849594b3af"
+          },
+          "reversed": {
+            "1x": "5ef36735da06b26c9f94b3b0",
+            "2x": "5ef36735da06b250e694b3b1",
+            "3x": "5ef36735da06b254a894b3b2"
+          },
+          "_id": "5d610b86162c063cc0400123",
+          "name": {
+            "nl": "Papier",
+            "fr": "Papier",
+            "de": "Papier",
+            "en": "Paper"
+          },
+          "createdAt": "2020-02-20T13:08:25.567Z",
+          "updatedAt": "2020-06-24T14:46:14.194Z",
+          "__v": 0,
+          "id": "5d610b86162c063cc0400123"
+        },
+        "id": "5e4e84d1bab65e00d0d7148d"
+      },
+      "id": "5fed8c1b521497001a257639"
+    },
+    {
+      "type": "collection",
+      "timestamp": "2021-10-08T00:00:00.000Z",
+      "fraction": {
+        "national": false,
+        "nationalRef": null,
+        "datatankRef": null,
+        "name": {
+          "nl": "Gft",
+          "fr": "Gft",
+          "en": "Gft",
+          "de": "Gft"
+        },
+        "logo": {
+          "regular": {
+            "1x": "5ef36735da06b2747894b353",
+            "2x": "5ef36735da06b2a9b994b354",
+            "3x": "5ef36735da06b273b894b355"
+          },
+          "reversed": {
+            "1x": "5ef36735da06b276b594b356",
+            "2x": "5ef36735da06b2002c94b357",
+            "3x": "5ef36735da06b22deb94b358"
+          },
+          "_id": "5d610b86162c063cc0400108",
+          "name": {
+            "nl": "Groente-, fruit-, tuinafval",
+            "fr": "Déchets biodégradables",
+            "de": "Bioabfall",
+            "en": "Biodegradable waste"
+          },
+          "createdAt": "2020-02-20T13:08:25.591Z",
+          "updatedAt": "2020-06-24T14:46:14.173Z",
+          "__v": 0,
+          "id": "5d610b86162c063cc0400108"
+        },
+        "color": "#C7D33B",
+        "variations": [],
+        "organisation": "5e27908010cfeaa15c9cee93",
+        "createdAt": "2020-06-03T13:27:30.273Z",
+        "updatedAt": "2021-06-01T14:18:19.079Z",
+        "id": "5ed7a542a2124463cc8814e6"
+      },
+      "id": "5fed885b433c05070505a1cb"
+    },
+    {
+      "event": {
+        "title": {
+          "nl": "Demo Kringlooptuinieren",
+          "fr": "Demo Kringlooptuinieren",
+          "en": "Demo Kringlooptuinieren",
+          "de": "Demo Kringlooptuinieren"
+        },
+        "introduction": {
+          "nl": "Op demoplaats thuiscomposteren in de Kruidtuin",
+          "fr": "Op demoplaats thuiscomposteren in de Kruidtuin",
+          "en": "Op demoplaats thuiscomposteren in de Kruidtuin",
+          "de": "Op demoplaats thuiscomposteren in de Kruidtuin"
+        },
+        "description": {
+          "nl": "Op verschillende zaterdagen kan je van 10.00 tot 12.00 uur met al je vragen over kringlooptuinieren terecht bij de compostmeesters.",
+          "fr": "Op verschillende zaterdagen kan je van 10.00 tot 12.00 uur met al je vragen over kringlooptuinieren terecht bij de compostmeesters.",
+          "en": "Op verschillende zaterdagen kan je van 10.00 tot 12.00 uur met al je vragen over kringlooptuinieren terecht bij de compostmeesters.",
+          "de": "Op verschillende zaterdagen kan je van 10.00 tot 12.00 uur met al je vragen over kringlooptuinieren terecht bij de compostmeesters."
+        },
+        "externalLink": {
+          "nl": "https://www.leuven.be/",
+          "fr": "https://www.leuven.be/",
+          "en": "https://www.leuven.be/",
+          "de": "https://www.leuven.be/"
+        }
+      },
+      "type": "event",
+      "timestamp": "2021-10-09T00:00:00.000Z",
+      "id": "5fed96095214976393257662",
+      "fraction": {
+        "variations": []
+      }
+    },
+    {
+      "type": "collection",
+      "timestamp": "2021-10-12T00:00:00.000Z",
+      "fraction": {
+        "national": false,
+        "nationalRef": null,
+        "datatankRef": null,
+        "name": {
+          "nl": "Huisvuil",
+          "fr": "Huisvuil",
+          "en": "Huisvuil",
+          "de": "Huisvuil"
+        },
+        "logo": {
+          "regular": {
+            "1x": "5ef36735da06b20c7694b36b",
+            "2x": "5ef36735da06b2d02c94b36c",
+            "3x": "5ef36735da06b22b5194b36d"
+          },
+          "reversed": {
+            "1x": "5ef36735da06b2487294b36e",
+            "2x": "5ef36735da06b24ac194b36f",
+            "3x": "5ef36735da06b25e9e94b370"
+          },
+          "_id": "5d610b86162c063cc0400112",
+          "name": {
+            "nl": "Restafval zak",
+            "fr": "Déchets non recyclables sac",
+            "de": "Restabfall tasche",
+            "en": "Non-recyclable waste bag"
+          },
+          "createdAt": "2020-02-20T13:08:25.556Z",
+          "updatedAt": "2020-06-24T14:46:14.409Z",
+          "__v": 0,
+          "id": "5d610b86162c063cc0400112"
+        },
+        "color": "#5C6B6F",
+        "variations": [],
+        "organisation": "5e27908010cfeaa15c9cee93",
+        "createdAt": "2020-06-02T10:47:22.808Z",
+        "updatedAt": "2020-06-03T13:29:58.827Z",
+        "id": "5ed62e3a8e14e7d3a0c5fbc9"
+      },
+      "id": "5fed884b5214977e6f257616"
+    },
+    {
+      "type": "collection",
+      "timestamp": "2021-10-13T00:00:00.000Z",
+      "fraction": {
+        "national": true,
+        "nationalRef": "5d610b87173c063cc0400103",
+        "datatankRef": null,
+        "name": {
+          "nl": "PMD",
+          "fr": "PMC",
+          "en": "PMD",
+          "de": "PMD"
+        },
+        "color": "#60b1df",
+        "variations": [],
+        "organisation": "5e27908010cfeaa15c9cee93",
+        "createdAt": "2020-02-20T13:08:32.883Z",
+        "updatedAt": "2021-09-30T15:16:36.595Z",
+        "logo": {
+          "regular": {
+            "1x": "5ef36735da06b266d294b3b9",
+            "2x": "5ef36735da06b298a894b3ba",
+            "3x": "5ef36735da06b23db894b3bb"
+          },
+          "reversed": {
+            "1x": "5ef36735da06b25d5e94b3bc",
+            "2x": "5ef36735da06b2a1a594b3bd",
+            "3x": "5ef36735da06b2093194b3be"
+          },
+          "_id": "5d610b86162c063cc0400125",
+          "name": {
+            "nl": "PMD",
+            "fr": "PMC",
+            "de": "PMD",
+            "en": "PMD"
+          },
+          "createdAt": "2020-02-20T13:08:25.556Z",
+          "updatedAt": "2020-06-24T14:46:14.194Z",
+          "__v": 0,
+          "id": "5d610b86162c063cc0400125"
+        },
+        "id": "5e4e84d1bab65e9819d714d2"
+      },
+      "id": "5fed8c315214975d9125764f"
+    },
+    {
+      "type": "collection",
+      "timestamp": "2021-10-15T00:00:00.000Z",
+      "fraction": {
+        "national": false,
+        "nationalRef": null,
+        "datatankRef": null,
+        "name": {
+          "nl": "Gft",
+          "fr": "Gft",
+          "en": "Gft",
+          "de": "Gft"
+        },
+        "logo": {
+          "regular": {
+            "1x": "5ef36735da06b2747894b353",
+            "2x": "5ef36735da06b2a9b994b354",
+            "3x": "5ef36735da06b273b894b355"
+          },
+          "reversed": {
+            "1x": "5ef36735da06b276b594b356",
+            "2x": "5ef36735da06b2002c94b357",
+            "3x": "5ef36735da06b22deb94b358"
+          },
+          "_id": "5d610b86162c063cc0400108",
+          "name": {
+            "nl": "Groente-, fruit-, tuinafval",
+            "fr": "Déchets biodégradables",
+            "de": "Bioabfall",
+            "en": "Biodegradable waste"
+          },
+          "createdAt": "2020-02-20T13:08:25.591Z",
+          "updatedAt": "2020-06-24T14:46:14.173Z",
+          "__v": 0,
+          "id": "5d610b86162c063cc0400108"
+        },
+        "color": "#C7D33B",
+        "variations": [],
+        "organisation": "5e27908010cfeaa15c9cee93",
+        "createdAt": "2020-06-03T13:27:30.273Z",
+        "updatedAt": "2021-06-01T14:18:19.079Z",
+        "id": "5ed7a542a2124463cc8814e6"
+      },
+      "id": "5fed885b433c05cfa305a1cc"
+    },
+    {
+      "event": {
+        "title": {
+          "nl": "Repair Café",
+          "fr": "Repair Café",
+          "en": "Repair Café",
+          "de": "Repair Café"
+        },
+        "introduction": {
+          "nl": "Repair Café in MAAKbar",
+          "fr": "Repair Café in MAAKbar",
+          "en": "Repair Café in MAAKbar",
+          "de": "Repair Café in MAAKbar"
+        },
+        "description": {
+          "nl": "Elke derde zaterdag van de maand tussen 14.00 en 17.00 uur in de Diestsestraat 142 in Leuven.",
+          "fr": "Elke derde zaterdag van de maand tussen 14.00 en 17.00 uur in de Diestsestraat 142 in Leuven.",
+          "en": "Elke derde zaterdag van de maand tussen 14.00 en 17.00 uur in de Diestsestraat 142 in Leuven.",
+          "de": "Elke derde zaterdag van de maand tussen 14.00 en 17.00 uur in de Diestsestraat 142 in Leuven."
+        },
+        "externalLink": {
+          "nl": "https://www.maakbaarleuven.be/",
+          "fr": "https://www.maakbaarleuven.be/",
+          "en": "https://www.maakbaarleuven.be/",
+          "de": "https://www.maakbaarleuven.be/"
+        }
+      },
+      "type": "event",
+      "timestamp": "2021-10-16T00:00:00.000Z",
+      "id": "5fed9649433c059bc005a1ea",
+      "fraction": {
+        "variations": []
+      }
+    },
+    {
+      "type": "collection",
+      "timestamp": "2021-10-19T00:00:00.000Z",
+      "fraction": {
+        "national": false,
+        "nationalRef": null,
+        "datatankRef": null,
+        "name": {
+          "nl": "Huisvuil",
+          "fr": "Huisvuil",
+          "en": "Huisvuil",
+          "de": "Huisvuil"
+        },
+        "logo": {
+          "regular": {
+            "1x": "5ef36735da06b20c7694b36b",
+            "2x": "5ef36735da06b2d02c94b36c",
+            "3x": "5ef36735da06b22b5194b36d"
+          },
+          "reversed": {
+            "1x": "5ef36735da06b2487294b36e",
+            "2x": "5ef36735da06b24ac194b36f",
+            "3x": "5ef36735da06b25e9e94b370"
+          },
+          "_id": "5d610b86162c063cc0400112",
+          "name": {
+            "nl": "Restafval zak",
+            "fr": "Déchets non recyclables sac",
+            "de": "Restabfall tasche",
+            "en": "Non-recyclable waste bag"
+          },
+          "createdAt": "2020-02-20T13:08:25.556Z",
+          "updatedAt": "2020-06-24T14:46:14.409Z",
+          "__v": 0,
+          "id": "5d610b86162c063cc0400112"
+        },
+        "color": "#5C6B6F",
+        "variations": [],
+        "organisation": "5e27908010cfeaa15c9cee93",
+        "createdAt": "2020-06-02T10:47:22.808Z",
+        "updatedAt": "2020-06-03T13:29:58.827Z",
+        "id": "5ed62e3a8e14e7d3a0c5fbc9"
+      },
+      "id": "5fed884b5214971b26257617"
+    },
+    {
+      "type": "collection",
+      "timestamp": "2021-10-20T00:00:00.000Z",
+      "fraction": {
+        "national": true,
+        "nationalRef": "5d610b87173c063cc0400102",
+        "datatankRef": null,
+        "name": {
+          "nl": "Papier-karton",
+          "fr": "Papiers-cartons",
+          "en": "Paper-cardboard",
+          "de": "Papier-Karton"
+        },
+        "color": "#F2B03B",
+        "variations": [],
+        "organisation": "5e27908010cfeaa15c9cee93",
+        "createdAt": "2020-02-20T13:08:32.882Z",
+        "updatedAt": "2021-10-13T14:18:48.968Z",
+        "logo": {
+          "regular": {
+            "1x": "5ef36735da06b20dfd94b3ad",
+            "2x": "5ef36735da06b24a1f94b3ae",
+            "3x": "5ef36735da06b2849594b3af"
+          },
+          "reversed": {
+            "1x": "5ef36735da06b26c9f94b3b0",
+            "2x": "5ef36735da06b250e694b3b1",
+            "3x": "5ef36735da06b254a894b3b2"
+          },
+          "_id": "5d610b86162c063cc0400123",
+          "name": {
+            "nl": "Papier",
+            "fr": "Papier",
+            "de": "Papier",
+            "en": "Paper"
+          },
+          "createdAt": "2020-02-20T13:08:25.567Z",
+          "updatedAt": "2020-06-24T14:46:14.194Z",
+          "__v": 0,
+          "id": "5d610b86162c063cc0400123"
+        },
+        "id": "5e4e84d1bab65e00d0d7148d"
+      },
+      "id": "5fed8c1b5214973cd525763a"
+    }
+  ],
+  "total": 46,
+  "pages": 3,
+  "page": 1,
+  "size": 20,
+  "self": "https://awe-in-wa-recycle-api.azurewebsites.net/v1/collections?zipcodeId=3000-24062&streetId=https%3A%2F%2Fdata.vlaanderen.be%2Fid%2Fstraatnaam-34637&houseNumber=73&fromDate=2021-09-15T00%3A00%3A00.000Z&untilDate=2021-12-14T23%3A59%3A59.999Z&page=1&size=20",
+  "first": "https://awe-in-wa-recycle-api.azurewebsites.net/v1/collections?zipcodeId=3000-24062&streetId=https%3A%2F%2Fdata.vlaanderen.be%2Fid%2Fstraatnaam-34637&houseNumber=73&fromDate=2021-09-15T00%3A00%3A00.000Z&untilDate=2021-12-14T23%3A59%3A59.999Z&page=1&size=20",
+  "last": "https://awe-in-wa-recycle-api.azurewebsites.net/v1/collections?zipcodeId=3000-24062&streetId=https%3A%2F%2Fdata.vlaanderen.be%2Fid%2Fstraatnaam-34637&houseNumber=73&fromDate=2021-09-15T00%3A00%3A00.000Z&untilDate=2021-12-14T23%3A59%3A59.999Z&page=3&size=20",
+  "next": "https://awe-in-wa-recycle-api.azurewebsites.net/v1/collections?zipcodeId=3000-24062&streetId=https%3A%2F%2Fdata.vlaanderen.be%2Fid%2Fstraatnaam-34637&houseNumber=73&fromDate=2021-09-15T00%3A00%3A00.000Z&untilDate=2021-12-14T23%3A59%3A59.999Z&page=2&size=20"
+}

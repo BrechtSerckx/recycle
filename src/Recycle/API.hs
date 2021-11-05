@@ -8,6 +8,7 @@ module Recycle.API
   , getAccessToken
   , searchZipcodes
   , searchStreets
+  , getCollections
   , liftApiError
   , HasServantClient(..)
   , ServantClientT(..)
@@ -23,6 +24,7 @@ import           Data.Proxy                     ( Proxy(..) )
 import           Data.SOP                       ( I(..)
                                                 , NS(..)
                                                 )
+import           Data.Time                      ( Day )
 import           Servant.API
 import           Servant.Client                 ( ClientM
                                                 , client
@@ -54,6 +56,15 @@ type RecycleAPI
       :> QueryParam' '[Optional] "zipcodes" ZipcodeId
       :> QueryParam' '[Optional] "q" SearchQuery
       :> UVerb 'GET '[JSON] '[WithStatus 200 (SingObject "items" [Street]), WithStatus 401 ApiError]
+    :<|> "collections"
+      :> Header' '[Required] "X-Consumer" Consumer
+      :> Header' '[Required] "Authorization" AccessToken
+      :> QueryParam' '[Required] "zipcodeId" ZipcodeId
+      :> QueryParam' '[Required] "streetId" StreetId
+      :> QueryParam' '[Required] "houseNumber" HouseNumber
+      :> QueryParam' '[Required] "fromDate" Day
+      :> QueryParam' '[Required] "untilDate" Day
+      :> UVerb 'GET '[JSON] '[WithStatus 200 (SingObject "items" [CollectionEvent (Union '[FullFraction, Event])]), WithStatus 401 ApiError]
      )
 
 getAccessToken
@@ -86,7 +97,28 @@ searchStreets
              401
              ApiError]
        )
-getAccessToken :<|> searchZipcodes :<|> searchStreets =
+getCollections
+  :: HasServantClient m
+  => Consumer
+  -> AccessToken
+  -> ZipcodeId
+  -> StreetId
+  -> HouseNumber
+  -> Day
+  -> Day
+  -> m
+       ( NS
+           I
+           '[WithStatus
+             200
+             ( SingObject
+                 "items"
+                 [ CollectionEvent
+                     (Union '[FullFraction, Event])
+                 ]
+             ), WithStatus 401 ApiError]
+       )
+getAccessToken :<|> searchZipcodes :<|> searchStreets :<|> getCollections =
   hoistClient (Proxy @RecycleAPI) runClient (client $ Proxy @RecycleAPI)
 
 class Monad m => HasServantClient m where

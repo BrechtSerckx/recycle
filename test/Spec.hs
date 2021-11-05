@@ -42,3 +42,9 @@ spec = describe "API responses" $ do
     $               eitherDecode @(SingObject "items" [Street])
                       (BSL.fromStrict $(embedFile "test/responses/streets.json"))
     `shouldSatisfy` isRight
+
+  it "parses a normal `Collections` response"
+    $               eitherDecode
+                      @(SingObject "items" [CollectionEvent (Union '[FullFraction , Event])])
+                      (BSL.fromStrict $(embedFile "test/responses/collections.json"))
+    `shouldSatisfy` isRight

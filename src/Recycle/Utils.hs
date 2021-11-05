@@ -4,6 +4,8 @@
 module Recycle.Utils
   ( PascalToCamel
   , LangCode
+  , Union
+  , module Data.SOP
   , module Export
   ) where
 
@@ -13,9 +15,11 @@ import           Data.LanguageCodes            as Export
 import qualified Data.Aeson                    as Aeson
 import qualified Data.Char                     as Char
 import qualified Data.LanguageCodes            as LangCode
+import           Data.SOP
 import qualified Data.Text                     as T
 import qualified Deriving.Aeson                as Aeson
 import           GHC.Generics                   ( Generic )
+import           Servant.API                    ( Union )
 import           Web.HttpApiData                ( FromHttpApiData(..)
                                                 , parseBoundedTextData
                                                 )

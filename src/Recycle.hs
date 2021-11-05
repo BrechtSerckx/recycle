@@ -5,6 +5,8 @@ where
 
 import           Control.Monad.IO.Class         ( liftIO )
 import           Data.IORef                     ( newIORef )
+import           Data.Foldable                  ( for_ )
+import           Data.Time               hiding ( getZonedTime )
 import           Network.HTTP.Client.TLS        ( newTlsManagerWith
                                                 , tlsManagerSettings
                                                 )
@@ -49,3 +51,12 @@ main = do
       []    -> error "No streets found"
       x : _ -> pure x
     liftIO . putStrLn $ "Street: " <> show street
+
+    today <- localDay . zonedTimeToLocalTime <$> liftIO getZonedTime
+    let fromDay  = addDays (negate 0) today
+        untilDay = addDays 14 today
+    collections <- getCollections (fullZipcodeId zipcode)
+                                  (streetId street)
+                                  (HouseNumber 73)
+                                  (Range fromDay untilDay)
+    for_ collections $ liftIO . print
