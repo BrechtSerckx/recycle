@@ -37,3 +37,8 @@ spec = describe "API responses" $ do
     $               eitherDecode @(SingObject "items" [FullZipcode])
                       (BSL.fromStrict $(embedFile "test/responses/zipcodes.json"))
     `shouldSatisfy` isRight
+
+  it "parses a normal `Streets` response"
+    $               eitherDecode @(SingObject "items" [Street])
+                      (BSL.fromStrict $(embedFile "test/responses/streets.json"))
+    `shouldSatisfy` isRight

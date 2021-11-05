@@ -7,6 +7,7 @@ module Recycle.API
   ( RecycleAPI
   , getAccessToken
   , searchZipcodes
+  , searchStreets
   , liftApiError
   , HasServantClient(..)
   , ServantClientT(..)
@@ -47,6 +48,12 @@ type RecycleAPI
       :> Header' '[Required] "Authorization" AccessToken
       :> QueryParam' '[Optional] "q" SearchQuery
       :> UVerb 'GET '[JSON] '[WithStatus 200 (SingObject "items" [FullZipcode]), WithStatus 401 ApiError]
+    :<|> "streets"
+      :> Header' '[Required] "X-Consumer" Consumer
+      :> Header' '[Required] "Authorization" AccessToken
+      :> QueryParam' '[Optional] "zipcodes" ZipcodeId
+      :> QueryParam' '[Optional] "q" SearchQuery
+      :> UVerb 'GET '[JSON] '[WithStatus 200 (SingObject "items" [Street]), WithStatus 401 ApiError]
      )
 
 getAccessToken
@@ -66,7 +73,20 @@ searchZipcodes
              401
              ApiError]
        )
-getAccessToken :<|> searchZipcodes =
+searchStreets
+  :: HasServantClient m
+  => Consumer
+  -> AccessToken
+  -> Maybe ZipcodeId
+  -> Maybe SearchQuery
+  -> m
+       ( NS
+           I
+           '[WithStatus 200 (SingObject "items" [Street]), WithStatus
+             401
+             ApiError]
+       )
+getAccessToken :<|> searchZipcodes :<|> searchStreets =
   hoistClient (Proxy @RecycleAPI) runClient (client $ Proxy @RecycleAPI)
 
 class Monad m => HasServantClient m where

@@ -3,7 +3,10 @@ module Recycle.Types.Geo
   ( CityId(..)
   , City(..)
   , ZipcodeId(..)
+  , Zipcode(..)
   , FullZipcode(..)
+  , StreetId(..)
+  , Street(..)
   ) where
 
 import           Data.Aeson                     ( FromJSON
@@ -47,6 +50,19 @@ data City = City
 newtype ZipcodeId = ZipcodeId { unZipcodeId :: Text}
   deriving newtype (Show, IsString, FromHttpApiData, ToHttpApiData, FromJSON, ToJSON)
 
+data Zipcode = Zipcode
+  { zipcodeCity      :: CityId
+  , zipcodeCode      :: Text
+  , zipcodeCreatedAt :: UTCTime
+  , zipcodeUpdatedAt :: UTCTime
+  , zipcodeId        :: ZipcodeId
+  , zipcodeNames     :: [Map Text Text]
+  }
+  deriving stock (Show, Generic)
+  deriving (FromJSON, ToJSON) via CustomJSON
+    '[FieldLabelModifier (StripPrefix "zipcode", PascalToCamel)]
+    Zipcode
+
 data FullZipcode = FullZipcode
   { fullZipcodeCity      :: City
   , fullZipcodeCode      :: Text
@@ -60,3 +76,23 @@ data FullZipcode = FullZipcode
   deriving (FromJSON, ToJSON) via CustomJSON
     '[FieldLabelModifier (StripPrefix "fullZipcode", PascalToCamel)]
     FullZipcode
+
+-- * Street
+
+newtype StreetId = StreetId { unStreetId :: Text }
+  deriving newtype (Show, IsString, FromHttpApiData, ToHttpApiData, FromJSON, ToJSON)
+
+data Street = Street
+  { streetId        :: StreetId
+  , streetCity      :: [City]
+  , streetCreatedAt :: UTCTime
+  , streetUpdatedAt :: UTCTime
+  , streetNames     :: Map Text Text
+  , streetName      :: Text
+  , streetDeleted   :: Bool
+  , streetZipcode   :: [Zipcode]
+  }
+  deriving stock (Show, Generic)
+  deriving (FromJSON, ToJSON) via CustomJSON
+    '[FieldLabelModifier (StripPrefix "street", PascalToCamel)]
+    Street

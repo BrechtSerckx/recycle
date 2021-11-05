@@ -103,6 +103,7 @@ setAccessToken authResultAccessToken = do
 
 class Monad m => HasRecycleClient m where
   searchZipcodes :: Maybe SearchQuery -> m [FullZipcode]
+  searchStreets :: Maybe ZipcodeId -> Maybe SearchQuery -> m [Street]
 
 newtype RecycleClientT m a = RecycleClientT { runRecycleClientT :: m a }
   deriving newtype (Functor, Applicative, Monad)
@@ -124,6 +125,16 @@ instance
     SingObject zipcodes <- runRecycleOp
       $ \consumer accessToken -> API.searchZipcodes consumer accessToken mQ
     pure zipcodes
+  searchStreets mZipcode mQ = do
+    lift
+      .  logInfo
+      $  "Searching streets in zipcode "
+      <> maybe "<all>" unZipcodeId mZipcode
+      <> ": "
+      <> maybe "<all>" unSearchQuery mQ
+    SingObject streets <- runRecycleOp $ \consumer accessToken ->
+      API.searchStreets consumer accessToken mZipcode mQ
+    pure streets
 
 runRecycleOp
   :: ( Monad m

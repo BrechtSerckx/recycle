@@ -17,8 +17,8 @@ import           Colog.Message
 import qualified Data.Text                     as T
 
 import           Recycle.Class
-import           Recycle.Types
 import           Recycle.AppM
+import           Recycle.Types
 
 main :: IO ()
 main = do
@@ -44,3 +44,8 @@ main = do
       x : _ -> pure x
 
     liftIO . putStrLn $ "Zip Code: " <> show zipcode
+    streets <- searchStreets (Just $ fullZipcodeId zipcode) (Just "Andreas")
+    street  <- case streets of
+      []    -> error "No streets found"
+      x : _ -> pure x
+    liftIO . putStrLn $ "Street: " <> show street
