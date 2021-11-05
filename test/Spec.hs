@@ -48,3 +48,8 @@ spec = describe "API responses" $ do
                       @(SingObject "items" [CollectionEvent (Union '[FullFraction , Event])])
                       (BSL.fromStrict $(embedFile "test/responses/collections.json"))
     `shouldSatisfy` isRight
+
+  it "parses a normal `Fractions` response"
+    $               eitherDecode @(SingObject "items" [Fraction])
+                      (BSL.fromStrict $(embedFile "test/responses/fractions.json"))
+    `shouldSatisfy` isRight

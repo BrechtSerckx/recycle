@@ -9,6 +9,7 @@ module Recycle.API
   , searchZipcodes
   , searchStreets
   , getCollections
+  , getFractions
   , liftApiError
   , HasServantClient(..)
   , ServantClientT(..)
@@ -65,6 +66,13 @@ type RecycleAPI
       :> QueryParam' '[Required] "fromDate" Day
       :> QueryParam' '[Required] "untilDate" Day
       :> UVerb 'GET '[JSON] '[WithStatus 200 (SingObject "items" [CollectionEvent (Union '[FullFraction, Event])]), WithStatus 401 ApiError]
+    :<|> "fractions"
+      :> Header' '[Required] "X-Consumer" Consumer
+      :> Header' '[Required] "Authorization" AccessToken
+      :> QueryParam' '[Required] "zipcodeId" ZipcodeId
+      :> QueryParam' '[Required] "streetId" StreetId
+      :> QueryParam' '[Required] "houseNumber" HouseNumber
+      :> UVerb 'GET '[JSON] '[WithStatus 200 (SingObject "items" [Fraction]), WithStatus 401 ApiError]
      )
 
 getAccessToken
@@ -118,8 +126,21 @@ getCollections
                  ]
              ), WithStatus 401 ApiError]
        )
-getAccessToken :<|> searchZipcodes :<|> searchStreets :<|> getCollections =
-  hoistClient (Proxy @RecycleAPI) runClient (client $ Proxy @RecycleAPI)
+getFractions
+  :: HasServantClient m
+  => Consumer
+  -> AccessToken
+  -> ZipcodeId
+  -> StreetId
+  -> HouseNumber
+  -> m
+       ( Union
+           '[WithStatus 200 (SingObject "items" [Fraction]), WithStatus
+             401
+             ApiError]
+       )
+getAccessToken :<|> searchZipcodes :<|> searchStreets :<|> getCollections :<|> getFractions
+  = hoistClient (Proxy @RecycleAPI) runClient (client $ Proxy @RecycleAPI)
 
 class Monad m => HasServantClient m where
   runClient :: ClientM a -> m a

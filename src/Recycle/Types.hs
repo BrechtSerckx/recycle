@@ -11,6 +11,7 @@ module Recycle.Types
   , SearchQuery(..)
   , Range(..)
   , Logo(..)
+  , FullLogo(..)
   , RGB(..)
   , CollectionEventId(..)
   , CollectionEvent(..)
@@ -81,12 +82,10 @@ data Range a = Range
   deriving Show
 
 data Logo = Logo
-  { logoRegular   :: Map Text Text
-  , logoReversed  :: Map Text Text
-  , logoName      :: Map Text Text
-  , logoCreatedAt :: UTCTime
-  , logoUpdatedAt :: UTCTime
-  , logoId        :: Text
+  { logoRegular  :: Map Text Text
+  , logoReversed :: Map Text Text
+  , logoName     :: Map Text Text
+  , logoId       :: Text
   }
   deriving stock (Generic, Show)
   deriving (FromJSON, ToJSON) via CustomJSON
@@ -143,13 +142,13 @@ newtype FractionId = FractionId Text
   deriving newtype (Show, FromJSON, ToJSON)
 
 partitionCollectionEvents
-  :: [CollectionEvent (Union '[Fraction, Event])]
-  -> ([CollectionEvent Fraction], [CollectionEvent Event])
+  :: [CollectionEvent (Union '[FullFraction, Event])]
+  -> ([CollectionEvent FullFraction], [CollectionEvent Event])
 partitionCollectionEvents ces =
   let go
-        :: ([CollectionEvent Fraction], [CollectionEvent Event])
-        -> CollectionEvent (Union '[Fraction, Event])
-        -> ([CollectionEvent Fraction], [CollectionEvent Event])
+        :: ([CollectionEvent FullFraction], [CollectionEvent Event])
+        -> CollectionEvent (Union '[FullFraction, Event])
+        -> ([CollectionEvent FullFraction], [CollectionEvent Event])
       go (fs, es) ce = case collectionEventContent ce of
         Z (I f    ) -> (ce { collectionEventContent = f } : fs, es)
         S (Z (I e)) -> (fs, ce { collectionEventContent = e } : es)
@@ -157,20 +156,14 @@ partitionCollectionEvents ces =
   in  foldl' go ([], []) ces
 
 data Fraction = Fraction
-  { fractionId           :: FractionId
-  , fractionNational     :: Bool
-  , fractionNationalRef  :: Maybe Text
-  , fractionDatatankRef  :: Maybe Text
-  , fractionName         :: Map LangCode Text
-  , fractionLogo         :: Logo
-  , fractionColor        :: RGB
-  , fractionVariations   :: ()
-  , fractionOrganisation :: Text
-  , fractionCreatedAt    :: UTCTime
-  , fractionUpdatedAt    :: UTCTime
+  { fractionId         :: FractionId
+  , fractionName       :: Map LangCode Text
+  , fractionLogo       :: Logo
+  , fractionColor      :: RGB
+  , fractionVariations :: [Aeson.Value]
   }
   deriving stock (Generic, Show)
-  deriving FromJSON via CustomJSON
+  deriving (FromJSON, ToJSON) via CustomJSON
     '[FieldLabelModifier (StripPrefix "fraction", PascalToCamel)]
     Fraction
 

@@ -110,6 +110,11 @@ class Monad m => HasRecycleClient m where
     -> HouseNumber
     -> Range Day
     -> m [CollectionEvent (Union '[FullFraction, Event])]
+  getFractions
+    :: ZipcodeId
+    -> StreetId
+    -> HouseNumber
+    -> m [Fraction]
 
 newtype RecycleClientT m a = RecycleClientT { runRecycleClientT :: m a }
   deriving newtype (Functor, Applicative, Monad)
@@ -163,6 +168,18 @@ instance
                          rangeFrom
                          rangeTo
     pure collections
+  getFractions zipcode street houseNumber = do
+    lift
+      .  logInfo
+      $  "Fetching fractions for "
+      <> unZipcodeId zipcode
+      <> ", "
+      <> unStreetId street
+      <> ", "
+      <> unHouseNumber houseNumber
+    SingObject fractions <- runRecycleOp $ \consumer accessToken ->
+      API.getFractions consumer accessToken zipcode street houseNumber
+    pure fractions
 
 runRecycleOp
   :: ( Monad m
