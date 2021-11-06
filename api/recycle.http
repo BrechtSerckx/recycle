@@ -1,0 +1,49 @@
+# Host
+:host = https://recycleapp.be
+# BaseUrl
+:baseUrl = :host/api/app/v1
+
+# Consumer
+:consumer = recycleapp.be
+# Secret
+:secret = Crgja3EGWe8jdapyr4EEoMBgZACYYjRRcRpaMQrLDW9HJBvmgkfGQyYqLgeXPavAGvnJqkV87PBB2b8zx43q46sUgzqio4yRZbABhtKeagkVKypTEDjKfPgGycjLyJTtLHYpzwJgp4YmmCuJZN9ZmJY8CGEoFs8MKfdJpU9RjkEVfngmmk2LYD4QzFegLNKUbcCeAdEW
+
+# Get access token
+GET :baseUrl/access-token
+X-Consumer: :consumer
+X-Secret: :secret
+
+# Access token
+:accessToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE2MzQyMzQ4NTAsImV4cCI6MTYzNDIzODQ1MCwiYXVkIjoicmVjeWNsZWFwcC5iZSJ9.xMamuRZTV9SCxmtZ633sMA4NNpHS2y4p2tYv8r5RVNo
+
+# Search zip code id
+:query = 3000
+GET :baseUrl/zipcodes?q=:query
+X-Consumer: :consumer
+Authorization: :accessToken
+
+# Zip code id
+:zipCodeId = 3000-24062
+
+# Search street id
+:query = Andreas
+GET :baseUrl/streets?zipcodes=:zipCodeId&q=:query
+X-Consumer: :consumer
+Authorization: :accessToken
+
+# Street id
+:streetId = https://data.vlaanderen.be/id/straatnaam-34637
+
+# Request calendar
+:houseNumber = 73
+:fromDate = 2021-09-15
+:untilDate = 2021-12-14
+:size = 200
+GET :baseUrl/collections?zipcodeId=:zipCodeId&streetId=:streetId&houseNumber=:houseNumber&fromDate=:fromDate&untilDate=:untilDate
+Authorization: :accessToken
+X-Consumer: :consumer
+
+# Fractions
+GET :baseUrl/fractions?zipcodeId=:zipCodeId&streetId=:streetId&houseNumber=:houseNumber
+Authorization: :accessToken
+X-Consumer: :consumer
