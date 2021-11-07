@@ -1,3 +1,4 @@
+const langCode = 'NL';
 
 // Attach a custom submit function to the form.
 function attachFormSubmit(form) {
@@ -86,12 +87,33 @@ function createAutoCompleter(input, container, getData, mkLabel, withResult, thr
         }
     };
 };
+
+function createZipcodeCompleter(input, container, target, streetQInput, submitButton) {
+    createAutoCompleter(input,
+        container,
+        q => searchZipcodes(q),
+        res => res.city.name,
+        res => {
+            target.value = res.id;
+            streetQInput.disabled = false;
+            submitButton.disabled = true;
+        }
+    );
+}
 function main() {
     attachFormSubmit(document.getElementById("recycleForm"));
 
     const radios = document.getElementsByName("date_range_type");
     attachDateRangeTypeFields(radios);
     enableDateRangeType(radios, document.getElementById("date_range_type_rel"));
+
+    const submitButton = document.getElementById("submit");
+    createZipcodeCompleter(document.getElementById("zipcode_q"),
+        document.getElementById("zipcode_results"),
+        document.getElementById("zipcode"),
+        document.getElementById("street_q"),
+        submitButton
+    );
 };
 
 main();
