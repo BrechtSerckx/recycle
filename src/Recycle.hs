@@ -36,6 +36,7 @@ import           Servant.Server                 ( Handler
                                                 , serve
                                                 , hoistServer
                                                 )
+import           Servant.Server.StaticFiles     ( serveDirectoryWebApp )
 
 import           Recycle.Class
 import           Recycle.AppM
@@ -104,23 +105,25 @@ calculateDateRange = \case
 
 -- brittany-disable-next-binding
 type RecycleIcsAPI
-  = "api"
-  :>  (  "search-zipcode"
-      :> QueryParam' '[Required] "q" SearchQuery
-      :> UVerb 'GET '[JSON] '[WithStatus 200 [FullZipcode]]
-    :<|> "search-street"
-      :> QueryParam' '[Required] "zipcode" ZipcodeId
-      :> QueryParam' '[Required] "q" SearchQuery
-      :> UVerb 'GET '[JSON] '[WithStatus 200 [Street]]
-    :<|> "generate"
-      :> QueryParamForm DateRange
-      :> QueryParam' '[Required] "lang_code" LangCode
-      :> QueryParam' '[Required] "fraction_encoding" FractionEncoding
-      :> QueryParam' '[Required] "zipcode" ZipcodeId
-      :> QueryParam' '[Required] "street" StreetId
-      :> QueryParam' '[Required] "house_number" HouseNumber
-      :> UVerb 'GET '[ICalendar] '[WithStatus 200 BSL.ByteString]
-      )
+  = (  "api"
+    :>  (  "search-zipcode"
+        :> QueryParam' '[Required] "q" SearchQuery
+        :> UVerb 'GET '[JSON] '[WithStatus 200 [FullZipcode]]
+      :<|> "search-street"
+        :> QueryParam' '[Required] "zipcode" ZipcodeId
+        :> QueryParam' '[Required] "q" SearchQuery
+        :> UVerb 'GET '[JSON] '[WithStatus 200 [Street]]
+      :<|> "generate"
+        :> QueryParamForm DateRange
+        :> QueryParam' '[Required] "lang_code" LangCode
+        :> QueryParam' '[Required] "fraction_encoding" FractionEncoding
+        :> QueryParam' '[Required] "zipcode" ZipcodeId
+        :> QueryParam' '[Required] "street" StreetId
+        :> QueryParam' '[Required] "house_number" HouseNumber
+        :> UVerb 'GET '[ICalendar] '[WithStatus 200 BSL.ByteString]
+        )
+  :<|> Raw
+    )
 
 data ICalendar
 instance Accept ICalendar where
@@ -134,7 +137,8 @@ pRecycleIcsAPI = Proxy
 
 recycleIcsServer
   :: forall m . (HasRecycleClient m, HasTime m) => ServerT RecycleIcsAPI m
-recycleIcsServer = searchZipcode :<|> searchStreet :<|> generateCollection
+recycleIcsServer = (searchZipcode :<|> searchStreet :<|> generateCollection)
+  :<|> serveDirectoryWebApp "www"
 
  where
   searchZipcode :: SearchQuery -> m (Union '[WithStatus 200 [FullZipcode]])
