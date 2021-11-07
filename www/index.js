@@ -46,6 +46,16 @@ function attachDateRangeTypeFields(radios) {
     }
 }
 
+
+function searchZipcodes(q) {
+    return fetch(`/api/search-zipcode?q=${q}`)
+        .then(response => response.json());
+}
+
+function searchStreets(zipcode, q) {
+    return fetch(`/api/search-street?zipcode=${zipcode}&q=${q}`)
+        .then(response => response.json());
+}
 function main() {
     attachFormSubmit(document.getElementById("recycleForm"));
 
