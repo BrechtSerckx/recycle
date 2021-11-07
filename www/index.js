@@ -56,6 +56,36 @@ function searchStreets(zipcode, q) {
     return fetch(`/api/search-street?zipcode=${zipcode}&q=${q}`)
         .then(response => response.json());
 }
+
+function removeChildren(node) {
+    while (node.firstChild) {
+        node.removeChild(node.lastChild);
+    }
+}
+
+function createAutoCompleter(input, container, getData, mkLabel, withResult, threshold = 3) {
+    input.oninput = function() {
+        const q = this.value;
+        removeChildren(container);
+        if (q.length >= threshold) {
+            getData(q).then(results => {
+                for (i = 0; i < results.length; i++) {
+                    const result = results[i];
+                    const node = document.createElement("li");
+                    const label = mkLabel(result);
+                    const labelNode = document.createTextNode(label);
+                    node.appendChild(labelNode);
+                    node.onclick = () => {
+                        input.value = label;
+                        removeChildren(container);
+                        withResult(result);
+                    };
+                    container.appendChild(node);
+                }
+            });
+        }
+    };
+};
 function main() {
     attachFormSubmit(document.getElementById("recycleForm"));
 
