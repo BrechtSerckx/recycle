@@ -59,6 +59,8 @@ library
     Recycle.Types.Geo
     Recycle.Utils
     Recycle.Opts
+  other-modules:
+    Servant.API.QueryParamForm
   build-depends:
       base >=4.7 && <5
 
