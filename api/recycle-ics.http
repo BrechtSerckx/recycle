@@ -4,7 +4,7 @@
 :langCode = NL
 
 # Search zip code id
-:query = 3000
+:query = Leu
 GET :host/api/search-zipcode?q=:query&lang_code=:langCode
 
 # Zip code id
@@ -17,18 +17,28 @@ GET :host/api/search-street?zipcode=:zipcodeId&q=:query&lang_code=:langCode
 # Street id
 :streetId = https://data.vlaanderen.be/id/straatnaam-34637
 
-# Generate ICS file for absolute date range
+# House number
 :houseNumber = 73
+
+# Todo encoding configuration
+:todoDueDaysBefore = 5
+:todoDueTime = 20:00
+# :todoDueType = date&todo_days_before=:todoDueDaysBefore
+:todoDueType = datetime&todo_days_before=:todoDueDaysBefore&todo_time=:todoDueTime
+
+# Event encoding configuration
+# :fractionEncoding = todo&todo_due_type=:todoDueType
+:eventStart = 08:00
+:eventEnd = 10:00
+:reminders = reminder_days_before=0&reminder_time=07:00&reminder_days_before=1&reminder_time=23:00&reminder_days_before=1&reminder_time=20:00
+
+# Fraction encoding
+:fractionEncoding = event&event_start=:eventStart&event_end=:eventEnd&:reminders
+
+# Date range
 :dateRangeType = absolute
 :fromDate = 2021-11-18
 :untilDate = 2021-11-19
-:fractionEncoding = todo
-GET :host/api/generate?date_range_type=:dateRangeType&from=:fromDate&to=:untilDate&zipcode=:zipcodeId&street=:streetId&house_number=:houseNumber&lang_code=:langCode&fraction_encoding=:fractionEncoding
 
-# Generate ICS file for relative date range
-:houseNumber = 73
-:dateRangeType = relative
-:fromDate = -7
-:untilDate = 14
-:fractionEncoding = todo
+# Generate ICS file for absolute date range
 GET :host/api/generate?date_range_type=:dateRangeType&from=:fromDate&to=:untilDate&zipcode=:zipcodeId&street=:streetId&house_number=:houseNumber&lang_code=:langCode&fraction_encoding=:fractionEncoding

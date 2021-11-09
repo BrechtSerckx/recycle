@@ -5,6 +5,9 @@ module Recycle.ICalendar
   , VCalendar
   , DateRange(..)
   , FractionEncoding(..)
+  , DateTimeReminder(..)
+  , DateReminder(..)
+  , TodoDue(..)
   )
 where
 
@@ -23,6 +26,7 @@ import           Data.Time
 import           Data.Version                   ( Version(..) )
 import           Web.FormUrlEncoded             ( FromForm(..)
                                                 , lookupUnique
+                                                , parseAll
                                                 , parseUnique
                                                 )
 import           Web.HttpApiData                ( FromHttpApiData(..) )
@@ -52,15 +56,54 @@ instance FromForm DateRange where
           t          -> Left $ "Must be one of [absolute,relative]: " <> t
 
 data FractionEncoding
-  = EncodeFractionAsVEvent
-  | EncodeFractionAsVTodo
-  deriving (Show, Read)
+  = EncodeFractionAsVEvent (Range TimeOfDay) [DateTimeReminder]
+  | EncodeFractionAsVTodo TodoDue
+  deriving Show
 
-instance FromHttpApiData FractionEncoding where
-  parseUrlPiece = \case
-    "event" -> Right EncodeFractionAsVEvent
-    "todo"  -> Right EncodeFractionAsVTodo
-    t       -> Left $ "Must be one of [event,todo]: " <> t
+instance FromForm FractionEncoding where
+  fromForm f = lookupUnique "fraction_encoding" f >>= \case
+    "event" -> do
+      eventRange <- do
+        rangeFrom <- parseUnique "event_start" f
+        rangeTo   <- parseUnique "event_end" f
+        pure Range { .. }
+      reminders <- do
+        remindersDaysBefore <- parseAll "reminder_days_before" f
+        remindersTime       <- parseAll "reminder_time" f
+        pure $ zipWith DateTimeReminder remindersDaysBefore remindersTime
+      pure $ EncodeFractionAsVEvent eventRange reminders
+    "todo" -> EncodeFractionAsVTodo <$> fromForm f
+    t      -> Left $ "Must be one of [event,todo]: " <> t
+
+data DateTimeReminder = DateTimeReminder
+  { dateTimeReminderDaysBefore :: Integer
+  , dateTimeReminderTimeOfDay  :: TimeOfDay
+  }
+  deriving (Eq, Show)
+newtype DateReminder = DateReminder
+  { dateReminderDaysBefore :: Integer
+  }
+  deriving (Eq, Show)
+
+data TodoDue
+  = TodoDueDateTime DateTimeReminder
+  | TodoDueDate DateReminder
+  deriving (Eq, Show)
+
+instance FromForm TodoDue where
+  fromForm f = lookupUnique "todo_due_type" f >>= \case
+    "date" -> do
+      dateReminder <- do
+        dateReminderDaysBefore <- parseUnique "todo_days_before" f
+        pure DateReminder { .. }
+      pure $ TodoDueDate dateReminder
+    "datetime" -> do
+      dateTimeReminder <- do
+        dateTimeReminderDaysBefore <- parseUnique "todo_days_before" f
+        dateTimeReminderTimeOfDay  <- parseUnique "todo_time" f
+        pure DateTimeReminder { .. }
+      pure $ TodoDueDateTime dateTimeReminder
+    t -> Left $ "Must be one of [date,datetime]: " <> t
 
 mkVCalendar
   :: LangCode
@@ -71,14 +114,15 @@ mkVCalendar langCode fractionEncoding ces =
   let (collections, events) = partitionCollectionEvents ces
   in  (emptyVCalendar "recycle")
         { vcEvents = case fractionEncoding of
-                       EncodeFractionAsVEvent ->
+                       EncodeFractionAsVEvent _eventRange _reminders ->
                          mkMapWith (collectionToVEvent langCode) collections
                            <> mkMapWith (eventToVEvent langCode) events
-                       EncodeFractionAsVTodo ->
+                       EncodeFractionAsVTodo _due ->
                          mkMapWith (eventToVEvent langCode) events
         , vcTodos  = case fractionEncoding of
-                       EncodeFractionAsVEvent -> Map.empty
-                       EncodeFractionAsVTodo ->
+                       EncodeFractionAsVEvent _eventRange _reminders ->
+                         Map.empty
+                       EncodeFractionAsVTodo _due ->
                          mkMapWith (collectionToVTodo langCode) collections
         }
 

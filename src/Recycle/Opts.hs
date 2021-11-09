@@ -90,24 +90,62 @@ pCollectionQuery = do
     <> value EN
     <> showDefault
     <> help "Preferred language for titles and descriptions"
-  collectionQueryFractionEncoding <-
-    let readFraction = \case
-          "todo"  -> Right EncodeFractionAsVTodo
-          "event" -> Right EncodeFractionAsVEvent
-          _       -> Left "One of `todo` or `event`"
-        showFraction = \case
-          EncodeFractionAsVTodo  -> "todo"
-          EncodeFractionAsVEvent -> "event"
-    in  option (eitherReader readFraction)
-        $  long "fraction-encoding"
-        <> metavar "ENCODING"
-        <> value EncodeFractionAsVTodo
-        <> showDefaultWith showFraction
-        <> help "Encode fraction collections as event or todo"
-  collectionQueryZipcode     <- pZipcodeId
-  collectionQueryStreet      <- pStreetId
-  collectionQueryHouseNumber <- pHouseNumber
+  collectionQueryFractionEncoding <- pFractionEncoding
+    -- let readFraction = \case
+    --       "todo"  -> Right EncodeFractionAsVTodo
+    --       "event" -> Right EncodeFractionAsVEvent
+    --       _       -> Left "One of `todo` or `event`"
+    --     showFraction = \case
+    --       EncodeFractionAsVTodo  -> "todo"
+    --       EncodeFractionAsVEvent -> "event"
+    -- in  option (eitherReader readFraction)
+    --     $  long "fraction-encoding"
+    --     <> metavar "ENCODING"
+    --     <> value EncodeFractionAsVTodo
+    --     <> showDefaultWith showFraction
+    --     <> help "Encode fraction collections as event or todo"
+  collectionQueryZipcode          <- pZipcodeId
+  collectionQueryStreet           <- pStreetId
+  collectionQueryHouseNumber      <- pHouseNumber
   pure CollectionQuery { .. }
+
+pFractionEncoding :: Parser FractionEncoding
+pFractionEncoding =
+  let
+    pAsEvent = do
+      eventRange <- do
+        rangeFrom <- option auto
+          $ mconcat [long "event-start", help "Start time of collection event"]
+        rangeTo <- option auto
+          $ mconcat [long "event-end", help "End time of collection event"]
+        pure Range { .. }
+      reminders <- many $ do
+        dateTimeReminderDaysBefore <-
+          option auto $ long "reminder-days-before" <> help
+            "Remind x days before the collection"
+        dateTimeReminderTimeOfDay <- option auto $ long "reminder-time" <> help
+          "Reminder time"
+        pure DateTimeReminder { .. }
+      pure $ EncodeFractionAsVEvent eventRange reminders
+    pAsTodo = do
+      due <-
+        let pDateTimeReminder = do
+              dateTimeReminderDaysBefore <-
+                option auto $ long "todo-days-before" <> help
+                  "Set task x days before the collection"
+              dateTimeReminderTimeOfDay <-
+                option auto $ long "todo-time" <> help "Set task at this time"
+              pure DateTimeReminder { .. }
+            pDateReminder = do
+              dateReminderDaysBefore <-
+                option auto $ long "todo-days-before" <> help
+                  "Set task x days before the collection"
+              pure DateReminder { .. }
+        in  (TodoDueDateTime <$> pDateTimeReminder)
+              <|> (TodoDueDate <$> pDateReminder)
+      pure $ EncodeFractionAsVTodo due
+  in
+    pAsEvent <|> pAsTodo
 
 pDateRange :: Parser DateRange
 pDateRange =

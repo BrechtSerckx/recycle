@@ -116,7 +116,7 @@ type RecycleIcsAPI
       :<|> "generate"
         :> QueryParamForm DateRange
         :> QueryParam' '[Required] "lang_code" LangCode
-        :> QueryParam' '[Required] "fraction_encoding" FractionEncoding
+        :> QueryParamForm FractionEncoding
         :> QueryParam' '[Required] "zipcode" ZipcodeId
         :> QueryParam' '[Required] "street" StreetId
         :> QueryParam' '[Required] "house_number" HouseNumber
