@@ -100,6 +100,20 @@ function createZipcodeCompleter(input, container, target, streetQInput, submitBu
         }
     );
 }
+
+function createStreetCompleter(input, container, target, zipcodeInput, houseNumberInput, submitButton) {
+    createAutoCompleter(input,
+        container,
+        q => searchStreets(zipcodeInput.value, q),
+        res => res.name,
+        res => {
+            target.value = res.id;
+            houseNumberInput.disabled = false;
+            submitButton.disabled = false;
+        }
+    );
+}
+
 function main() {
     attachFormSubmit(document.getElementById("recycleForm"));
 
@@ -112,6 +126,14 @@ function main() {
         document.getElementById("zipcode_results"),
         document.getElementById("zipcode"),
         document.getElementById("street_q"),
+        submitButton
+    );
+
+    createStreetCompleter(document.getElementById("street_q"),
+        document.getElementById("street_results"),
+        document.getElementById("street"),
+        document.getElementById("zipcode"),
+        document.getElementById("house_number"),
         submitButton
     );
 };
