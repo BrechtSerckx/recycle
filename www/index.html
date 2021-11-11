@@ -128,14 +128,74 @@
                 <h2>Options</h2>
                 <fieldset>
                     <legend>Fraction encoding</legend>
-                    <p>
-                        <input type="radio" name="fraction_encoding" id="fraction_encoding_event" value="event">
-                        <label for="fraction_encoding_event">Event</label>
-                    </p>
-                    <p>
-                        <input type="radio" name="fraction_encoding" id="fraction_encoding_todo" value="todo" checked>
+                    <div>
+                        <p>
+                            <input type="radio" name="fe" id="fraction_encoding_event" value="event">
+                            <label for="fraction_encoding_event">Event</label>
+                        </p>
+                        <p>Represent waste collections as an event.</p>
+                        <p>
+                            <span>
+                                <label for="event_start">
+                                    <span>Start time: </span>
+                                    <strong><abbr title="required" aria-label="required">*</abbr></strong>
+                                </label>
+                                <input type="time" id="event_start" name="es" class="fraction_encoding_event" required value="07:00" disabled>
+                            </span>
+                            <span>
+                                <label for="event_end">
+                                    <span>End time: </span>
+                                    <strong><abbr title="required" aria-label="required">*</abbr></strong>
+                                </label>
+                                <input type="time" id="event_end" name="ee" class="fraction_encoding_event" required value="10:00" disabled>
+                            </span>
+                        </p>
+                    </div>
+                    <div>
+                        <input type="radio" name="fe" id="fraction_encoding_todo" value="todo" checked>
                         <label for="fraction_encoding_todo">Todo</label>
-                    </p>
+                        <p>Represent waste collections as a todo or task.</p>
+                        <ul>
+                            <li>
+                                <fieldset>
+                                    <legend>Due type</legend>
+                                    <p>
+                                        <input type="radio" name="todo_due_type" id="todo_due_type_date" value="date">
+                                        <label for="todo_due_type_date">Full day:</label>
+                                    </p>
+                                    <p>
+                                        <span>
+                                            <label for="todo_days_before">
+                                                <span>Days before: </span>
+                                                <strong><abbr title="required" aria-label="required">*</abbr></strong>
+                                            </label>
+                                            <input type="number" id="todo_days_before" name="todo_days_before" required value="1" disabled>
+                                        </span>
+                                    </p>
+                                    <p>
+                                        <input type="radio" name="todo_due_type" id="todo_due_type_datetime" value="datetime" checked>
+                                        <label for="todo_due_type_datetime">Specific time:</label>
+                                    </p>
+                                    <p>
+                                        <span>
+                                            <label for="todo_days_before">
+                                                <span>Days before: </span>
+                                                <strong><abbr title="required" aria-label="required">*</abbr></strong>
+                                            </label>
+                                            <input type="number" id="todo_days_before" name="todo_days_before" required value="1" disabled>
+                                        </span>
+                                        <span>
+                                            <label for="todo_time">
+                                                <span>Time: </span>
+                                                <strong><abbr title="required" aria-label="required">*</abbr></strong>
+                                            </label>
+                                            <input type="time" id="todo_time" name="todo_time" required value="20:00" disabled>
+                                        </span>
+                                    </p>
+                                </fieldset>
+                            </li>
+                        </ul>
+                    </div>
                 </fieldset>
             </section>
             <section>
