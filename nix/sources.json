@@ -1,4 +1,16 @@
 {
+    "deriving-aeson": {
+        "branch": "master",
+        "description": "Scrap your hand-rolled aeson instances",
+        "homepage": "http://hackage.haskell.org/package/deriving-aeson",
+        "owner": "fumieval",
+        "repo": "deriving-aeson",
+        "rev": "3f8ab60afa4491af62f22095bada9ea61e2ec95a",
+        "sha256": "095ml73175wpbkqr15q8c22sgn8svkxw5hk25wd81fgb2q10adg3",
+        "type": "tarball",
+        "url": "https://github.com/fumieval/deriving-aeson/archive/3f8ab60afa4491af62f22095bada9ea61e2ec95a.tar.gz",
+        "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
+    },
     "niv": {
         "branch": "master",
         "description": "Easy dependency management for Nix recycles",

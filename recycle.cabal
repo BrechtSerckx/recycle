@@ -51,6 +51,10 @@ library
     Recycle
     Recycle.API
     Recycle.AppM
+    Recycle.Class
+    Recycle.Types
+    Recycle.Types.Error
+    Recycle.Utils
   build-depends:
       base >=4.7 && <5
 
@@ -68,6 +72,15 @@ library
     , servant-client
     , http-client
     , http-client-tls
+    , aeson
+    , aeson-extra
+    , deriving-aeson
+    , http-api-data
+    , iso639
+    , sop-core
+    , text
+    , time
+    , containers
 
       -- logging
     , co-log
@@ -99,3 +112,9 @@ test-suite recycle-test
     , recycle
     , hspec
     , QuickCheck
+    , aeson
+    , file-embed
+    , bytestring
+    , aeson-extra
+    , containers
+    , text

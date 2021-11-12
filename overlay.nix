@@ -7,6 +7,7 @@ let
     super.nix-gitignore.gitignoreSourcePure [ (path + /.gitignore) ] path;
   overrides = selfh: superh: {
     recycle = superh.callCabal2nix "recycle" (gitignore ./.) {};
+    deriving-aeson = superh.callCabal2nix "deriving-aeson" sources.deriving-aeson {};
     servant = superh.callCabal2nixWithOptions "servant" sources.servant "--subpath servant" {};
     servant-client-core = superh.callCabal2nixWithOptions "servant" sources.servant "--subpath servant-client-core" {};
     servant-client = superh.callCabal2nixWithOptions "servant" sources.servant "--subpath servant-client" {};
