@@ -35,31 +35,32 @@ function attachFormSubmit(form, permalink, downloadLink) {
     });
 }
 
-// Enable a date range type radio input and its corresponding date range inputs.
-function enableDateRangeType(radios, thisRadio) {
+// Enable a radio input and its corresponding sub-inputs.
+function enableRadioSubInputs(radios, thisRadio, f = () => {}) {
     thisRadio.checked = true;
     // for all other radio inputs, disable the corresponding inputs
     for (thatRadio of radios) {
         if (thatRadio.id != thisRadio.id) {
 
-            for (input of document.getElementsByClassName(thatRadio.id)) {
-                input.disabled = true;
-            }
+            Array.from(document.getElementsByClassName(thatRadio.id)).forEach(input =>
+                input.disabled = true
+            );
         } else {}
     }
     // enable the corresponding inputs for this radio
-    for (input of document.getElementsByClassName(thisRadio.id)) {
-        input.disabled = false;
-    }
-
+    Array.from(document.getElementsByClassName(thisRadio.id)).forEach(input =>
+        input.disabled = false
+    );
+    // callback
+    f(thisRadio);
 }
 
 // Attach a function to the `date_range_type` radio inputs so their respective
 // input fields get enabled or disabled based on the radio input.
-function attachDateRangeTypeFields(radios) {
+function attachRadioSwitch(radios, f = () => {}) {
     for (const radio of radios) {
         radio.onclick = () => {
-            enableDateRangeType(radios, radio);
+            enableRadioSubInputs(radios, radio, f);
         };
     }
 }
@@ -152,9 +153,9 @@ function main() {
         document.getElementById("downloadLink")
     );
 
-    const radios = document.getElementsByName("date_range_type");
-    attachDateRangeTypeFields(radios);
-    enableDateRangeType(radios, document.getElementById("date_range_type_rel"));
+    const dateRangeRadios = document.getElementsByName("date_range_type");
+    attachRadioSwitch(dateRangeRadios);
+    enableRadioSubInputs(dateRangeRadios, document.getElementById("date_range_type_rel"));
 
     const submitButton = document.getElementById("submit");
     createZipcodeCompleter(document.getElementById("zipcode_q"),
