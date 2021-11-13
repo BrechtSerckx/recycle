@@ -157,6 +157,21 @@ function main() {
     attachRadioSwitch(dateRangeRadios);
     enableRadioSubInputs(dateRangeRadios, document.getElementById("date_range_type_rel"));
 
+    const todoDueRadios = document.getElementsByName("todo_due_type");
+    attachRadioSwitch(todoDueRadios);
+    enableRadioSubInputs(todoDueRadios, document.getElementById("todo_due_type_datetime"));
+
+    const fractionEncodingRadios = document.getElementsByName("fraction_encoding");
+
+    function enableActiveTodoDueType(thisRadio) {
+        if (thisRadio == document.getElementById("fraction_encoding_todo")) {
+            var checkedRadio = Array.from(document.querySelectorAll("[name=todo_due_type]")).filter(x => x.checked)[0];
+            enableRadioSubInputs(todoDueRadios, checkedRadio);
+        } else {}
+    }
+    attachRadioSwitch(fractionEncodingRadios, enableActiveTodoDueType);
+    enableRadioSubInputs(fractionEncodingRadios, document.getElementById("fraction_encoding_event"));
+
     const submitButton = document.getElementById("submit");
     createZipcodeCompleter(document.getElementById("zipcode_q"),
         document.getElementById("zipcode_results"),

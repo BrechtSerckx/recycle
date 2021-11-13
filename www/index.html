@@ -130,7 +130,7 @@
                     <legend>Fraction encoding</legend>
                     <div>
                         <p>
-                            <input type="radio" name="fe" id="fraction_encoding_event" value="event">
+                            <input type="radio" name="fraction_encoding" id="fraction_encoding_event" value="event">
                             <label for="fraction_encoding_event">Event</label>
                         </p>
                         <p>Represent waste collections as an event.</p>
@@ -140,14 +140,14 @@
                                     <span>Start time: </span>
                                     <strong><abbr title="required" aria-label="required">*</abbr></strong>
                                 </label>
-                                <input type="time" id="event_start" name="es" class="fraction_encoding_event" required value="07:00" disabled>
+                                <input type="time" id="event_start" name="event_start" class="fraction_encoding_event" required value="07:00" disabled>
                             </span>
                             <span>
                                 <label for="event_end">
                                     <span>End time: </span>
                                     <strong><abbr title="required" aria-label="required">*</abbr></strong>
                                 </label>
-                                <input type="time" id="event_end" name="ee" class="fraction_encoding_event" required value="10:00" disabled>
+                                <input type="time" id="event_end" name="event_end" class="fraction_encoding_event" required value="10:00" disabled>
                             </span>
                         </p>
                         <p>Reminders: </p>
@@ -160,14 +160,14 @@
                                             <span>Days before: </span>
                                             <strong><abbr title="required" aria-label="required">*</abbr></strong>
                                         </label>
-                                        <input type="number" id="reminder_days_before" name="reminder_days_before" required value="1" disabled>
+                                        <input type="number" id="reminder_days_before" name="reminder_days_before" class="fraction_encoding_event" required value="1" disabled>
                                     </span>
                                     <span>
                                         <label for="reminder_time">
                                             <span>Time: </span>
                                             <strong><abbr title="required" aria-label="required">*</abbr></strong>
                                         </label>
-                                        <input type="time" id="reminder_time" name="reminder_time" required value="20:00" disabled>
+                                        <input type="time" id="reminder_time" name="reminder_time" class="fraction_encoding_event" required value="20:00" disabled>
                                     </span>
                                     <button id="delete_reminder_button" type="button">Delete reminder</button>
                                 </fieldset>
@@ -184,7 +184,7 @@
                                 <fieldset>
                                     <legend>Due type</legend>
                                     <p>
-                                        <input type="radio" name="todo_due_type" id="todo_due_type_date" value="date">
+                                        <input type="radio" name="todo_due_type" id="todo_due_type_date" class="fraction_encoding_todo" value="date">
                                         <label for="todo_due_type_date">Full day:</label>
                                     </p>
                                     <p>
@@ -193,11 +193,11 @@
                                                 <span>Days before: </span>
                                                 <strong><abbr title="required" aria-label="required">*</abbr></strong>
                                             </label>
-                                            <input type="number" id="todo_days_before" name="todo_days_before" required value="1" disabled>
+                                            <input type="number" id="todo_days_before" name="todo_days_before" class="fraction_encoding_todo todo_due_type_date" required value="1" disabled>
                                         </span>
                                     </p>
                                     <p>
-                                        <input type="radio" name="todo_due_type" id="todo_due_type_datetime" value="datetime" checked>
+                                        <input type="radio" name="todo_due_type" id="todo_due_type_datetime" value="datetime" class="fraction_encoding_todo">
                                         <label for="todo_due_type_datetime">Specific time:</label>
                                     </p>
                                     <p>
@@ -206,14 +206,14 @@
                                                 <span>Days before: </span>
                                                 <strong><abbr title="required" aria-label="required">*</abbr></strong>
                                             </label>
-                                            <input type="number" id="todo_days_before" name="todo_days_before" required value="1" disabled>
+                                            <input type="number" id="todo_days_before" name="todo_days_before" class="fraction_encoding_todo todo_due_type_datetime" required value="1" disabled>
                                         </span>
                                         <span>
                                             <label for="todo_time">
                                                 <span>Time: </span>
                                                 <strong><abbr title="required" aria-label="required">*</abbr></strong>
                                             </label>
-                                            <input type="time" id="todo_time" name="todo_time" required value="20:00" disabled>
+                                            <input type="time" id="todo_time" name="todo_time" class="fraction_encoding_todo todo_due_type_datetime" required value="20:00" disabled>
                                         </span>
                                     </p>
                                 </fieldset>
