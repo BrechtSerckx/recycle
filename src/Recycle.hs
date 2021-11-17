@@ -123,11 +123,11 @@ type RecycleIcsAPI
         :> UVerb 'GET '[JSON] '[WithStatus 200 [Street]]
       :<|> "generate"
         :> QueryParamForm DateRange
-        :> QueryParam' '[Required] "lang_code" LangCode
+        :> QueryParam' '[Required] "lc" LangCode
         :> QueryParamForm FractionEncoding
-        :> QueryParam' '[Required] "zipcode" ZipcodeId
-        :> QueryParam' '[Required] "street" StreetId
-        :> QueryParam' '[Required] "house_number" HouseNumber
+        :> QueryParam' '[Required] "z" ZipcodeId
+        :> QueryParam' '[Required] "s" StreetId
+        :> QueryParam' '[Required] "hn" HouseNumber
         :> UVerb 'GET '[ICalendar] '[WithStatus 200 BSL.ByteString]
         )
   :<|> Raw

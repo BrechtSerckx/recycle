@@ -12,7 +12,7 @@ function attachFormSubmit(form, permalink, downloadLink) {
         }
 
         // prepare formdata
-        formData.set("lang_code", langCode);
+        formData.set("lc", langCode);
 
         // make url
         var url = new URL('/api/generate', window.location.origin);
@@ -153,19 +153,19 @@ function main() {
         document.getElementById("downloadLink")
     );
 
-    const dateRangeRadios = document.getElementsByName("date_range_type");
+    const dateRangeRadios = document.getElementsByName("drt");
     attachRadioSwitch(dateRangeRadios);
     enableRadioSubInputs(dateRangeRadios, document.getElementById("date_range_type_rel"));
 
-    const todoDueRadios = document.getElementsByName("todo_due_type");
+    const todoDueRadios = document.getElementsByName("tdt");
     attachRadioSwitch(todoDueRadios);
     enableRadioSubInputs(todoDueRadios, document.getElementById("todo_due_type_datetime"));
 
-    const fractionEncodingRadios = document.getElementsByName("fraction_encoding");
+    const fractionEncodingRadios = document.getElementsByName("fe");
 
     function enableActiveTodoDueType(thisRadio) {
         if (thisRadio == document.getElementById("fraction_encoding_todo")) {
-            var checkedRadio = Array.from(document.querySelectorAll("[name=todo_due_type]")).filter(x => x.checked)[0];
+            var checkedRadio = Array.from(document.querySelectorAll("[name=tdt]")).filter(x => x.checked)[0];
             enableRadioSubInputs(todoDueRadios, checkedRadio);
         } else {}
     }

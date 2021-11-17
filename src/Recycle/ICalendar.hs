@@ -50,10 +50,10 @@ instance FromForm DateRange where
   fromForm f =
     let lookupRange :: FromHttpApiData a => Either Text (Range a)
         lookupRange = do
-          rangeFrom <- parseUnique "from" f
-          rangeTo   <- parseUnique "to" f
+          rangeFrom <- parseUnique "f" f
+          rangeTo   <- parseUnique "t" f
           pure Range { .. }
-    in  lookupUnique "date_range_type" f >>= \case
+    in  lookupUnique "drt" f >>= \case
           "absolute" -> AbsoluteDateRange <$> lookupRange
           "relative" -> RelativeDateRange <$> lookupRange
           t          -> Left $ "Must be one of [absolute,relative]: " <> t
@@ -64,15 +64,15 @@ data FractionEncoding
   deriving Show
 
 instance FromForm FractionEncoding where
-  fromForm f = lookupUnique "fraction_encoding" f >>= \case
+  fromForm f = lookupUnique "fe" f >>= \case
     "event" -> do
       eventRange <- do
-        rangeFrom <- parseUnique "event_start" f
-        rangeTo   <- parseUnique "event_end" f
+        rangeFrom <- parseUnique "es" f
+        rangeTo   <- parseUnique "ee" f
         pure Range { .. }
       reminders <- do
-        remindersDaysBefore <- parseAll "reminder_days_before" f
-        remindersTime       <- parseAll "reminder_time" f
+        remindersDaysBefore <- parseAll "rdb" f
+        remindersTime       <- parseAll "rt" f
         pure $ zipWith DateTimeReminder remindersDaysBefore remindersTime
       pure $ EncodeFractionAsVEvent eventRange reminders
     "todo" -> EncodeFractionAsVTodo <$> fromForm f
@@ -94,16 +94,16 @@ data TodoDue
   deriving (Eq, Show)
 
 instance FromForm TodoDue where
-  fromForm f = lookupUnique "todo_due_type" f >>= \case
+  fromForm f = lookupUnique "tdt" f >>= \case
     "date" -> do
       dateReminder <- do
-        dateReminderDaysBefore <- parseUnique "todo_days_before" f
+        dateReminderDaysBefore <- parseUnique "tdb" f
         pure DateReminder { .. }
       pure $ TodoDueDate dateReminder
     "datetime" -> do
       dateTimeReminder <- do
-        dateTimeReminderDaysBefore <- parseUnique "todo_days_before" f
-        dateTimeReminderTimeOfDay  <- parseUnique "todo_time" f
+        dateTimeReminderDaysBefore <- parseUnique "tdb" f
+        dateTimeReminderTimeOfDay  <- parseUnique "tt" f
         pure DateTimeReminder { .. }
       pure $ TodoDueDateTime dateTimeReminder
     t -> Left $ "Must be one of [date,datetime]: " <> t
