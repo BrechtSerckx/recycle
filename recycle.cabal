@@ -14,7 +14,9 @@ maintainer:          services+git@brechtserckx.be
 -- copyright:
 -- category:
 build-type:          Simple
--- extra-source-files:  CHANGELOG.md
+data-files:
+  www/index.html
+  www/index.js
 
 common common-default-extensions
   default-language:    Haskell2010
@@ -60,11 +62,13 @@ library
     Recycle.Utils
     Recycle.Opts
   other-modules:
+    Paths_recycle
     Servant.API.QueryParamForm
   build-depends:
       base >=4.7 && <5
 
       -- data
+    , filepath
     , generic-lens
     , text
 
@@ -97,6 +101,7 @@ library
     , wai
     , wai-extra
     , http-media
+    , wai-app-static
 
       -- logging
     , co-log

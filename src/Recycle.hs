@@ -20,6 +20,10 @@ import           Data.SOP                       ( I(..)
                                                 , NS(..)
                                                 )
 import           Network.HTTP.Media.MediaType
+import           Network.Wai.Application.Static ( StaticSettings(..)
+                                                , defaultWebAppSettings
+                                                )
+import           WaiAppStatic.Types
 import           Network.Wai.Handler.Warp
 import           Network.Wai.Middleware.RequestLogger
 import           Servant.API
@@ -36,9 +40,11 @@ import           Servant.Server                 ( Handler
                                                 , serve
                                                 , hoistServer
                                                 )
-import           Servant.Server.StaticFiles     ( serveDirectoryWebApp )
+import           Servant.Server.StaticFiles     ( serveDirectoryWith )
+import           System.FilePath
 
 import           Recycle.Class
+import           Paths_recycle
 import           Recycle.AppM
 import           Recycle.ICalendar
 import           Recycle.Opts
@@ -84,12 +90,14 @@ main = do
         Nothing -> BSL.putStr bs
 
     ServeIcs ServeIcsOpts {..} -> do
+      dataDir <- getDataDir
+      let wwwDir = dataDir </> "www"
       putStrLn "Starting server"
       run port
         . logStdoutDev
         . serve pRecycleIcsAPI
         . hoistServer pRecycleIcsAPI (recycleToHandler env)
-        $ recycleIcsServer
+        $ recycleIcsServer wwwDir
 
 recycleToHandler :: Env -> RecycleM a -> Handler a
 recycleToHandler env act = liftIO $ act `runRecycle` env
@@ -136,9 +144,12 @@ pRecycleIcsAPI :: Proxy RecycleIcsAPI
 pRecycleIcsAPI = Proxy
 
 recycleIcsServer
-  :: forall m . (HasRecycleClient m, HasTime m) => ServerT RecycleIcsAPI m
-recycleIcsServer = (searchZipcode :<|> searchStreet :<|> generateCollection)
-  :<|> serveDirectoryWebApp "www"
+  :: forall m
+   . (HasRecycleClient m, HasTime m)
+  => FilePath
+  -> ServerT RecycleIcsAPI m
+recycleIcsServer dataDir =
+  (searchZipcode :<|> searchStreet :<|> generateCollection) :<|> serveWww
 
  where
   searchZipcode :: SearchQuery -> m (Union '[WithStatus 200 [FullZipcode]])
@@ -163,6 +174,10 @@ recycleIcsServer = (searchZipcode :<|> searchStreet :<|> generateCollection)
       let collectionQuery = CollectionQuery { .. }
       collections <- runCollectionQuery collectionQuery
       pure . Z . I . WithStatus @200 $ printVCalendar collections
+  serveWww = serveDirectoryWith (defaultWebAppSettings dataDir)
+    { ssRedirectToIndex = True
+    , ssIndices         = [unsafeToPiece "index.html"]
+    }
 
 runCollectionQuery
   :: (HasRecycleClient m, HasTime m) => CollectionQuery -> m VCalendar
