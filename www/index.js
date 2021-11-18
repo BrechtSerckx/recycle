@@ -26,7 +26,9 @@ function attachFormSubmit(form, permalink, downloadLink) {
         downloadLink.href = url;
 
         // show permalink and download link
-        document.getElementById("link").style = "hidden";
+        const link = document.getElementById("link");
+        link.style.display = "block";
+        link.scrollIntoView();
     }
 
     form.addEventListener("submit", (event) => {
