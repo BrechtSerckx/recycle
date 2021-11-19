@@ -1,5 +1,3 @@
-const langCode = 'NL';
-
 // Attach a custom submit function to the form.
 function attachFormSubmit(form, permalink, downloadLink) {
 
@@ -10,9 +8,6 @@ function attachFormSubmit(form, permalink, downloadLink) {
         for (var entry of formData.entries()) {
             console.log(entry[0], entry[1]);
         }
-
-        // prepare formdata
-        formData.set("lc", langCode);
 
         // make url
         var url = new URL('/api/generate', window.location.origin);
@@ -35,6 +30,12 @@ function attachFormSubmit(form, permalink, downloadLink) {
         event.preventDefault();
         submit();
     });
+}
+
+function getLangCode() {
+    var checkedRadio = Array.from(document.querySelectorAll("[name=lc]")).filter(x => x.checked)[0];
+    console.log(checkedRadio.value);
+    return checkedRadio.value;
 }
 
 // Enable a radio input and its corresponding sub-inputs.
@@ -112,7 +113,10 @@ function createZipcodeCompleter(input, container, target, streetQInput, submitBu
     createAutoCompleter(input,
         container,
         q => searchZipcodes(q),
-        res => res.city.name,
+        res => {
+            const lc = getLangCode();
+            return res.city.names[lc];
+        },
         res => {
             target.value = res.id;
             streetQInput.disabled = false;
@@ -125,7 +129,10 @@ function createStreetCompleter(input, container, target, zipcodeInput, houseNumb
     createAutoCompleter(input,
         container,
         q => searchStreets(zipcodeInput.value, q),
-        res => res.name,
+        res => {
+            const lc = getLangCode();
+            return res.names[lc];
+        },
         res => {
             target.value = res.id;
             houseNumberInput.disabled = false;
