@@ -176,7 +176,7 @@ instance
       <> ", "
       <> unStreetId street
       <> ", "
-      <> unHouseNumber houseNumber
+      <> T.pack (show $ unHouseNumber houseNumber)
     SingObject fractions <- runRecycleOp $ \consumer accessToken ->
       API.getFractions consumer accessToken zipcode street houseNumber
     pure fractions
