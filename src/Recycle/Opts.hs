@@ -5,13 +5,13 @@ module Recycle.Opts
   , GenerateIcsOpts(..)
   , CollectionQuery(..)
   , ApiClientOpts(..)
+  , ApiClientCmd(..)
   )
 where
 
 import qualified Data.Char                     as Char
-import           Text.Read                      ( readMaybe )
-
 import           Options.Applicative
+import           Text.Read                      ( readMaybe )
 
 import           Recycle.ICalendar
 import           Recycle.Types
@@ -36,14 +36,20 @@ pOpts = do
   apiClientOpts <- pApiClientOpts
   pure Opts { .. }
 
-data Cmd = GenerateIcs GenerateIcsOpts
+data Cmd
+  = GenerateIcs GenerateIcsOpts
+  | ApiClient ApiClientCmd
 
 pCmd :: Parser Cmd
 pCmd = hsubparser $ mconcat
   [ command "generate-ics"
-      $ let generateInfo =
-              mconcat [fullDesc, progDesc "Generate an iCalendar file"]
-        in  (GenerateIcs <$> pGenerateIcsOpts) `info` generateInfo
+    $ let generateInfo =
+            mconcat [fullDesc, progDesc "Generate an iCalendar file"]
+      in  (GenerateIcs <$> pGenerateIcsOpts) `info` generateInfo
+  , command "client"
+    $ let generateInfo =
+            mconcat [fullDesc, progDesc "Client for the RecycleApp.be api"]
+      in  (ApiClient <$> pApiClientCmd) `info` generateInfo
   ]
 
 data GenerateIcsOpts = GenerateIcsOpts
@@ -146,6 +152,50 @@ defaultAuthSecret =
   AuthSecret
     "Crgja3EGWe8jdapyr4EEoMBgZACYYjRRcRpaMQrLDW9HJBvmgkfGQyYqLgeXPavAGvnJqkV87PBB2b8zx43q46sUgzqio4yRZbABhtKeagkVKypTEDjKfPgGycjLyJTtLHYpzwJgp4YmmCuJZN9ZmJY8CGEoFs8MKfdJpU9RjkEVfngmmk2LYD4QzFegLNKUbcCeAdEW"
 
+data ApiClientCmd
+  = GetAccessToken
+  | SearchZipcodes (Maybe AccessToken) (Maybe SearchQuery)
+  | SearchStreets (Maybe AccessToken) (Maybe ZipcodeId) (Maybe SearchQuery)
+  | GetCollections (Maybe AccessToken) ZipcodeId StreetId HouseNumber DateRange
+  | GetFractions (Maybe AccessToken) ZipcodeId StreetId HouseNumber
+
+pApiClientCmd :: Parser ApiClientCmd
+pApiClientCmd = hsubparser $ mconcat
+  [ command "get-access-token"
+  $      pure GetAccessToken
+  `info` (fullDesc <> progDesc "Get an access token")
+  , command "search-zipcodes"
+  $      (SearchZipcodes <$> optional pAccessToken <*> optional pSearchQuery)
+  `info` (fullDesc <> progDesc "Search for zipcodes")
+  , command "search-streets"
+  $      (   SearchStreets
+         <$> optional pAccessToken
+         <*> optional pZipcodeId
+         <*> optional pSearchQuery
+         )
+  `info` (fullDesc <> progDesc "Search for streets")
+  , command "get-collections"
+  $      (   GetCollections
+         <$> optional pAccessToken
+         <*> pZipcodeId
+         <*> pStreetId
+         <*> pHouseNumber
+         <*> pDateRange
+         )
+  `info` (fullDesc <> progDesc "Get collections")
+  , command "get-fractions"
+  $      (   GetFractions
+         <$> optional pAccessToken
+         <*> pZipcodeId
+         <*> pStreetId
+         <*> pHouseNumber
+         )
+  `info` (fullDesc <> progDesc "Get fractions")
+  ]
+
+pAccessToken :: Parser AccessToken
+pAccessToken = strOption $ long "access-token" <> help "AccessToken"
+
 pZipcodeId :: Parser ZipcodeId
 pZipcodeId = strOption $ long "zipcode" <> help "ZipcodeId"
 
@@ -159,3 +209,6 @@ pHouseNumber =
 
 pStreetId :: Parser StreetId
 pStreetId = strOption $ long "street" <> help "StreetId"
+
+pSearchQuery :: Parser SearchQuery
+pSearchQuery = strArgument $ metavar "QUERY" <> help "SearchQuery"
