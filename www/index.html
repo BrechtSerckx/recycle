@@ -52,6 +52,39 @@
         <form id="recycleForm">
             <h2>Generator form</h2>
             <p>Required fields are followed by <abbr title="required">*</abbr>.</p>
+            <section>
+                <h3>Address</h3>
+                <p>Waste collections are specific to your address.</p>
+                <div>
+                    <p>Search for your city and choose the correct city from the list.</p>
+                    <label for="zipcode_q">
+                        <span>City: </span>
+                        <strong><abbr title="required" aria-label="required">*</abbr></strong>
+                    </label>
+                    <input type="text" id="zipcode_q" placeholder="Leuven" required>
+                    <input type="hidden" id="zipcode" name="zipcode">
+                    <ul id="zipcode_results" style="display: block"></ul>
+
+                </div>
+                <div>
+                    <p>Search for your street and choose the correct street from the list.</p>
+                    <label for="street_q">
+                        <span>Street: </span>
+                        <strong><abbr title="required" aria-label="required">* </abbr></strong>
+                    </label>
+                    <input type="text" id="street_q" placeholder="Grote Markt" disabled required>
+                    <input type=hidden id="street" name="street">
+                    <ul id="street_results" style="display: block"></ul>
+                </div>
+                <div>
+                    <p>Enter your house number.</p>
+                    <label for="house_number">
+                        <span>House number: </span>
+                        <strong><abbr title="required" aria-label="required">*</abbr></strong>
+                    </label>
+                    <input type="number" id="house_number" name="house_number" placeholder="1" disabled required>
+                </div>
+            </section>
         </form>
     </main>
 
