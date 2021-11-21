@@ -49,6 +49,7 @@ library
     -Wall
   exposed-modules:
     Recycle
+    Recycle.API
     Recycle.AppM
   build-depends:
       base >=4.7 && <5
@@ -57,6 +58,12 @@ library
     , capability
     , transformers
     , mtl
+
+      -- network
+    , servant
+    , servant-client
+    , http-client
+    , http-client-tls
 
 executable recycle
   main-is:             Main.hs
