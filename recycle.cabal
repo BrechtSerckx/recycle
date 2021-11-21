@@ -90,6 +90,10 @@ library
     , bytestring
     , iCalendar
     , optparse-applicative
+    , servant-server
+    , warp
+    , wai
+    , wai-extra
 
       -- logging
     , co-log

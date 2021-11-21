@@ -3,6 +3,7 @@ module Recycle.Opts
   , Opts(..)
   , parseOpts
   , GenerateIcsOpts(..)
+  , ServeIcsOpts(..)
   , CollectionQuery(..)
   , ApiClientOpts(..)
   , ApiClientCmd(..)
@@ -10,6 +11,7 @@ module Recycle.Opts
 where
 
 import qualified Data.Char                     as Char
+import qualified Network.Wai.Handler.Warp      as Warp
 import           Options.Applicative
 import           Text.Read                      ( readMaybe )
 
@@ -39,6 +41,7 @@ pOpts = do
 data Cmd
   = GenerateIcs GenerateIcsOpts
   | ApiClient ApiClientCmd
+  | ServeIcs ServeIcsOpts
 
 pCmd :: Parser Cmd
 pCmd = hsubparser $ mconcat
@@ -50,6 +53,9 @@ pCmd = hsubparser $ mconcat
     $ let generateInfo =
             mconcat [fullDesc, progDesc "Client for the RecycleApp.be api"]
       in  (ApiClient <$> pApiClientCmd) `info` generateInfo
+  , command "serve-ics"
+    $ let serveInfo = mconcat [fullDesc, progDesc "Serve iCalendar files"]
+      in  (ServeIcs <$> pServeIcsOpts) `info` serveInfo
   ]
 
 data GenerateIcsOpts = GenerateIcsOpts
@@ -212,3 +218,14 @@ pStreetId = strOption $ long "street" <> help "StreetId"
 
 pSearchQuery :: Parser SearchQuery
 pSearchQuery = strArgument $ metavar "QUERY" <> help "SearchQuery"
+
+newtype ServeIcsOpts = ServeIcsOpts
+  { port      :: Warp.Port
+  }
+
+
+pServeIcsOpts :: Parser ServeIcsOpts
+pServeIcsOpts = do
+  port <- option auto $ long "port" <> short 'p' <> metavar "PORT" <> help
+    "port"
+  pure ServeIcsOpts { .. }

@@ -14,5 +14,9 @@ API_CLIENT_ARGS+=(search-zipcodes)
 API_CLIENT_ARGS+=(--access-token eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE2MzQ2MzE0NzksImV4cCI6MTYzNDYzNTA3OSwiYXVkIjoicmVjeWNsZWFwcC5iZSJ9.RBcnYf-0kwpGDWvcHFO2SXYDm94doruaZrudl2h0sfA)
 API_CLIENT_ARGS+=(3000)
 
+SERVE_ICS_ARGS=(serve-ics)
+SERVE_ICS_ARGS+=(--port 3333)
+
 # cabal run exe:recycle -- "${GENERATE_ICS_ARGS[@]}" "$@"
 # cabal run exe:recycle -- "${API_CLIENT_ARGS[@]}" "$@"
+cabal run exe:recycle -- "${SERVE_ICS_ARGS[@]}" "$@"

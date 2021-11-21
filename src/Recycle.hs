@@ -1,3 +1,4 @@
+{-# LANGUAGE TypeOperators #-}
 module Recycle
   ( main
   )
@@ -13,6 +14,11 @@ import qualified Data.ByteString.Lazy.Char8    as BSL8
 import           Network.HTTP.Client.TLS        ( newTlsManagerWith
                                                 , tlsManagerSettings
                                                 )
+import           Data.Proxy                     ( Proxy(..) )
+import           Network.HTTP.Media.MediaType
+import           Network.Wai.Handler.Warp
+import           Network.Wai.Middleware.RequestLogger
+import           Servant.API
 import           Servant.Client                 ( BaseUrl(..)
                                                 , Scheme(..)
                                                 , mkClientEnv
@@ -20,6 +26,12 @@ import           Servant.Client                 ( BaseUrl(..)
 import           Colog.Core                     ( LogAction(..) )
 import           Colog.Message
 import qualified Data.Text                     as T
+import           Servant.Server                 ( Handler
+                                                , ServerT
+                                                , serve
+                                                , hoistServer
+                                                , emptyServer
+                                                )
 
 import           Recycle.Class
 import           Recycle.AppM
@@ -66,6 +78,17 @@ main = do
         Just f  -> BSL.writeFile f bs
         Nothing -> BSL.putStr bs
 
+    ServeIcs ServeIcsOpts {..} -> do
+      putStrLn "Starting server"
+      run port
+        . logStdoutDev
+        . serve pRecycleIcsAPI
+        . hoistServer pRecycleIcsAPI (recycleToHandler env)
+        $ recycleIcsServer
+
+recycleToHandler :: Env -> RecycleM a -> Handler a
+recycleToHandler env act = liftIO $ act `runRecycle` env
+
 calculateDateRange :: HasTime m => DateRange -> m (Range Day)
 calculateDateRange = \case
   AbsoluteDateRange r        -> pure r
@@ -75,6 +98,17 @@ calculateDateRange = \case
                , rangeTo   = addDays (rangeTo relRange) today
                }
 
+-- brittany-disable-next-binding
+type RecycleIcsAPI
+  =   "api"
+  :> EmptyAPI
+
+pRecycleIcsAPI :: Proxy RecycleIcsAPI
+pRecycleIcsAPI = Proxy
+
+recycleIcsServer
+  :: forall m . (HasRecycleClient m, HasTime m) => ServerT RecycleIcsAPI m
+recycleIcsServer = emptyServer
 runCollectionQuery
   :: (HasRecycleClient m, HasTime m) => CollectionQuery -> m VCalendar
 runCollectionQuery CollectionQuery {..} = do
