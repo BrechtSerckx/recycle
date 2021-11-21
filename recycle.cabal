@@ -49,8 +49,14 @@ library
     -Wall
   exposed-modules:
     Recycle
+    Recycle.AppM
   build-depends:
       base >=4.7 && <5
+
+      -- effects
+    , capability
+    , transformers
+    , mtl
 
 executable recycle
   main-is:             Main.hs

@@ -1,6 +1,11 @@
 module Recycle
   ( main
-  ) where
+  )
+where
+
+import           Recycle.AppM
 
 main :: IO ()
-main = putStrLn "Hello World!"
+main = do
+  let env = Env { .. }
+  flip runRecycle env $ pure ()
