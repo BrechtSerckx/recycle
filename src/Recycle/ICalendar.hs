@@ -21,6 +21,10 @@ import           Data.Text                      ( Text )
 import qualified Data.Text.Lazy                as TL
 import           Data.Time
 import           Data.Version                   ( Version(..) )
+import           Web.FormUrlEncoded             ( FromForm(..)
+                                                , lookupUnique
+                                                , parseUnique
+                                                )
 import           Web.HttpApiData                ( FromHttpApiData(..) )
 
 import           Text.ICalendar.Printer
@@ -34,6 +38,18 @@ getByLangCode lc m =
     (Map.toList m)
 
 data DateRange = AbsoluteDateRange (Range Day) | RelativeDateRange (Range Integer)
+
+instance FromForm DateRange where
+  fromForm f =
+    let lookupRange :: FromHttpApiData a => Either Text (Range a)
+        lookupRange = do
+          rangeFrom <- parseUnique "from" f
+          rangeTo   <- parseUnique "to" f
+          pure Range { .. }
+    in  lookupUnique "date_range_type" f >>= \case
+          "absolute" -> AbsoluteDateRange <$> lookupRange
+          "relative" -> RelativeDateRange <$> lookupRange
+          t          -> Left $ "Must be one of [absolute,relative]: " <> t
 
 data FractionEncoding
   = EncodeFractionAsVEvent
