@@ -85,6 +85,44 @@
                     <input type="number" id="house_number" name="house_number" placeholder="1" disabled required>
                 </div>
             </section>
+            <section>
+                <h3>Date range</h3>
+                <p>
+                    Choose a start date and an end date for which you want the waste collections.
+                </p>
+                <fieldset>
+                    <legend>Date range type</legend>
+                    <div>
+                        <input type="radio" name="date_range_type" id="date_range_type_abs" value="absolute" checked>
+                        <label for="date_range_type_abs">Absolute:</label>
+                        <p>This will get the waste collections between two dates.</p>
+                        <label for="range_from">
+                            <span>From: </span>
+                            <strong><abbr title="required" aria-label="required">*</abbr></strong>
+                        </label>
+                        <input type="date" id="abs_range_from" class="date_range_type_abs" name="from" required>
+                        <label for="range_to">
+                            <span>To: </span>
+                            <strong><abbr title="required" aria-label="required">*</abbr></strong>
+                        </label>
+                        <input type="date" id="abs_range_to" class="date_range_type_abs" name="to" required>
+                    </div>
+                    <div>
+                        <input type="radio" name="date_range_type" id="date_range_type_rel" value="relative">
+                        <label for="date_range_type_rel">Relative:</label>
+                        <label for="range_from">
+                            <span>Days before: </span>
+                            <strong><abbr title="required" aria-label="required">*</abbr></strong>
+                        </label>
+                        <input type="number" step=1 id="rel_range_from" class="date_range_type_rel" name="from" required value="-14" disabled>
+                        <label for="range_to">
+                            <span>Days after: </span>
+                            <strong><abbr title="required" aria-label="required">*</abbr></strong>
+                        </label>
+                        <input type="number" step=1 id="rel_range_to" class="date_range_type_rel" name="to" required value="28" disabled>
+                    </div>
+                </fieldset>
+            </section>
         </form>
     </main>
 
