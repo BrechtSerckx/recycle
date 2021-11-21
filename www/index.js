@@ -1,5 +1,5 @@
 // Attach a custom submit function to the form.
-function attachFormSubmit(form, permalink, downloadLink) {
+function attachFormSubmit(form, permalink, openLink, downloadLink) {
 
     // Function to execute when the form is submitted.
     function submit() {
@@ -10,15 +10,22 @@ function attachFormSubmit(form, permalink, downloadLink) {
         }
 
         // make url
-        var url = new URL('/api/generate', window.location.origin);
-        url.search = new URLSearchParams(formData).toString();
+        function mkUrl(base) {
+            var url = new URL('/api/generate', base);
+            url.search = new URLSearchParams(formData).toString();
+            return url;
+        }
 
         // set permalink
-        permalink.value = url;
+        permalink.value = mkUrl("webcal://" + window.location.host);
+
+        // set open link
+        openLink.disabled = false;
+        openLink.href = mkUrl("webcal://" + window.location.host);
 
         // set download link
         downloadLink.disabled = false;
-        downloadLink.href = url;
+        downloadLink.href = mkUrl(window.location.origin);
 
         // show permalink and download link
         const link = document.getElementById("link");
@@ -159,6 +166,7 @@ function createEditableList(reminders, prototype, addReminderButton) {
 function main() {
     attachFormSubmit(document.getElementById("recycleForm"),
         document.getElementById("permalink"),
+        document.getElementById("openLink"),
         document.getElementById("downloadLink")
     );
 
