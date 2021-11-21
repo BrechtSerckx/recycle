@@ -110,6 +110,7 @@
                     <div>
                         <input type="radio" name="date_range_type" id="date_range_type_rel" value="relative">
                         <label for="date_range_type_rel">Relative:</label>
+                        <p>This will get the waste collections relative to the current date. This is is particularly useful when auto-importing the waste collections through Google Calendar or Outlook, as it will always give the collections relative to that date. The collections will always be up-to-date like this.</p>
                         <label for="range_from">
                             <span>Days before: </span>
                             <strong><abbr title="required" aria-label="required">*</abbr></strong>
@@ -121,6 +122,20 @@
                         </label>
                         <input type="number" step=1 id="rel_range_to" class="date_range_type_rel" name="to" required value="28" disabled>
                     </div>
+                </fieldset>
+            </section>
+            <section>
+                <h2>Options</h2>
+                <fieldset>
+                    <legend>Fraction encoding</legend>
+                    <p>
+                        <input type="radio" name="fraction_encoding" id="fraction_encoding_event" value="event">
+                        <label for="fraction_encoding_event">Event</label>
+                    </p>
+                    <p>
+                        <input type="radio" name="fraction_encoding" id="fraction_encoding_todo" value="todo" checked>
+                        <label for="fraction_encoding_todo">Todo</label>
+                    </p>
                 </fieldset>
             </section>
         </form>
