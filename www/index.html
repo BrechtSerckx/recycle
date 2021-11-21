@@ -150,6 +150,30 @@
                                 <input type="time" id="event_end" name="ee" class="fraction_encoding_event" required value="10:00" disabled>
                             </span>
                         </p>
+                        <p>Reminders: </p>
+                        <ul id="reminder_list">
+                            <li id="reminder_prototype" style="display: none">
+                                <fieldset>
+                                    <legend>Reminder</legend>
+                                    <span>
+                                        <label for="reminder_days_before">
+                                            <span>Days before: </span>
+                                            <strong><abbr title="required" aria-label="required">*</abbr></strong>
+                                        </label>
+                                        <input type="number" id="reminder_days_before" name="reminder_days_before" required value="1" disabled>
+                                    </span>
+                                    <span>
+                                        <label for="reminder_time">
+                                            <span>Time: </span>
+                                            <strong><abbr title="required" aria-label="required">*</abbr></strong>
+                                        </label>
+                                        <input type="time" id="reminder_time" name="reminder_time" required value="20:00" disabled>
+                                    </span>
+                                    <button id="delete_reminder_button" type="button">Delete reminder</button>
+                                </fieldset>
+                            </li>
+                        </ul>
+                        <button id="add_reminder_button" type="button">Add reminder</button>
                     </div>
                     <div>
                         <input type="radio" name="fe" id="fraction_encoding_todo" value="todo" checked>

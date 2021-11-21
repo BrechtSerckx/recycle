@@ -131,6 +131,21 @@ function createStreetCompleter(input, container, target, zipcodeInput, houseNumb
     );
 }
 
+function createEditableList(reminders, prototype, addReminderButton) {
+    function deleteReminder(reminder) {
+        reminder.parentNode.removeChild(reminder);
+    }
+
+    function addReminder() {
+        const newReminder = prototype.cloneNode(true);
+        newReminder.style.display = "list-item";
+        Array.from(newReminder.getElementsByTagName("input")).forEach(input => input.disabled = false);
+        newReminder.querySelector("#delete_reminder_button").onclick = () => deleteReminder(newReminder);
+        reminder_list.appendChild(newReminder);
+    }
+    addReminderButton.onclick = addReminder;
+}
+
 function main() {
     attachFormSubmit(document.getElementById("recycleForm"),
         document.getElementById("permalink"),
@@ -156,6 +171,8 @@ function main() {
         document.getElementById("house_number"),
         submitButton
     );
+
+    createEditableList(document.getElementById("reminder_list"), document.getElementById("reminder_prototype"), document.getElementById("add_reminder_button"));
 };
 
 main();
