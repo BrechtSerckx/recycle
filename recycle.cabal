@@ -96,6 +96,7 @@ library
     , warp
     , wai
     , wai-extra
+    , http-media
 
       -- logging
     , co-log

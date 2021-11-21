@@ -1,0 +1,34 @@
+# Host
+:host = http://localhost:3332
+
+:langCode = NL
+
+# Search zip code id
+:query = 3000
+GET :host/api/search-zipcode?q=:query&lang_code=:langCode
+
+# Zip code id
+:zipcodeId = 3000-24062
+
+# Search street id
+:query = Andreas
+GET :host/api/search-street?zipcode=:zipcodeId&q=:query&lang_code=:langCode
+
+# Street id
+:streetId = https://data.vlaanderen.be/id/straatnaam-34637
+
+# Generate ICS file for absolute date range
+:houseNumber = 73
+:dateRangeType = absolute
+:fromDate = 2021-11-18
+:untilDate = 2021-11-19
+:fractionEncoding = todo
+GET :host/api/generate?date_range_type=:dateRangeType&from=:fromDate&to=:untilDate&zipcode=:zipcodeId&street=:streetId&house_number=:houseNumber&lang_code=:langCode&fraction_encoding=:fractionEncoding
+
+# Generate ICS file for relative date range
+:houseNumber = 73
+:dateRangeType = relative
+:fromDate = -7
+:untilDate = 14
+:fractionEncoding = todo
+GET :host/api/generate?date_range_type=:dateRangeType&from=:fromDate&to=:untilDate&zipcode=:zipcodeId&street=:streetId&house_number=:houseNumber&lang_code=:langCode&fraction_encoding=:fractionEncoding
