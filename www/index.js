@@ -1,7 +1,7 @@
 const langCode = 'NL';
 
 // Attach a custom submit function to the form.
-function attachFormSubmit(form) {
+function attachFormSubmit(form, permalink, downloadLink) {
 
     // Function to execute when the form is submitted.
     function submit() {
@@ -10,6 +10,23 @@ function attachFormSubmit(form) {
         for (var entry of formData.entries()) {
             console.log(entry[0], entry[1]);
         }
+
+        // prepare formdata
+        formData.set("lang_code", langCode);
+
+        // make url
+        var url = new URL('/api/generate', window.location.origin);
+        url.search = new URLSearchParams(formData).toString();
+
+        // set permalink
+        permalink.value = url;
+
+        // set download link
+        downloadLink.disabled = false;
+        downloadLink.href = url;
+
+        // show permalink and download link
+        document.getElementById("link").style = "hidden";
     }
 
     form.addEventListener("submit", (event) => {
@@ -115,7 +132,10 @@ function createStreetCompleter(input, container, target, zipcodeInput, houseNumb
 }
 
 function main() {
-    attachFormSubmit(document.getElementById("recycleForm"));
+    attachFormSubmit(document.getElementById("recycleForm"),
+        document.getElementById("permalink"),
+        document.getElementById("downloadLink")
+    );
 
     const radios = document.getElementsByName("date_range_type");
     attachDateRangeTypeFields(radios);
