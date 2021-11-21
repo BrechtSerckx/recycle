@@ -54,6 +54,10 @@ library
   build-depends:
       base >=4.7 && <5
 
+      -- data
+    , generic-lens
+    , text
+
       -- effects
     , capability
     , transformers
@@ -64,6 +68,10 @@ library
     , servant-client
     , http-client
     , http-client-tls
+
+      -- logging
+    , co-log
+    , co-log-core
 
 executable recycle
   main-is:             Main.hs

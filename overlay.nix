@@ -11,6 +11,7 @@ let
     servant-client-core = superh.callCabal2nixWithOptions "servant" sources.servant "--subpath servant-client-core" {};
     servant-client = superh.callCabal2nixWithOptions "servant" sources.servant "--subpath servant-client" {};
     servant-server = hlib.dontCheck(superh.callCabal2nixWithOptions "servant" sources.servant "--subpath servant-server" {});
+    typerep-map = hlib.dontCheck(superh.typerep-map);
   };
 in {
   haskellPackages = super.haskellPackages.override (old: {
