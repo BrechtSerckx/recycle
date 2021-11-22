@@ -111,41 +111,33 @@ pCollectionQuery = do
 
 pFractionEncoding :: Parser FractionEncoding
 pFractionEncoding =
-  let
-    pAsEvent = do
-      eventRange <- do
-        rangeFrom <- option auto
-          $ mconcat [long "event-start", help "Start time of collection event"]
-        rangeTo <- option auto
-          $ mconcat [long "event-end", help "End time of collection event"]
-        pure Range { .. }
-      reminders <- many $ do
-        dateTimeReminderDaysBefore <-
-          option auto $ long "reminder-days-before" <> help
+  let pAsEvent = do
+        eventRange <- do
+          rangeFrom <- option auto $ mconcat
+            [long "event-start", help "Start time of collection event"]
+          rangeTo <- option auto
+            $ mconcat [long "event-end", help "End time of collection event"]
+          pure Range { .. }
+        reminders <- many $ do
+          flag' () $ long "reminder" <> help "Add a reminder"
+          daysBefore <- option auto $ long "days-before" <> help
             "Remind x days before the collection"
-        dateTimeReminderTimeOfDay <- option auto $ long "reminder-time" <> help
-          "Reminder time"
-        pure DateTimeReminder { .. }
-      pure $ EncodeFractionAsVEvent eventRange reminders
-    pAsTodo = do
-      due <-
-        let pDateTimeReminder = do
-              dateTimeReminderDaysBefore <-
-                option auto $ long "todo-days-before" <> help
-                  "Set task x days before the collection"
-              dateTimeReminderTimeOfDay <-
+          hoursBefore <- option auto $ long "hours-before" <> help
+            "Remind x hours before the collection"
+          minutesBefore <- option auto $ long "minutes-before" <> help
+            "Remind x days before the collection"
+          pure Reminder { .. }
+        pure $ EncodeFractionAsVEvent eventRange reminders
+      pAsTodo = do
+        due <-
+          let pDaysBefore = option auto $ long "todo-days-before" <> help
+                "Set task x days before the collection"
+              pTimeOfDay =
                 option auto $ long "todo-time" <> help "Set task at this time"
-              pure DateTimeReminder { .. }
-            pDateReminder = do
-              dateReminderDaysBefore <-
-                option auto $ long "todo-days-before" <> help
-                  "Set task x days before the collection"
-              pure DateReminder { .. }
-        in  (TodoDueDateTime <$> pDateTimeReminder)
-              <|> (TodoDueDate <$> pDateReminder)
-      pure $ EncodeFractionAsVTodo due
-  in
-    pAsEvent <|> pAsTodo
+          in  (TodoDueDateTime <$> pDaysBefore <*> pTimeOfDay)
+                <|> (TodoDueDate <$> pDaysBefore)
+        pure $ EncodeFractionAsVTodo due
+  in  pAsEvent <|> pAsTodo
 
 pDateRange :: Parser DateRange
 pDateRange =

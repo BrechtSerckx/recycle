@@ -5,8 +5,7 @@ module Recycle.ICalendar
   , VCalendar
   , DateRange(..)
   , FractionEncoding(..)
-  , DateTimeReminder(..)
-  , DateReminder(..)
+  , Reminder(..)
   , TodoDue(..)
   )
 where
@@ -59,7 +58,7 @@ instance FromForm DateRange where
           t          -> Left $ "Must be one of [absolute,relative]: " <> t
 
 data FractionEncoding
-  = EncodeFractionAsVEvent (Range TimeOfDay) [DateTimeReminder]
+  = EncodeFractionAsVEvent (Range TimeOfDay) [Reminder]
   | EncodeFractionAsVTodo TodoDue
   deriving Show
 
@@ -71,41 +70,38 @@ instance FromForm FractionEncoding where
         rangeTo   <- parseUnique "ee" f
         pure Range { .. }
       reminders <- do
-        remindersDaysBefore <- parseAll "rdb" f
-        remindersTime       <- parseAll "rt" f
-        pure $ zipWith DateTimeReminder remindersDaysBefore remindersTime
+        remindersDaysBefore    <- parseAll "rdb" f
+        remindersHoursBefore   <- parseAll "rhb" f
+        remindersMinutesBefore <- parseAll "rmb" f
+        pure $ zipWith3 Reminder
+                        remindersDaysBefore
+                        remindersHoursBefore
+                        remindersMinutesBefore
       pure $ EncodeFractionAsVEvent eventRange reminders
     "todo" -> EncodeFractionAsVTodo <$> fromForm f
     t      -> Left $ "Must be one of [event,todo]: " <> t
 
-data DateTimeReminder = DateTimeReminder
-  { dateTimeReminderDaysBefore :: Integer
-  , dateTimeReminderTimeOfDay  :: TimeOfDay
-  }
-  deriving (Eq, Show)
-newtype DateReminder = DateReminder
-  { dateReminderDaysBefore :: Integer
+data Reminder = Reminder
+  { daysBefore :: Int
+  , hoursBefore :: Int
+  , minutesBefore :: Int
   }
   deriving (Eq, Show)
 
 data TodoDue
-  = TodoDueDateTime DateTimeReminder
-  | TodoDueDate DateReminder
+  = TodoDueDateTime Integer TimeOfDay
+  | TodoDueDate Integer
   deriving (Eq, Show)
 
 instance FromForm TodoDue where
   fromForm f = lookupUnique "tdt" f >>= \case
     "date" -> do
-      dateReminder <- do
-        dateReminderDaysBefore <- parseUnique "tdb" f
-        pure DateReminder { .. }
+      dateReminder <- parseUnique "tdb" f
       pure $ TodoDueDate dateReminder
     "datetime" -> do
-      dateTimeReminder <- do
-        dateTimeReminderDaysBefore <- parseUnique "tdb" f
-        dateTimeReminderTimeOfDay  <- parseUnique "tt" f
-        pure DateTimeReminder { .. }
-      pure $ TodoDueDateTime dateTimeReminder
+      daysBefore <- parseUnique "tdb" f
+      timeOfDay  <- parseUnique "tt" f
+      pure $ TodoDueDateTime daysBefore timeOfDay
     t -> Left $ "Must be one of [date,datetime]: " <> t
 
 mkVCalendar
@@ -145,7 +141,7 @@ printVCalendar = printICalendar def
 collectionToVEvent
   :: LangCode
   -> Range TimeOfDay
-  -> [DateTimeReminder]
+  -> [Reminder]
   -> CollectionEvent FullFraction
   -> VEvent
 collectionToVEvent langCode Range {..} reminders CollectionEvent { collectionEventContent = FullFraction {..}, ..}
@@ -210,34 +206,36 @@ collectionToVTodo langCode due CollectionEvent { collectionEventContent = FullFr
 
 makeDue :: UTCTime -> TodoDue -> Due
 makeDue ts = \case
-  TodoDueDateTime DateTimeReminder {..} -> DueDateTime
+  TodoDueDateTime daysBefore timeOfDay -> DueDateTime
     { dueDateTimeValue = UTCDateTime UTCTime
-                           { utctDay     = addDays
-                                             (negate dateTimeReminderDaysBefore)
-                                             (utctDay ts)
-                           , utctDayTime = timeOfDayToTime
-                                             dateTimeReminderTimeOfDay
+                           { utctDay = addDays (negate daysBefore) (utctDay ts)
+                           , utctDayTime = timeOfDayToTime timeOfDay
                            }
     , dueOther         = def
     }
-  TodoDueDate DateReminder {..} -> DueDate
-    { dueDateValue = Date
-                       { dateValue = addDays (negate dateReminderDaysBefore)
-                                             (utctDay ts)
-                       }
+  TodoDueDate daysBefore -> DueDate
+    { dueDateValue = Date { dateValue = addDays (negate daysBefore) (utctDay ts)
+                          }
     , dueOther     = def
     }
 
-reminderToVAlarm :: Description -> UTCTime -> DateTimeReminder -> VAlarm
-reminderToVAlarm vaDescription ts DateTimeReminder {..} = VAlarmDisplay
+reminderToVAlarm :: Description -> UTCTime -> Reminder -> VAlarm
+reminderToVAlarm vaDescription ts Reminder {..} = VAlarmDisplay
   { vaDescription
-  , vaTrigger     = TriggerDateTime
-                      { triggerDateTime = UTCTime
-                        { utctDay = addDays (negate dateTimeReminderDaysBefore)
-                                            (utctDay ts)
-                        , utctDayTime = timeOfDayToTime dateTimeReminderTimeOfDay
-                        }
-                      , triggerOther    = def
+  , vaTrigger     = TriggerDuration
+                      { triggerDuration = DurationDate { durSign   = Negative
+                                                       , durDay    = daysBefore
+                                                       , durHour   = hoursBefore
+                                                       , durMinute = minutesBefore
+                                                       , durSecond = 0
+                                                       }
+
+                        -- { utctDay = addDays (negate dateTimeReminderDaysBefore)
+                        --                     (utctDay ts)
+                        -- , utctDayTime = timeOfDayToTime dateTimeReminderTimeOfDay
+                        -- }
+                      , triggerRelated = Start
+                      , triggerOther = def
                       }
   , vaRepeat      = def
   , vaDuration    = Nothing

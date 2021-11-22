@@ -249,14 +249,21 @@
                     <span>Days before: </span>
                     <strong><abbr title="required" aria-label="required">*</abbr></strong>
                 </label>
-                <input type="number" id="reminder_days_before" name="rdb" class="fraction_encoding_event" required value="1" disabled>
+                <input type="number" id="reminder_days_before" name="rdb" class="fraction_encoding_event" required value="0" disabled>
             </span>
             <span>
-                <label for="reminder_time">
-                    <span>Time: </span>
-                    <strong><abbr title="required" aria-label="required">*</abbr></strong>
-                </label>
-                <input type="time" id="reminder_time" name="rt" class="fraction_encoding_event" required value="20:00" disabled>
+              <label for="reminder_hours_before">
+                <span>Hours before: </span>
+                <strong><abbr title="required" aria-label="required">*</abbr></strong>
+              </label>
+              <input type="number" id="reminder_hours_before" name="rhb" class="fraction_encoding_event" required value="10" disabled>
+            </span>
+            <span>
+              <label for="reminder_minutes_before">
+                <span>Minutes before: </span>
+                <strong><abbr title="required" aria-label="required">*</abbr></strong>
+              </label>
+              <input type="number" id="reminder_minutes_before" name="rmb" class="fraction_encoding_event" required value="0" disabled>
             </span>
             <button id="delete_reminder_button" type="button">Delete reminder</button>
         </fieldset>
