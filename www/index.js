@@ -159,8 +159,11 @@ function createZipcodeCompleter(input, container, target, streetQInput, submitBu
         container,
         q => searchZipcodes(q),
         res => {
-            const lc = getLangCode();
-            return res.city.names[lc];
+            let lc = getLangCode();
+                cityName = res.city.names[lc];
+                zipcode = res.code;
+                names = res.names.map(n => n[lc]);
+            return `${cityName} (${zipcode}) - ${names.join(', ')}`;
         },
         res => {
             target.value = res.id;
