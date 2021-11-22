@@ -126,6 +126,7 @@ function createZipcodeCompleter(input, container, target, streetQInput, submitBu
         },
         res => {
             target.value = res.id;
+            streetQInput.value = "";
             streetQInput.disabled = false;
             submitButton.disabled = true;
         }
