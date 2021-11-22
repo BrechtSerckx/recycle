@@ -17,6 +17,7 @@ build-type:          Simple
 data-files:
   www/index.html
   www/index.js
+  www/favicon.ico
 
 common common-default-extensions
   default-language:    Haskell2010
