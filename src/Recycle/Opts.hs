@@ -176,17 +176,11 @@ pApiClientOpts = do
   authSecret <-
     strOption
     $  long "secret"
-    <> help "Authentication secret"
-    <> value defaultAuthSecret
+    <> help "Authentication secret. Get from inspecting the requests on browsing `recycleapp.be`."
   pure ApiClientOpts { .. }
 
 defaultConsumer :: Consumer
 defaultConsumer = Consumer "recycleapp.be"
-
-defaultAuthSecret :: AuthSecret
-defaultAuthSecret =
-  AuthSecret
-    "Crgja3EGWe8jdapyr4EEoMBgZACYYjRRcRpaMQrLDW9HJBvmgkfGQyYqLgeXPavAGvnJqkV87PBB2b8zx43q46sUgzqio4yRZbABhtKeagkVKypTEDjKfPgGycjLyJTtLHYpzwJgp4YmmCuJZN9ZmJY8CGEoFs8MKfdJpU9RjkEVfngmmk2LYD4QzFegLNKUbcCeAdEW"
 
 data ApiClientCmd
   = GetAccessToken

@@ -39,7 +39,7 @@ import           Recycle.Types
 
 -- brittany-disable-next-binding
 type RecycleAPI
-  =  "api"
+  =  "recycle-public"
   :> "app"
   :> "v1"
   :>  (  "access-token"
@@ -56,7 +56,7 @@ type RecycleAPI
       :> Header' '[Required] "Authorization" AccessToken
       :> QueryParam' '[Optional] "zipcodes" ZipcodeId
       :> QueryParam' '[Optional] "q" SearchQuery
-      :> UVerb 'GET '[JSON] '[WithStatus 200 (SingObject "items" [Street]), WithStatus 401 ApiError]
+      :> UVerb 'POST '[JSON] '[WithStatus 200 (SingObject "items" [Street]), WithStatus 401 ApiError]
     :<|> "collections"
       :> Header' '[Required] "X-Consumer" Consumer
       :> Header' '[Required] "Authorization" AccessToken
