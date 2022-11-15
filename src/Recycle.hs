@@ -55,7 +55,7 @@ main = do
   Opts { apiClientOpts = ApiClientOpts {..}, ..} <- parseOpts
   httpManager <- newTlsManagerWith tlsManagerSettings
   let clientEnv =
-        mkClientEnv httpManager $ BaseUrl Https "recycleapp.be" 443 ""
+        mkClientEnv httpManager $ BaseUrl Https "api.fostplus.be" 443 ""
       logAction = LogAction $ liftIO . putStrLn . T.unpack . fmtMessage
 
   authResult <- newIORef Nothing
