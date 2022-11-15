@@ -26,6 +26,7 @@ common common-default-extensions
     DeriveAnyClass
     DeriveGeneric
     DerivingVia
+    EmptyCase
     FlexibleContexts
     FlexibleInstances
     GADTs
@@ -40,6 +41,7 @@ common common-default-extensions
     PatternSynonyms
     RecordWildCards
     ScopedTypeVariables
+    StandaloneDeriving
     StrictData
     TupleSections
     TypeApplications

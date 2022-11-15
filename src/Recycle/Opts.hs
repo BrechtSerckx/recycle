@@ -14,6 +14,8 @@ import qualified Data.Char                     as Char
 import qualified Network.Wai.Handler.Warp      as Warp
 import           Options.Applicative
 import           Text.Read                      ( readMaybe )
+import           Data.Text                      ( Text )
+import           Numeric.Natural                ( Natural )
 
 import           Recycle.ICalendar
 import           Recycle.Types
@@ -176,7 +178,8 @@ pApiClientOpts = do
   authSecret <-
     strOption
     $  long "secret"
-    <> help "Authentication secret. Get from inspecting the requests on browsing `recycleapp.be`."
+    <> help
+         "Authentication secret. Get from inspecting the requests on browsing `recycleapp.be`."
   pure ApiClientOpts { .. }
 
 defaultConsumer :: Consumer
@@ -184,8 +187,8 @@ defaultConsumer = Consumer "recycleapp.be"
 
 data ApiClientCmd
   = GetAccessToken
-  | SearchZipcodes (Maybe AccessToken) (Maybe SearchQuery)
-  | SearchStreets (Maybe AccessToken) (Maybe ZipcodeId) (Maybe SearchQuery)
+  | SearchZipcodes (Maybe AccessToken) (Maybe (SearchQuery Natural))
+  | SearchStreets (Maybe AccessToken) (Maybe ZipcodeId) (Maybe (SearchQuery Text))
   | GetCollections (Maybe AccessToken) ZipcodeId StreetId HouseNumber DateRange
   | GetFractions (Maybe AccessToken) ZipcodeId StreetId HouseNumber
 
@@ -195,13 +198,13 @@ pApiClientCmd = hsubparser $ mconcat
   $      pure GetAccessToken
   `info` (fullDesc <> progDesc "Get an access token")
   , command "search-zipcodes"
-  $      (SearchZipcodes <$> optional pAccessToken <*> optional pSearchQuery)
+  $      (SearchZipcodes <$> optional pAccessToken <*> optional pSearchQueryNat)
   `info` (fullDesc <> progDesc "Search for zipcodes")
   , command "search-streets"
   $      (   SearchStreets
          <$> optional pAccessToken
          <*> optional pZipcodeId
-         <*> optional pSearchQuery
+         <*> optional pSearchQueryText
          )
   `info` (fullDesc <> progDesc "Search for streets")
   , command "get-collections"
@@ -240,8 +243,12 @@ pHouseNumber =
 pStreetId :: Parser StreetId
 pStreetId = strOption $ long "street" <> help "StreetId"
 
-pSearchQuery :: Parser SearchQuery
-pSearchQuery = strArgument $ metavar "QUERY" <> help "SearchQuery"
+pSearchQueryText :: Parser (SearchQuery Text)
+pSearchQueryText = strArgument $ metavar "QUERY" <> help "SearchQuery"
+
+pSearchQueryNat :: Parser (SearchQuery Natural)
+pSearchQueryNat =
+  argument (SearchQuery <$> auto) $ metavar "QUERY" <> help "SearchQuery"
 
 newtype ServeIcsOpts = ServeIcsOpts
   { port      :: Warp.Port

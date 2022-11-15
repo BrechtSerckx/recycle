@@ -1,5 +1,4 @@
 {-# LANGUAGE DataKinds #-}
-{-# LANGUAGE EmptyCase #-}
 module Recycle.Types
   ( module Recycle.Types.Geo
   , module Recycle.Types.Error
@@ -72,8 +71,9 @@ data AuthResult = AuthResult
     '[FieldLabelModifier (StripPrefix "authResult", PascalToCamel)]
     AuthResult
 
-newtype SearchQuery = SearchQuery { unSearchQuery :: Text}
-  deriving newtype (FromHttpApiData, ToHttpApiData, IsString)
+newtype SearchQuery a = SearchQuery { unSearchQuery :: a}
+  deriving newtype (FromHttpApiData, ToHttpApiData)
+deriving newtype instance IsString (SearchQuery Text)
 
 data Range a = Range
   { rangeFrom :: a

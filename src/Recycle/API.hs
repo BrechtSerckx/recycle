@@ -18,7 +18,9 @@ where
 
 import           Control.Monad.Trans
 import           Capability.Reader
+import           Data.Text                      ( Text )
 import           Capability.Error
+import           Numeric.Natural                ( Natural )
 import           Control.Monad.IO.Class         ( MonadIO(..) )
 import           Data.Aeson.Extra.SingObject    ( SingObject )
 import           Data.Proxy                     ( Proxy(..) )
@@ -49,13 +51,13 @@ type RecycleAPI
     :<|> "zipcodes"
       :> Header' '[Required] "X-Consumer" Consumer
       :> Header' '[Required] "Authorization" AccessToken
-      :> QueryParam' '[Optional] "q" SearchQuery
+      :> QueryParam' '[Optional] "q" (SearchQuery Natural)
       :> UVerb 'GET '[JSON] '[WithStatus 200 (SingObject "items" [FullZipcode]), WithStatus 401 ApiError]
     :<|> "streets"
       :> Header' '[Required] "X-Consumer" Consumer
       :> Header' '[Required] "Authorization" AccessToken
       :> QueryParam' '[Optional] "zipcodes" ZipcodeId
-      :> QueryParam' '[Optional] "q" SearchQuery
+      :> QueryParam' '[Optional] "q" (SearchQuery Text)
       :> UVerb 'POST '[JSON] '[WithStatus 200 (SingObject "items" [Street]), WithStatus 401 ApiError]
     :<|> "collections"
       :> Header' '[Required] "X-Consumer" Consumer
@@ -84,7 +86,7 @@ searchZipcodes
   :: HasServantClient m
   => Consumer
   -> AccessToken
-  -> Maybe SearchQuery
+  -> Maybe (SearchQuery Natural)
   -> m
        ( NS
            I
@@ -97,7 +99,7 @@ searchStreets
   => Consumer
   -> AccessToken
   -> Maybe ZipcodeId
-  -> Maybe SearchQuery
+  -> Maybe (SearchQuery Text)
   -> m
        ( NS
            I

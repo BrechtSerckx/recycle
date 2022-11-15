@@ -1,22 +1,25 @@
 #! /usr/bin/env bash
 # shellcheck disable=SC3030,SC3024,SC3054
 
-GENERATE_ICS_ARGS=(generate-ics)
-GENERATE_ICS_ARGS+=(--language NL)
-GENERATE_ICS_ARGS+=(--relative-from 7)
-GENERATE_ICS_ARGS+=(--relative-to 60)
+CMD=(cabal run exe:recycle --)
+SECRET="<REDACTED>"
+CMD+=("--secret" "$SECRET")
+
+# CMD+=(generate-ics)
+# CMD+=(--language NL)
+# CMD+=(--relative-from 7)
+# CMD+=(--relative-to 60)
 # GENERATE_ICS_ARGS+=(--absolute-from 2021-10-13)
 # GENERATE_ICS_ARGS+=(--absolute-to 2021-12-08)
 
-API_CLIENT_ARGS=(client)
-# API_CLIENT_ARGS+=(get-access-token)
-API_CLIENT_ARGS+=(search-zipcodes)
-API_CLIENT_ARGS+=(--access-token eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE2MzQ2MzE0NzksImV4cCI6MTYzNDYzNTA3OSwiYXVkIjoicmVjeWNsZWFwcC5iZSJ9.RBcnYf-0kwpGDWvcHFO2SXYDm94doruaZrudl2h0sfA)
-API_CLIENT_ARGS+=(3000)
+# CMD+=(client)
+# CMD+=(get-access-token)
+# CMD+=(search-zipcodes)
+# ACCESS_TOKEN="<REDACTED>"
+# CMD+=(--access-token "$ACCESS_TOKEN")
+# CMD+=(3000)
 
-SERVE_ICS_ARGS=(serve-ics)
-SERVE_ICS_ARGS+=(--port 3333)
+CMD+=(serve-ics)
+CMD+=(--port 3333)
 
-# cabal run exe:recycle -- "${GENERATE_ICS_ARGS[@]}" "$@"
-# cabal run exe:recycle -- "${API_CLIENT_ARGS[@]}" "$@"
-cabal run exe:recycle -- "${SERVE_ICS_ARGS[@]}" "$@"
+"${CMD[@]}" "$@"
