@@ -23,6 +23,7 @@ import           Data.Time               hiding ( getZonedTime
                                                 )
 import qualified Data.Text                     as T
 import qualified Data.Time                     as Time
+import           Numeric.Natural                ( Natural )
 import           Servant.API
 
 import qualified Recycle.API                   as API
@@ -102,8 +103,8 @@ setAccessToken authResultAccessToken = do
   setAuthResult AuthResult { .. }
 
 class Monad m => HasRecycleClient m where
-  searchZipcodes :: Maybe SearchQuery -> m [FullZipcode]
-  searchStreets :: Maybe ZipcodeId -> Maybe SearchQuery -> m [Street]
+  searchZipcodes :: Maybe (SearchQuery Natural) -> m [FullZipcode]
+  searchStreets :: Maybe ZipcodeId -> Maybe (SearchQuery T.Text) -> m [Street]
   getCollections
     :: ZipcodeId
     -> StreetId
@@ -132,7 +133,10 @@ instance
   , HasLog env Message m
   ) => HasRecycleClient (RecycleClientT m) where
   searchZipcodes mQ = do
-    lift . logInfo $ "Searching zipcodes: " <> maybe "<all>" unSearchQuery mQ
+    lift
+      .  logInfo
+      $  "Searching zipcodes: "
+      <> maybe "<all>" (T.pack . show . unSearchQuery) mQ
     SingObject zipcodes <- runRecycleOp
       $ \consumer accessToken -> API.searchZipcodes consumer accessToken mQ
     pure zipcodes

@@ -7,6 +7,8 @@ where
 
 import           Control.Monad.IO.Class         ( liftIO )
 import           Data.IORef                     ( newIORef )
+import           Data.Text                      ( Text )
+import           Numeric.Natural                ( Natural )
 import qualified Data.ByteString.Lazy.Char8    as BSL
 import           Data.Foldable                  ( for_ )
 import           Data.Time               hiding ( getZonedTime )
@@ -115,11 +117,11 @@ calculateDateRange = \case
 type RecycleIcsAPI
   = (  "api"
     :>  (  "search-zipcode"
-        :> QueryParam' '[Required] "q" SearchQuery
+        :> QueryParam' '[Required] "q" (SearchQuery Natural)
         :> UVerb 'GET '[JSON] '[WithStatus 200 [FullZipcode]]
       :<|> "search-street"
         :> QueryParam' '[Required] "zipcode" ZipcodeId
-        :> QueryParam' '[Required] "q" SearchQuery
+        :> QueryParam' '[Required] "q" (SearchQuery Text)
         :> UVerb 'GET '[JSON] '[WithStatus 200 [Street]]
       :<|> "generate"
         :> QueryParamForm DateRange
@@ -152,12 +154,13 @@ recycleIcsServer dataDir =
   (searchZipcode :<|> searchStreet :<|> generateCollection) :<|> serveWww
 
  where
-  searchZipcode :: SearchQuery -> m (Union '[WithStatus 200 [FullZipcode]])
+  searchZipcode
+    :: SearchQuery Natural -> m (Union '[WithStatus 200 [FullZipcode]])
   searchZipcode query = do
     zipcodes <- searchZipcodes (Just query)
     pure . Z . I $ WithStatus @200 zipcodes
   searchStreet
-    :: ZipcodeId -> SearchQuery -> m (Union '[WithStatus 200 [Street]])
+    :: ZipcodeId -> SearchQuery Text -> m (Union '[WithStatus 200 [Street]])
   searchStreet zipcodeId query = do
     streets <- searchStreets (Just zipcodeId) (Just query)
     pure . Z . I $ WithStatus @200 streets
