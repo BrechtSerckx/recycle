@@ -1,14 +1,16 @@
+{ release ? false }:
 let
   sources = import ./nix/sources.nix { };
   haskellNix = import sources.haskellNix { };
-  pkgs = import haskellNix.sources.nixpkgs-unstable haskellNix.nixpkgsArgs;
-in pkgs.haskell-nix.project {
-  src = pkgs.haskell-nix.haskellLib.cleanGit {
+  nixpkgs = import haskellNix.sources.nixpkgs-unstable haskellNix.nixpkgsArgs;
+in nixpkgs.haskell-nix.project {
+  src = nixpkgs.haskell-nix.haskellLib.cleanGit {
     name = "recycle";
     src = ./.;
   };
-  modules = [{
-    reinstallableLibGhc = true;
-  }];
+  modules = [{ reinstallableLibGhc = true; }] ++ (if release then [{
+    packages.recycle.components.exes.recycle.dontStrip = false;
+  }] else
+    [ ]);
   compiler-nix-name = "ghc902";
 }

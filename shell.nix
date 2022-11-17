@@ -2,7 +2,7 @@ let
   sources = import ./nix/sources.nix { };
   haskellNix = import sources.haskellNix { };
   nixpkgs = haskellNix.pkgs-unstable;
-in (import ./default.nix).shellFor {
+in (import ./default.nix {}).shellFor {
   packages = ps: with ps; [ recycle ];
 
   withHoogle = true;

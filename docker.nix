@@ -1,17 +1,22 @@
-let sources = import ./nix/sources.nix;
-in { pkgs ? import sources.nixpkgs { }, name ? "recycle", tag ? "latest" }:
+let
+  sources = import ./nix/sources.nix { };
+  haskellNix = import sources.haskellNix { };
+  nixpkgs = haskellNix.pkgs-unstable;
+in { name ? "recycle", tag ? "latest" }:
 
-let recycle = pkgs.haskell.lib.justStaticExecutables (import ./.);
-in pkgs.dockerTools.buildImage {
+let recycle = (import ./. { release = true; }).recycle.components.exes.recycle;
+in nixpkgs.dockerTools.buildImage {
   inherit name tag;
   fromImageName = "alpine:latest";
-  contents = [ recycle ] ++ (with pkgs; [ coreutils cacert ]);
+  copyToRoot = nixpkgs.buildEnv {
+    name = "image-root";
+    paths = [ recycle ] ++ (with nixpkgs; [ coreutils cacert ]);
+    pathsToLink = [ "/bin" ];
+  };
   config = {
     Entrypoint = [ "recycle" ];
     Cmd = [ "-h" ];
     WorkingDir = "/app/";
-    ExposedPorts = {
-      "3332/tcp" = { };
-    };
+    ExposedPorts = { "3332/tcp" = { }; };
   };
 }
