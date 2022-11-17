@@ -14,8 +14,18 @@ in (import ./default.nix {}).shellFor {
   };
 
   buildInputs = (with nixpkgs; [
+    # niv
     (import sources.niv { }).niv
+    # nix formatter
     nixfmt
+    # haskell formatter (not using haskell.nix, unfortunately)
     haskellPackages.brittany
-  ]) ++ (with nixpkgs.nodePackages; [ js-beautify eslint ]);
+    # haskell ci/cd generator
+    haskell-ci
+  ]) ++ (with nixpkgs.nodePackages; [
+    # web formatter
+    js-beautify
+    # js linter
+    eslint
+  ]);
 }

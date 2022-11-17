@@ -19,6 +19,8 @@ data-files:
   www/index.js
   www/favicon.ico
 
+Tested-With: GHC ==9.0.2
+
 common common-default-extensions
   default-language:    Haskell2010
   default-extensions:
