@@ -76,7 +76,7 @@ library
     , text
 
       -- effects
-    , capability
+    , capability >= 0.5
     , transformers
     , mtl
 
@@ -97,7 +97,7 @@ library
     , data-default-class
     , case-insensitive
     , bytestring
-    , iCalendar
+    , iCalendar >= 0.4
     , optparse-applicative
     , servant-server
     , warp

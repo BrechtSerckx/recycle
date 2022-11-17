@@ -10,5 +10,5 @@ in pkgs.haskell-nix.project {
   modules = [{
     reinstallableLibGhc = true;
   }];
-  compiler-nix-name = "ghc925";
+  compiler-nix-name = "ghc902";
 }
