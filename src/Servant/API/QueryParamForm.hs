@@ -1,4 +1,3 @@
-{-# LANGUAGE KindSignatures #-}
 {-# LANGUAGE TypeFamilies #-}
 {-# LANGUAGE TypeOperators #-}
 
@@ -9,6 +8,7 @@ where
 
 import qualified Data.ByteString as BS
 import qualified Data.ByteString.Lazy as BSL
+import Data.Kind (Type)
 import Data.Proxy
 import qualified Data.Text.Encoding as T
 import Network.Wai
@@ -17,7 +17,7 @@ import Servant.Server
 import Servant.Server.Internal
 import qualified Web.FormUrlEncoded as Form
 
-data QueryParamForm (a :: *)
+data QueryParamForm (a :: Type)
 
 instance
   ( Form.FromForm a,

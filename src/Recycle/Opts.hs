@@ -17,10 +17,6 @@ import Numeric.Natural (Natural)
 import Options.Applicative
 import Recycle.ICalendar
 import Recycle.Types
-import Recycle.Utils
-  ( ISO639_1 (EN),
-    LangCode,
-  )
 import Text.Read (readMaybe)
 
 data Opts = Opts

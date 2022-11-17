@@ -19,14 +19,8 @@ where
 
 import Capability.Error
 import Capability.Reader
-import Control.Monad.IO.Class (MonadIO (..))
 import Control.Monad.Trans
 import Data.Aeson.Extra.SingObject (SingObject)
-import Data.Proxy (Proxy (..))
-import Data.SOP
-  ( I (..),
-    NS (..),
-  )
 import Data.Text (Text)
 import Data.Time (Day)
 import Numeric.Natural (Natural)

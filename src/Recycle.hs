@@ -14,11 +14,6 @@ import qualified Data.ByteString.Lazy.Char8 as BSL
 import qualified Data.ByteString.Lazy.Char8 as BSL8
 import Data.Foldable (for_)
 import Data.IORef (newIORef)
-import Data.Proxy (Proxy (..))
-import Data.SOP
-  ( I (..),
-    NS (..),
-  )
 import Data.Text (Text)
 import qualified Data.Text as T
 import Data.Time hiding (getZonedTime)
@@ -28,8 +23,7 @@ import Network.HTTP.Client.TLS
   )
 import Network.HTTP.Media.MediaType
 import Network.Wai.Application.Static
-  ( StaticSettings (..),
-    defaultWebAppSettings,
+  ( defaultWebAppSettings,
   )
 import Network.Wai.Handler.Warp
 import Network.Wai.Middleware.RequestLogger

@@ -16,7 +16,6 @@ import Capability.Error
 import Capability.Reader
 import Capability.State
 import Colog hiding (I)
-import Control.Monad.IO.Class (MonadIO (..))
 import qualified Control.Monad.Reader as Mtl
 import Control.Monad.Trans
 import Data.Aeson.Extra.SingObject (SingObject (..))

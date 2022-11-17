@@ -246,7 +246,7 @@ makeDue ts = \case
       }
 
 reminderToVAlarm :: Description -> UTCTime -> Reminder -> VAlarm
-reminderToVAlarm vaDescription ts Reminder {..} =
+reminderToVAlarm vaDescription _ts Reminder {..} =
   VAlarmDisplay
     { vaDescription,
       vaTrigger =
