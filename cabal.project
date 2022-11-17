@@ -1,0 +1,42 @@
+packages:
+  ./recycle.cabal
+
+source-repository-package:
+  type: git
+  location: https://github.com/markus1189/iCalendar
+  tag: a3b17449f7f3ab66f01ab77fde2e667d4e93e265
+  --sha256: 1b65mjyafbi5dzvai7iy23c8dncs6k4fw093v905v2rbvds5zgx7
+
+source-repository-package:
+  type: git
+  location: https://github.com/fumieval/deriving-aeson
+  tag: 3f8ab60afa4491af62f22095bada9ea61e2ec95a
+  --sha256: 1dc9h10ads7krj4izp79d1nilyli9z34hdxayqrs82dfdv7fqyqp
+
+source-repository-package:
+  type: git
+  location: https://github.com/haskell-servant/servant
+  subdir: servant
+  tag: abc53b54e390ea3cb2abecca03414f999eb1d310
+  --sha256: 0d49gb7631axlj0ca7qhsk654qpcp5kmk13w4hba3c6s7sz5nryk
+
+source-repository-package:
+  type: git
+  location: https://github.com/haskell-servant/servant
+  subdir: servant-client-core
+  tag: abc53b54e390ea3cb2abecca03414f999eb1d310
+  --sha256: 0d49gb7631axlj0ca7qhsk654qpcp5kmk13w4hba3c6s7sz5nryk
+
+source-repository-package:
+  type: git
+  location: https://github.com/haskell-servant/servant
+  subdir: servant-client
+  tag: abc53b54e390ea3cb2abecca03414f999eb1d310
+  --sha256: 0d49gb7631axlj0ca7qhsk654qpcp5kmk13w4hba3c6s7sz5nryk
+
+source-repository-package:
+  type: git
+  location: https://github.com/haskell-servant/servant
+  subdir: servant-server
+  tag: abc53b54e390ea3cb2abecca03414f999eb1d310
+  --sha256: 0d49gb7631axlj0ca7qhsk654qpcp5kmk13w4hba3c6s7sz5nryk

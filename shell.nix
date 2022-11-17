@@ -1,11 +1,21 @@
-let pkgs = import ./pkgs.nix;
-in pkgs.haskellPackages.shellFor {
-  packages = p: [ p.recycle ];
-  buildInputs = with pkgs;
-    [
-      haskellPackages.cabal-install
-      haskellPackages.brittany
-      haskellPackages.ghcid
-      haskellPackages.hlint
-    ] ++ (with pkgs.nodePackages; [ js-beautify eslint ]);
+let
+  sources = import ./nix/sources.nix { };
+  haskellNix = import sources.haskellNix { };
+  nixpkgs = haskellNix.pkgs-unstable;
+in (import ./default.nix).shellFor {
+  packages = ps: with ps; [ recycle ];
+
+  withHoogle = true;
+
+  tools = {
+    cabal = { version = "latest"; };
+    ghcid = { version = "latest"; };
+    hlint = { version = "latest"; };
+  };
+
+  buildInputs = (with nixpkgs; [
+    (import sources.niv { }).niv
+    nixfmt
+    haskellPackages.brittany
+  ]) ++ (with nixpkgs.nodePackages; [ js-beautify eslint ]);
 }
