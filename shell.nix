@@ -11,6 +11,7 @@ in (import ./default.nix {}).shellFor {
     cabal = { version = "latest"; };
     ghcid = { version = "latest"; };
     hlint = { version = "latest"; };
+    ormolu = { version = "latest"; };
   };
 
   buildInputs = (with nixpkgs; [
@@ -18,8 +19,6 @@ in (import ./default.nix {}).shellFor {
     (import sources.niv { }).niv
     # nix formatter
     nixfmt
-    # haskell formatter (not using haskell.nix, unfortunately)
-    haskellPackages.brittany
     # haskell ci/cd generator
     haskell-ci
   ]) ++ (with nixpkgs.nodePackages; [
