@@ -25,16 +25,11 @@ import Data.Text (Text)
 import qualified Data.Text.Lazy as TL
 import Data.Time
 import Data.Version (Version (..))
+import Recycle.Ics.Types
 import Recycle.Types
 import Recycle.Types.Orphans ()
 import Text.ICalendar.Printer
 import Text.ICalendar.Types hiding (Range)
-import Web.FormUrlEncoded
-  ( FromForm (..),
-    lookupUnique,
-    parseAll,
-    parseUnique,
-  )
 
 getByLangCode :: LangCode -> Map.Map LangCode a -> (LangCode, a)
 getByLangCode lc m =
@@ -42,57 +37,6 @@ getByLangCode lc m =
     ((lc,) <$> Map.lookup lc m)
       <|> ((EN,) <$> Map.lookup EN m)
       <|> headMay (Map.toList m)
-
-data FractionEncoding
-  = EncodeFractionAsVEvent (Range TimeOfDay) [Reminder]
-  | EncodeFractionAsVTodo TodoDue
-  deriving (Show)
-
-instance FromForm FractionEncoding where
-  fromForm f =
-    lookupUnique "fe" f >>= \case
-      "event" -> do
-        eventRange <- do
-          rangeFrom <- parseUnique "es" f
-          rangeTo <- parseUnique "ee" f
-          pure Range {..}
-        reminders <- do
-          remindersDaysBefore <- parseAll "rdb" f
-          remindersHoursBefore <- parseAll "rhb" f
-          remindersMinutesBefore <- parseAll "rmb" f
-          pure $
-            zipWith3
-              Reminder
-              remindersDaysBefore
-              remindersHoursBefore
-              remindersMinutesBefore
-        pure $ EncodeFractionAsVEvent eventRange reminders
-      "todo" -> EncodeFractionAsVTodo <$> fromForm f
-      t -> Left $ "Must be one of [event,todo]: " <> t
-
-data Reminder = Reminder
-  { daysBefore :: Int,
-    hoursBefore :: Int,
-    minutesBefore :: Int
-  }
-  deriving (Eq, Show)
-
-data TodoDue
-  = TodoDueDateTime Integer TimeOfDay
-  | TodoDueDate Integer
-  deriving (Eq, Show)
-
-instance FromForm TodoDue where
-  fromForm f =
-    lookupUnique "tdt" f >>= \case
-      "date" -> do
-        dateReminder <- parseUnique "tdb" f
-        pure $ TodoDueDate dateReminder
-      "datetime" -> do
-        daysBefore <- parseUnique "tdb" f
-        timeOfDay <- parseUnique "tt" f
-        pure $ TodoDueDateTime daysBefore timeOfDay
-      t -> Left $ "Must be one of [date,datetime]: " <> t
 
 mkVCalendar ::
   LangCode ->
