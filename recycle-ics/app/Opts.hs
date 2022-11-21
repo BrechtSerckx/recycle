@@ -5,14 +5,11 @@ module Opts
     GenerateIcsOpts (..),
     ServeIcsOpts (..),
     ApiClientOpts (..),
-    ApiClientCmd (..),
   )
 where
 
 import qualified Data.Char as Char
-import Data.Text (Text)
 import qualified Network.Wai.Handler.Warp as Warp
-import Numeric.Natural (Natural)
 import Options.Applicative
 import Recycle.Ics.ICalendar
 import Recycle.Ics.Types
@@ -40,7 +37,6 @@ pOpts = do
 
 data Cmd
   = GenerateIcs GenerateIcsOpts
-  | ApiClient ApiClientCmd
   | ServeIcs ServeIcsOpts
 
 pCmd :: Parser Cmd
@@ -51,10 +47,6 @@ pCmd =
           let generateInfo =
                 mconcat [fullDesc, progDesc "Generate an iCalendar file"]
            in (GenerateIcs <$> pGenerateIcsOpts) `info` generateInfo,
-        command "client" $
-          let generateInfo =
-                mconcat [fullDesc, progDesc "Client for the RecycleApp.be api"]
-           in (ApiClient <$> pApiClientCmd) `info` generateInfo,
         command "serve-ics" $
           let serveInfo = mconcat [fullDesc, progDesc "Serve iCalendar files"]
            in (ServeIcs <$> pServeIcsOpts) `info` serveInfo
@@ -200,51 +192,6 @@ pApiClientOpts = do
 defaultConsumer :: Consumer
 defaultConsumer = Consumer "recycleapp.be"
 
-data ApiClientCmd
-  = GetAccessToken
-  | SearchZipcodes (Maybe AccessToken) (Maybe (SearchQuery Natural))
-  | SearchStreets (Maybe AccessToken) (Maybe ZipcodeId) (Maybe (SearchQuery Text))
-  | GetCollections (Maybe AccessToken) ZipcodeId StreetId HouseNumber DateRange
-  | GetFractions (Maybe AccessToken) ZipcodeId StreetId HouseNumber
-
-pApiClientCmd :: Parser ApiClientCmd
-pApiClientCmd =
-  hsubparser $
-    mconcat
-      [ command "get-access-token" $
-          pure GetAccessToken
-            `info` (fullDesc <> progDesc "Get an access token"),
-        command "search-zipcodes" $
-          (SearchZipcodes <$> optional pAccessToken <*> optional pSearchQueryNat)
-            `info` (fullDesc <> progDesc "Search for zipcodes"),
-        command "search-streets" $
-          ( SearchStreets
-              <$> optional pAccessToken
-              <*> optional pZipcodeId
-              <*> optional pSearchQueryText
-          )
-            `info` (fullDesc <> progDesc "Search for streets"),
-        command "get-collections" $
-          ( GetCollections
-              <$> optional pAccessToken
-              <*> pZipcodeId
-              <*> pStreetId
-              <*> pHouseNumber
-              <*> pDateRange
-          )
-            `info` (fullDesc <> progDesc "Get collections"),
-        command "get-fractions" $
-          ( GetFractions
-              <$> optional pAccessToken
-              <*> pZipcodeId
-              <*> pStreetId
-              <*> pHouseNumber
-          )
-            `info` (fullDesc <> progDesc "Get fractions")
-      ]
-
-pAccessToken :: Parser AccessToken
-pAccessToken = strOption $ long "access-token" <> help "AccessToken"
 
 pZipcodeId :: Parser ZipcodeId
 pZipcodeId = strOption $ long "zipcode" <> help "ZipcodeId"
@@ -259,13 +206,6 @@ pHouseNumber =
 
 pStreetId :: Parser StreetId
 pStreetId = strOption $ long "street" <> help "StreetId"
-
-pSearchQueryText :: Parser (SearchQuery Text)
-pSearchQueryText = strArgument $ metavar "QUERY" <> help "SearchQuery"
-
-pSearchQueryNat :: Parser (SearchQuery Natural)
-pSearchQueryNat =
-  argument (SearchQuery <$> auto) $ metavar "QUERY" <> help "SearchQuery"
 
 newtype ServeIcsOpts = ServeIcsOpts
   { port :: Warp.Port
