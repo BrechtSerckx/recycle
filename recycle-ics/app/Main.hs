@@ -1,6 +1,6 @@
 {-# LANGUAGE DataKinds #-}
 
-module Recycle.Ics
+module Main
   ( main,
   )
 where
@@ -20,11 +20,11 @@ import Network.HTTP.Client.TLS
   )
 import Network.Wai.Handler.Warp
 import Network.Wai.Middleware.RequestLogger
+import Opts
 import Paths_recycle_ics
 import Recycle.AppM
 import Recycle.Class
 import Recycle.Ics.ICalendar
-import Recycle.Ics.Opts
 import Recycle.Ics.Server
 import Servant.Client
   ( BaseUrl (..),

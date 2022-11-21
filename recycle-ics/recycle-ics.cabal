@@ -55,9 +55,7 @@ library
   ghc-options:
     -Wall
   exposed-modules:
-    Recycle.Ics
     Recycle.Ics.ICalendar
-    Recycle.Ics.Opts
     Recycle.Ics.Types
     Recycle.Ics.API
     Recycle.Ics.Server
@@ -113,7 +111,12 @@ library
     , optparse-applicative >= 0.14
 
 executable recycle-ics
+  import: common-default-extensions
   main-is:             Main.hs
+  hs-source-dirs:      app
+  other-modules:
+    Opts
+    Paths_recycle_ics
   ghc-options:
     -O2
     -Wall
@@ -122,4 +125,27 @@ executable recycle-ics
     -with-rtsopts=-N
   build-depends:
       base >=4.7 && <5
+    , recycle-client
     , recycle-ics
+
+      -- data
+    , bytestring >= 0.10
+    , filepath >= 1.4
+    , text >= 1.2
+
+    -- serialisation
+    , aeson >= 1.4
+
+      -- network
+    , http-client >= 0.6
+    , http-client-tls >= 0.3
+    , servant-client >= 0.16
+    , wai-extra >= 3.1
+    , warp >= 3.3
+
+      -- logging
+    , co-log >= 0.5
+    , co-log-core >= 0.3
+
+      -- cli
+    , optparse-applicative >= 0.14

@@ -22,7 +22,7 @@ import Recycle.AppM
 import Recycle.Class
 import Recycle.Ics.API (RecycleIcsAPI, pRecycleIcsAPI)
 import Recycle.Ics.ICalendar
-import Recycle.Ics.Opts
+import Recycle.Ics.Types
 import Recycle.Types
 import Servant.API
 import Servant.Server

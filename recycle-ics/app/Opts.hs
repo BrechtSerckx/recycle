@@ -1,10 +1,9 @@
-module Recycle.Ics.Opts
+module Opts
   ( Cmd (..),
     Opts (..),
     parseOpts,
     GenerateIcsOpts (..),
     ServeIcsOpts (..),
-    CollectionQuery (..),
     ApiClientOpts (..),
     ApiClientCmd (..),
   )
@@ -16,6 +15,7 @@ import qualified Network.Wai.Handler.Warp as Warp
 import Numeric.Natural (Natural)
 import Options.Applicative
 import Recycle.Ics.ICalendar
+import Recycle.Ics.Types
 import Recycle.Types
 import Text.Read (readMaybe)
 
@@ -63,15 +63,6 @@ pCmd =
 data GenerateIcsOpts = GenerateIcsOpts
   { outputFile :: Maybe FilePath,
     collectionQuery :: CollectionQuery
-  }
-
-data CollectionQuery = CollectionQuery
-  { collectionQueryDateRange :: DateRange,
-    collectionQueryLangCode :: LangCode,
-    collectionQueryFractionEncoding :: FractionEncoding,
-    collectionQueryZipcode :: ZipcodeId,
-    collectionQueryStreet :: StreetId,
-    collectionQueryHouseNumber :: HouseNumber
   }
 
 pGenerateIcsOpts :: Parser GenerateIcsOpts

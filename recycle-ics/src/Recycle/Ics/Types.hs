@@ -2,6 +2,7 @@ module Recycle.Ics.Types
   ( FractionEncoding (..),
     Reminder (..),
     TodoDue (..),
+    CollectionQuery (..),
   )
 where
 
@@ -65,3 +66,12 @@ instance FromForm TodoDue where
         timeOfDay <- parseUnique "tt" f
         pure $ TodoDueDateTime daysBefore timeOfDay
       t -> Left $ "Must be one of [date,datetime]: " <> t
+
+data CollectionQuery = CollectionQuery
+  { collectionQueryDateRange :: DateRange,
+    collectionQueryLangCode :: LangCode,
+    collectionQueryFractionEncoding :: FractionEncoding,
+    collectionQueryZipcode :: ZipcodeId,
+    collectionQueryStreet :: StreetId,
+    collectionQueryHouseNumber :: HouseNumber
+  }
