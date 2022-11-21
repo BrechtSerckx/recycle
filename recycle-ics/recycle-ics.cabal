@@ -125,24 +125,3 @@ executable recycle-ics
   build-depends:
       base >=4.7 && <5
     , recycle-ics
-
-test-suite recycle-ics-test
-  import: common-default-extensions
-  type: exitcode-stdio-1.0
-  main-is: Spec.hs
-  hs-source-dirs: test
-  ghc-options:
-    -threaded
-    -rtsopts
-    -with-rtsopts=-N
-  build-depends:
-      base >=4.7 && <5
-    , recycle-ics
-    , QuickCheck >= 2.13
-    , aeson >= 1.4
-    , aeson-extra >= 0.5
-    , bytestring >= 0.10
-    , containers >= 0.6
-    , file-embed >= 0.0
-    , hspec >= 2.7
-    , text >= 1.2
