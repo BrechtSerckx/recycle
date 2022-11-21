@@ -1,6 +1,6 @@
 {-# LANGUAGE DataKinds #-}
 
-module Recycle.ICalendar
+module Recycle.Ics.ICalendar
   ( mkVCalendar,
     printVCalendar,
     VCalendar,

@@ -1,7 +1,7 @@
 {-# LANGUAGE DataKinds #-}
 {-# LANGUAGE TypeOperators #-}
 
-module Recycle
+module Recycle.Ics
   ( main,
   )
 where
@@ -31,8 +31,8 @@ import Numeric.Natural (Natural)
 import Paths_recycle_ics
 import Recycle.AppM
 import Recycle.Class
-import Recycle.ICalendar
-import Recycle.Opts
+import Recycle.Ics.ICalendar
+import Recycle.Ics.Opts
 import Recycle.Types
 import Servant.API
 import Servant.API.QueryParamForm

@@ -1,6 +1,6 @@
 module Main where
 
-import qualified Recycle
+import qualified Recycle.Ics
 
 main :: IO ()
-main = Recycle.main
+main = Recycle.Ics.main

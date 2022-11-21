@@ -1,4 +1,4 @@
-module Recycle.Opts
+module Recycle.Ics.Opts
   ( Cmd (..),
     Opts (..),
     parseOpts,
@@ -15,7 +15,7 @@ import Data.Text (Text)
 import qualified Network.Wai.Handler.Warp as Warp
 import Numeric.Natural (Natural)
 import Options.Applicative
-import Recycle.ICalendar
+import Recycle.Ics.ICalendar
 import Recycle.Types
 import Text.Read (readMaybe)
 
