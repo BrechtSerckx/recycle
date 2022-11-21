@@ -26,6 +26,7 @@ import qualified Data.Text.Lazy as TL
 import Data.Time
 import Data.Version (Version (..))
 import Recycle.Types
+import Recycle.Types.Orphans ()
 import Text.ICalendar.Printer
 import Text.ICalendar.Types hiding (Range)
 import Web.FormUrlEncoded
@@ -34,7 +35,6 @@ import Web.FormUrlEncoded
     parseAll,
     parseUnique,
   )
-import Web.HttpApiData (FromHttpApiData (..))
 
 getByLangCode :: LangCode -> Map.Map LangCode a -> (LangCode, a)
 getByLangCode lc m =
@@ -42,19 +42,6 @@ getByLangCode lc m =
     ((lc,) <$> Map.lookup lc m)
       <|> ((EN,) <$> Map.lookup EN m)
       <|> headMay (Map.toList m)
-
--- FIXME: merge with the one in `Recycle.Types`
-instance FromForm DateRange where
-  fromForm f =
-    let lookupRange :: FromHttpApiData a => Either Text (Range a)
-        lookupRange = do
-          rangeFrom <- parseUnique "f" f
-          rangeTo <- parseUnique "t" f
-          pure Range {..}
-     in lookupUnique "drt" f >>= \case
-          "absolute" -> AbsoluteDateRange <$> lookupRange
-          "relative" -> RelativeDateRange <$> lookupRange
-          t -> Left $ "Must be one of [absolute,relative]: " <> t
 
 data FractionEncoding
   = EncodeFractionAsVEvent (Range TimeOfDay) [Reminder]

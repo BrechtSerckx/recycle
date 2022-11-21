@@ -60,6 +60,7 @@ library
     Recycle.Ics.Opts
   other-modules:
     Paths_recycle_ics
+    Recycle.Types.Orphans
     Servant.API.QueryParamForm
   build-depends:
       base >= 4.12
