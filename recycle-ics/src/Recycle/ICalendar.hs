@@ -44,8 +44,6 @@ getByLangCode lc m =
       <|> headMay (Map.toList m)
 
 -- FIXME: merge with the one in `Recycle.Types`
-data DateRange = AbsoluteDateRange (Range Day) | RelativeDateRange (Range Integer)
-
 instance FromForm DateRange where
   fromForm f =
     let lookupRange :: FromHttpApiData a => Either Text (Range a)
