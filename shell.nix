@@ -3,7 +3,7 @@ let
   haskellNix = import sources.haskellNix { };
   nixpkgs = haskellNix.pkgs-unstable;
 in (import ./default.nix {}).shellFor {
-  packages = ps: with ps; [ recycle ];
+  packages = ps: with ps; [ recycle-client ];
 
   withHoogle = true;
 

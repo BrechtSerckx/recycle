@@ -9,7 +9,7 @@ in nixpkgs.haskell-nix.project {
     src = ./.;
   };
   modules = [{ reinstallableLibGhc = true; }] ++ (if release then [{
-    packages.recycle.components.exes.recycle.dontStrip = false;
+    packages.recycle-client.components.exes.recycle-client.dontStrip = false;
   }] else
     [ ]);
   compiler-nix-name = "ghc902";

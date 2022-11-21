@@ -28,7 +28,7 @@ import Network.Wai.Application.Static
 import Network.Wai.Handler.Warp
 import Network.Wai.Middleware.RequestLogger
 import Numeric.Natural (Natural)
-import Paths_recycle
+import Paths_recycle_client
 import Recycle.AppM
 import Recycle.Class
 import Recycle.ICalendar
