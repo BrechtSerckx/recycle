@@ -1,5 +1,6 @@
 packages:
   ./recycle-client
+  ./recycle-ics
 
 source-repository-package
   type: git

@@ -14,10 +14,6 @@ maintainer:          services+git@brechtserckx.be
 -- copyright:
 -- category:
 build-type:          Simple
-data-files:
-  www/index.html
-  www/index.js
-  www/favicon.ico
 
 Tested-With: GHC ==9.0.2
 
