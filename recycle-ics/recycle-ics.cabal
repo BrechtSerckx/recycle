@@ -59,6 +59,8 @@ library
     Recycle.Ics.ICalendar
     Recycle.Ics.Opts
     Recycle.Ics.Types
+    Recycle.Ics.API
+    Recycle.Ics.Server
   other-modules:
     Paths_recycle_ics
     Recycle.Types.Orphans
