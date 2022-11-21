@@ -94,6 +94,21 @@ library
     , co-log >= 0.5
     , co-log-core >= 0.3
 
+library recycle-client-optparse-applicative
+  import: common-default-extensions
+  visibility: public
+  hs-source-dirs: src-optparse-applicative
+  ghc-options:
+    -Wall
+  exposed-modules:
+    Recycle.Types.Optparse
+  build-depends:
+      base >= 4.12
+    , recycle-client
+
+      -- cli
+    , optparse-applicative >= 0.14
+
 executable recycle-client
   import: common-default-extensions
   main-is:             Main.hs
@@ -109,6 +124,7 @@ executable recycle-client
   build-depends:
       base >=4.7 && <5
     , recycle-client
+    , recycle-client:recycle-client-optparse-applicative
 
       -- data
     , bytestring >= 0.10

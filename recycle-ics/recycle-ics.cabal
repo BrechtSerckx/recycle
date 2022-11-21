@@ -125,8 +125,9 @@ executable recycle-ics
     -with-rtsopts=-N
   build-depends:
       base >=4.7 && <5
-    , recycle-client
     , recycle-ics
+    , recycle-client
+    , recycle-client:recycle-client-optparse-applicative
 
       -- data
     , bytestring >= 0.10
