@@ -1,0 +1,7 @@
+packages: .
+
+source-repository-package
+  type: git
+  location: https://github.com/markus1189/iCalendar.git
+  tag: a3b17449f7f3ab66f01ab77fde2e667d4e93e265
+  --sha256: 1b65mjyafbi5dzvai7iy23c8dncs6k4fw093v905v2rbvds5zgx7

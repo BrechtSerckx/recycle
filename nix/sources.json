@@ -1,27 +1,14 @@
 {
-    "deriving-aeson": {
+    "haskellNix": {
         "branch": "master",
-        "description": "Scrap your hand-rolled aeson instances",
-        "homepage": "http://hackage.haskell.org/package/deriving-aeson",
-        "owner": "fumieval",
-        "repo": "deriving-aeson",
-        "rev": "3f8ab60afa4491af62f22095bada9ea61e2ec95a",
-        "sha256": "095ml73175wpbkqr15q8c22sgn8svkxw5hk25wd81fgb2q10adg3",
+        "description": "Alternative Haskell Infrastructure for Nixpkgs",
+        "homepage": "https://input-output-hk.github.io/haskell.nix",
+        "owner": "input-output-hk",
+        "repo": "haskell.nix",
+        "rev": "cbf1e918b6e278a81c385155605b8504e498efef",
+        "sha256": "1dc9h10ads7krj4izp79d1nilyli9z34hdxayqrs82dfdv7fqyqp",
         "type": "tarball",
-        "url": "https://github.com/fumieval/deriving-aeson/archive/3f8ab60afa4491af62f22095bada9ea61e2ec95a.tar.gz",
-        "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
-    },
-    "iCalendar": {
-        "branch": "update-bounds",
-        "description": "iCalendar data types, parser, and printer.",
-        "homepage": null,
-        "owner": "markus1189",
-        "ref": "update-bounds",
-        "repo": "iCalendar",
-        "rev": "a3b17449f7f3ab66f01ab77fde2e667d4e93e265",
-        "sha256": "1b65mjyafbi5dzvai7iy23c8dncs6k4fw093v905v2rbvds5zgx7",
-        "type": "tarball",
-        "url": "https://github.com/markus1189/iCalendar/archive/a3b17449f7f3ab66f01ab77fde2e667d4e93e265.tar.gz",
+        "url": "https://github.com/input-output-hk/haskell.nix/archive/cbf1e918b6e278a81c385155605b8504e498efef.tar.gz",
         "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
     },
     "niv": {
@@ -34,30 +21,6 @@
         "sha256": "1qjavxabbrsh73yck5dcq8jggvh3r2jkbr6b5nlz5d9yrqm9255n",
         "type": "tarball",
         "url": "https://github.com/nmattia/niv/archive/af958e8057f345ee1aca714c1247ef3ba1c15f5e.tar.gz",
-        "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
-    },
-    "nixpkgs": {
-        "branch": "release-20.03",
-        "description": "Nix Packages collection",
-        "homepage": "",
-        "owner": "NixOS",
-        "repo": "nixpkgs",
-        "rev": "6d1a044fc9ff3cc96fca5fa3ba9c158522bbf2a5",
-        "sha256": "07a3nyrj3pwl017ig0rbn5rbmbf14gl3vqggvkyrdby01726p5fg",
-        "type": "tarball",
-        "url": "https://github.com/NixOS/nixpkgs/archive/6d1a044fc9ff3cc96fca5fa3ba9c158522bbf2a5.tar.gz",
-        "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
-    },
-    "servant": {
-        "branch": "master",
-        "description": "Main repository for the servant libraries -- DSL for describing, serving, querying, mocking, documenting web applications and more!",
-        "homepage": "https://docs.servant.dev/",
-        "owner": "haskell-servant",
-        "repo": "servant",
-        "rev": "abc53b54e390ea3cb2abecca03414f999eb1d310",
-        "sha256": "0d49gb7631axlj0ca7qhsk654qpcp5kmk13w4hba3c6s7sz5nryk",
-        "type": "tarball",
-        "url": "https://github.com/haskell-servant/servant/archive/abc53b54e390ea3cb2abecca03414f999eb1d310.tar.gz",
         "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
     }
 }
