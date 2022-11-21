@@ -55,7 +55,6 @@ library
     Recycle.API
     Recycle.AppM
     Recycle.Class
-    Recycle.ICalendar
     Recycle.Types
     Recycle.Types.Error
     Recycle.Types.Geo
@@ -63,7 +62,6 @@ library
     Recycle.Opts
   other-modules:
     Paths_recycle_client
-    Servant.API.QueryParamForm
   build-depends:
       base >= 4.12
 

@@ -20,6 +20,7 @@ module Recycle.Types
     FullFraction (..),
     Event (..),
     partitionCollectionEvents,
+    DateRange (..),
   )
 where
 
@@ -35,7 +36,7 @@ import Data.Map.Strict (Map)
 import Data.SOP
 import Data.String (IsString)
 import Data.Text (Text)
-import Data.Time (UTCTime)
+import Data.Time (Day, UTCTime)
 import Deriving.Aeson
   ( CustomJSON (CustomJSON),
     FieldLabelModifier,
@@ -216,3 +217,7 @@ data Event = Event
     via CustomJSON
           '[FieldLabelModifier (StripPrefix "event", PascalToCamel)]
           Event
+
+-- * DateRange
+
+data DateRange = AbsoluteDateRange (Range Day) | RelativeDateRange (Range Integer)
