@@ -1,4 +1,4 @@
-module Recycle.Opts
+module Opts
   ( Opts (..),
     parseOpts,
     ApiClientOpts (..),

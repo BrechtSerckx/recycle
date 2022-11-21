@@ -1,6 +1,6 @@
 {-# LANGUAGE DataKinds #-}
 
-module Recycle
+module Main
   ( main,
   )
 where
@@ -18,9 +18,9 @@ import Network.HTTP.Client.TLS
   ( newTlsManagerWith,
     tlsManagerSettings,
   )
+import Opts
 import Recycle.AppM
 import Recycle.Class
-import Recycle.Opts
 import Recycle.Types
 import Servant.Client
   ( BaseUrl (..),

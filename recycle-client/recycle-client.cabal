@@ -51,7 +51,6 @@ library
   ghc-options:
     -Wall
   exposed-modules:
-    Recycle
     Recycle.API
     Recycle.AppM
     Recycle.Class
@@ -59,20 +58,14 @@ library
     Recycle.Types.Error
     Recycle.Types.Geo
     Recycle.Utils
-    Recycle.Opts
   other-modules:
     Paths_recycle_client
   build-depends:
       base >= 4.12
 
       -- data
-    , bytestring >= 0.10
-    , case-insensitive >= 1.2
     , containers >= 0.6
-    , data-default-class >= 0.1
-    , filepath >= 1.4
     , generic-lens >= 2.2
-    , iCalendar >= 0.4
     , iso639 >= 0.1
     , sop-core >= 0.4
     , text >= 1.2
@@ -95,11 +88,40 @@ library
     , http-media >= 0.8
     , servant >= 0.16
     , servant-client >= 0.16
-    , servant-server >= 0.16
     , wai >= 3.2
-    , wai-app-static >= 3.1
-    , wai-extra >= 3.1
-    , warp >= 3.3
+
+      -- logging
+    , co-log >= 0.5
+    , co-log-core >= 0.3
+
+executable recycle-client
+  import: common-default-extensions
+  main-is:             Main.hs
+  hs-source-dirs:      app
+  ghc-options:
+    -O2
+    -Wall
+    -threaded
+    -rtsopts
+    -with-rtsopts=-N
+  other-modules:
+    Opts
+  build-depends:
+      base >=4.7 && <5
+    , recycle-client
+
+      -- data
+    , bytestring >= 0.10
+    , text >= 1.2
+    , time >= 1.8
+
+    -- serialisation
+    , aeson >= 1.4
+
+      -- network
+    , http-client >= 0.6
+    , http-client-tls >= 0.3
+    , servant-client >= 0.16
 
       -- logging
     , co-log >= 0.5
@@ -107,18 +129,6 @@ library
 
       -- cli
     , optparse-applicative >= 0.14
-
-executable recycle-client
-  main-is:             Main.hs
-  ghc-options:
-    -O2
-    -Wall
-    -threaded
-    -rtsopts
-    -with-rtsopts=-N
-  build-depends:
-      base >=4.7 && <5
-    , recycle-client
 
 test-suite recycle-client-test
   import: common-default-extensions
