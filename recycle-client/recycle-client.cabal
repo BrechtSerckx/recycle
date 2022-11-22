@@ -14,6 +14,8 @@ maintainer:          services+git@brechtserckx.be
 -- copyright:
 -- category:
 build-type:          Simple
+extra-source-files:
+  test/responses/*.json
 
 Tested-With: GHC ==9.0.2
 
