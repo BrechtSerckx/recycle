@@ -77,7 +77,6 @@ library
     , filepath >= 1.4
     , generic-lens >= 2.2
     , iCalendar >= 0.4
-    , iso639 >= 0.1
     , sop-core >= 0.4
     , text >= 1.2
     , time >= 1.8
