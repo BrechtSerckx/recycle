@@ -122,7 +122,8 @@ jobs:
       - name: initial cabal.project for sdist
         run: |
           touch cabal.project
-          echo "packages: $GITHUB_WORKSPACE/source/." >> cabal.project
+          echo "packages: $GITHUB_WORKSPACE/source/./recycle-client" >> cabal.project
+          echo "packages: $GITHUB_WORKSPACE/source/./recycle-ics" >> cabal.project
           cat cabal.project
       - name: sdist
         run: |
@@ -134,13 +135,18 @@ jobs:
           find sdist -maxdepth 1 -type f -name '*.tar.gz' -exec tar -C $GITHUB_WORKSPACE/unpacked -xzvf {} \;
       - name: generate cabal.project
         run: |
-          PKGDIR_recycle="$(find "$GITHUB_WORKSPACE/unpacked" -maxdepth 1 -type d -regex '.*/recycle-[0-9.]*')"
-          echo "PKGDIR_recycle=${PKGDIR_recycle}" >> "$GITHUB_ENV"
+          PKGDIR_recycle_client="$(find "$GITHUB_WORKSPACE/unpacked" -maxdepth 1 -type d -regex '.*/recycle-client-[0-9.]*')"
+          echo "PKGDIR_recycle_client=${PKGDIR_recycle_client}" >> "$GITHUB_ENV"
+          PKGDIR_recycle_ics="$(find "$GITHUB_WORKSPACE/unpacked" -maxdepth 1 -type d -regex '.*/recycle-ics-[0-9.]*')"
+          echo "PKGDIR_recycle_ics=${PKGDIR_recycle_ics}" >> "$GITHUB_ENV"
           rm -f cabal.project cabal.project.local
           touch cabal.project
           touch cabal.project.local
-          echo "packages: ${PKGDIR_recycle}" >> cabal.project
-          echo "package recycle" >> cabal.project
+          echo "packages: ${PKGDIR_recycle_client}" >> cabal.project
+          echo "packages: ${PKGDIR_recycle_ics}" >> cabal.project
+          echo "package recycle-client" >> cabal.project
+          echo "    ghc-options: -Werror=missing-methods" >> cabal.project
+          echo "package recycle-ics" >> cabal.project
           echo "    ghc-options: -Werror=missing-methods" >> cabal.project
           cat >> cabal.project <<EOF
           source-repository-package
@@ -148,7 +154,7 @@ jobs:
             location: https://github.com/markus1189/iCalendar.git
             tag:      a3b17449f7f3ab66f01ab77fde2e667d4e93e265
           EOF
-          $HCPKG list --simple-output --names-only | perl -ne 'for (split /\s+/) { print "constraints: $_ installed\n" unless /^(recycle)$/; }' >> cabal.project.local
+          $HCPKG list --simple-output --names-only | perl -ne 'for (split /\s+/) { print "constraints: $_ installed\n" unless /^(recycle-client|recycle-ics)$/; }' >> cabal.project.local
           cat cabal.project
           cat cabal.project.local
       - name: dump install plan
@@ -176,7 +182,9 @@ jobs:
           $CABAL v2-test $ARG_COMPILER $ARG_TESTS $ARG_BENCH all --test-show-details=direct
       - name: cabal check
         run: |
-          cd ${PKGDIR_recycle} || false
+          cd ${PKGDIR_recycle_client} || false
+          ${CABAL} -vnormal check
+          cd ${PKGDIR_recycle_ics} || false
           ${CABAL} -vnormal check
       - name: haddock
         run: |
