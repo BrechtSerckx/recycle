@@ -70,7 +70,6 @@ library
       -- data
     , containers >= 0.6
     , generic-lens >= 2.2
-    , iso639 >= 0.1
     , sop-core >= 0.4
     , text >= 1.2
     , time >= 1.8
