@@ -57,6 +57,7 @@ library
     Recycle.AppM
     Recycle.Class
     Recycle.Types
+    Recycle.Types.LangCode
     Recycle.Types.Error
     Recycle.Types.Geo
     Recycle.Utils
