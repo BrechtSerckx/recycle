@@ -3,6 +3,7 @@ module Recycle.Ics.Types
     Reminder (..),
     TodoDue (..),
     CollectionQuery (..),
+    Filter (..),
   )
 where
 
@@ -75,3 +76,19 @@ data CollectionQuery = CollectionQuery
     collectionQueryStreet :: StreetId,
     collectionQueryHouseNumber :: HouseNumber
   }
+
+data Filter = Filter
+  { -- | Include events
+    filterEvents :: Bool,
+    -- | Include these fractions
+    filterFractions :: [FractionId]
+  }
+
+instance FromForm Filter where
+  fromForm f = do
+    fractions <- parseAll "ff" f
+    pure
+      Filter
+        { filterEvents = "e" `elem` parseAll "f" f,
+          filterFractions = fractions
+        }

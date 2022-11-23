@@ -38,6 +38,7 @@ type RecycleIcsAPI =
                :> QueryParam' '[Required] "z" ZipcodeId
                :> QueryParam' '[Required] "s" StreetId
                :> QueryParam' '[Required] "hn" HouseNumber
+               :> QueryParamForm Filter
                :> UVerb 'GET '[ICalendar] '[WithStatus 200 BSL.ByteString]
          )
       :<|> Raw

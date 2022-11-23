@@ -68,8 +68,9 @@ recycleIcsServer dataDir =
       ZipcodeId ->
       StreetId ->
       HouseNumber ->
+      Filter ->
       m (Union '[WithStatus 200 BSL8.ByteString])
-    generateCollection collectionQueryDateRange collectionQueryLangCode collectionQueryFractionEncoding collectionQueryZipcode collectionQueryStreet collectionQueryHouseNumber =
+    generateCollection collectionQueryDateRange collectionQueryLangCode collectionQueryFractionEncoding collectionQueryZipcode collectionQueryStreet collectionQueryHouseNumber _ =
       do
         let collectionQuery = CollectionQuery {..}
         collections <- runCollectionQuery collectionQuery
