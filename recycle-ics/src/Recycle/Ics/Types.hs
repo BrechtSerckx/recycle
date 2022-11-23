@@ -86,9 +86,12 @@ data Filter = Filter
 
 instance FromForm Filter where
   fromForm f = do
-    fractions <- parseAll "ff" f
+    fractions <- parseAll "fif" f
     pure
       Filter
-        { filterEvents = "e" `elem` parseAll "f" f,
-          filterFractions = fractions
+        { filterEvents = "e" `elem` parseAll "fi" f,
+          filterFractions =
+            if "f" `elem` parseAll "fi" f
+              then fractions
+              else mempty
         }

@@ -40,5 +40,8 @@ GET :host/api/search-street?zipcode=:zipcodeId&q=:query&lang_code=:langCode
 :fromDate = 2021-11-18
 :untilDate = 2021-11-19
 
+# Filter
+:filter = &fl=e
+
 # Generate ICS file for absolute date range
-GET :host/api/generate?drt=:dateRangeType&f=:fromDate&t=:untilDate&z=:zipcodeId&s=:streetId&hn=:houseNumber&lc=:langCode&fe=:fractionEncoding
+GET :host/api/generate?drt=:dateRangeType&f=:fromDate&t=:untilDate&z=:zipcodeId&s=:streetId&hn=:houseNumber&lc=:langCode&fe=:fractionEncoding:filter
