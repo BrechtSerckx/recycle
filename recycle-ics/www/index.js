@@ -124,6 +124,11 @@ function searchStreets(zipcode, q) {
         .then(response => response.json());
 }
 
+function getFractions(zipcode, street, house_number) {
+    return fetch(`/api/fractions?zipcode=${zipcode}&street=${street}&house_number=${house_number}`)
+        .then(response => response.json());
+}
+
 function removeChildren(node) {
     while (node.firstChild) {
         node.removeChild(node.lastChild);
@@ -185,7 +190,6 @@ function createStreetCompleter(input, container, target, zipcodeInput, houseNumb
         res => {
             target.value = res.id;
             houseNumberInput.disabled = false;
-            submitButton.disabled = false;
         }
     );
 }
@@ -246,6 +250,19 @@ function main() {
         document.getElementById("house_number"),
         submitButton
     );
+
+    document.getElementById("house_number").oninput = debounce(function() {
+        submitButton.disabled = false;
+        getFractions(
+            document.getElementById("zipcode").value,
+            document.getElementById("street").value,
+            document.getElementById("house_number").value
+        ).then(fractions => {
+            let lc = getLangCode();
+                names = fractions.map(fraction => fraction.name[lc]);
+            console.log(JSON.stringify(names));
+        });
+    }, 250);
 
     createEditableList(document.getElementById("reminder_list"), document.getElementById("reminder_prototype"), document.getElementById("add_reminder_button"));
 };
