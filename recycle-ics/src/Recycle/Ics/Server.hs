@@ -19,7 +19,8 @@ import Network.Wai.Application.Static
   )
 import Numeric.Natural (Natural)
 import Recycle.AppM
-import Recycle.Class
+import Recycle.Class (HasRecycleClient, HasTime (..))
+import qualified Recycle.Class as Recycle
 import Recycle.Ics.API (RecycleIcsAPI, pRecycleIcsAPI)
 import Recycle.Ics.ICalendar
 import Recycle.Ics.Types
@@ -40,18 +41,26 @@ recycleIcsServer ::
   FilePath ->
   ServerT RecycleIcsAPI m
 recycleIcsServer dataDir =
-  (searchZipcode :<|> searchStreet :<|> generateCollection) :<|> serveWww
+  (searchZipcode :<|> searchStreet :<|> getFractions :<|> generateCollection) :<|> serveWww
   where
     searchZipcode ::
       SearchQuery Natural -> m (Union '[WithStatus 200 [FullZipcode]])
     searchZipcode query = do
-      zipcodes <- searchZipcodes (Just query)
+      zipcodes <- Recycle.searchZipcodes (Just query)
       pure . Z . I $ WithStatus @200 zipcodes
     searchStreet ::
       ZipcodeId -> SearchQuery Text -> m (Union '[WithStatus 200 [Street]])
     searchStreet zipcodeId query = do
-      streets <- searchStreets (Just zipcodeId) (Just query)
+      streets <- Recycle.searchStreets (Just zipcodeId) (Just query)
       pure . Z . I $ WithStatus @200 streets
+    getFractions ::
+      ZipcodeId ->
+      StreetId ->
+      HouseNumber ->
+      m (Union '[WithStatus 200 [Fraction]])
+    getFractions zipcode street houseNumber = do
+      fractions <- Recycle.getFractions zipcode street houseNumber
+      pure . Z . I $ WithStatus @200 fractions
     generateCollection ::
       DateRange ->
       LangCode ->
@@ -86,7 +95,7 @@ runCollectionQuery ::
 runCollectionQuery CollectionQuery {..} = do
   range <- calculateDateRange collectionQueryDateRange
   collections <-
-    getCollections
+    Recycle.getCollections
       collectionQueryZipcode
       collectionQueryStreet
       collectionQueryHouseNumber
