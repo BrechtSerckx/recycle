@@ -43,15 +43,23 @@ mkVCalendar ::
   Filter ->
   [CollectionEvent (Union '[FullFraction, Event])] ->
   VCalendar
-mkVCalendar langCode fractionEncoding filter ces =
+mkVCalendar langCode fractionEncoding Filter {..} ces =
   let (collections, events) = partitionCollectionEvents ces
    in (emptyVCalendar "recycle")
         { vcEvents = case fractionEncoding of
             EncodeFractionAsVEvent timeslot reminders ->
               mkMapWith
                 (collectionToVEvent langCode timeslot reminders)
-                collections
-                <> mkMapWith (eventToVEvent langCode) events
+                ( maybe
+                    collections
+                    ( \fractions ->
+                        filter
+                          ((`elem` fractions) . fullFractionId . collectionEventContent)
+                          collections
+                    )
+                    filterFractions
+                )
+                <> if filterEvents then mkMapWith (eventToVEvent langCode) events else mempty
             EncodeFractionAsVTodo {} ->
               mkMapWith (eventToVEvent langCode) events,
           vcTodos = case fractionEncoding of
