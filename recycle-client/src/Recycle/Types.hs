@@ -3,6 +3,7 @@
 module Recycle.Types
   ( module Recycle.Types.Geo,
     module Recycle.Types.Error,
+    module Recycle.Types.LangCode,
     module Recycle.Utils,
     AccessToken (..),
     AuthResult (..),
@@ -45,6 +46,7 @@ import Deriving.Aeson
 import GHC.Generics (Generic)
 import Recycle.Types.Error
 import Recycle.Types.Geo
+import Recycle.Types.LangCode
 import Recycle.Utils
 import Web.HttpApiData
   ( FromHttpApiData,

@@ -17,7 +17,6 @@ import qualified Data.ByteString.Lazy as BSL
 import qualified Data.CaseInsensitive as CI
 import Data.Default.Class (def)
 import Data.Function
-import Data.LanguageCodes
 import qualified Data.Map as Map
 import Data.Maybe (fromMaybe)
 import qualified Data.Set as Set
