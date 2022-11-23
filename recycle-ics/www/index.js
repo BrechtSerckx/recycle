@@ -260,7 +260,20 @@ function main() {
         ).then(fractions => {
             let lc = getLangCode();
                 names = fractions.map(fraction => fraction.name[lc]);
-            console.log(JSON.stringify(names));
+                nodes = fractions.map(fraction => {
+                let input = document.createElement("input");
+                input.type = "checkbox";
+                input.name = fraction.id;
+                input.id = `fraction_${fraction.id}`;
+                input.checked = true;
+                let label = document.createElement("label");
+                label.textContent = fraction.name[lc];
+                label.for = `fraction_${fraction.id}`;
+                let container = document.createElement("div");
+                container.replaceChildren(input, label);
+                return container;
+            });
+            document.getElementById("fraction_container").replaceChildren(...nodes);
         });
     }, 250);
 
