@@ -4,21 +4,21 @@
 :langCode = NL
 
 # Search zip code id
-:query = Leu
+:query = 3000
 GET :host/api/search-zipcode?q=:query&lang_code=:langCode
 
 # Zip code id
 :zipcodeId = 3000-24062
 
 # Search street id
-:query = Andreas
+:query = Grote
 GET :host/api/search-street?zipcode=:zipcodeId&q=:query&lang_code=:langCode
 
 # Street id
-:streetId = https://data.vlaanderen.be/id/straatnaam-34637
+:streetId = https://data.vlaanderen.be/id/straatnaam-34867
 
 # House number
-:houseNumber = 73
+:houseNumber = 1
 
 # Todo encoding configuration
 :todoDueDaysBefore = 5
