@@ -40,9 +40,10 @@ getByLangCode lc m =
 mkVCalendar ::
   LangCode ->
   FractionEncoding ->
+  Filter ->
   [CollectionEvent (Union '[FullFraction, Event])] ->
   VCalendar
-mkVCalendar langCode fractionEncoding ces =
+mkVCalendar langCode fractionEncoding filter ces =
   let (collections, events) = partitionCollectionEvents ces
    in (emptyVCalendar "recycle")
         { vcEvents = case fractionEncoding of

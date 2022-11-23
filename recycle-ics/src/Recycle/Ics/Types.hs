@@ -75,6 +75,8 @@ data CollectionQuery = CollectionQuery
     collectionQueryZipcode :: ZipcodeId,
     collectionQueryStreet :: StreetId,
     collectionQueryHouseNumber :: HouseNumber
+  , collectionQueryFilter :: Filter
+  
   }
 
 data Filter = Filter

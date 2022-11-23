@@ -70,7 +70,7 @@ recycleIcsServer dataDir =
       HouseNumber ->
       Filter ->
       m (Union '[WithStatus 200 BSL8.ByteString])
-    generateCollection collectionQueryDateRange collectionQueryLangCode collectionQueryFractionEncoding collectionQueryZipcode collectionQueryStreet collectionQueryHouseNumber _ =
+    generateCollection collectionQueryDateRange collectionQueryLangCode collectionQueryFractionEncoding collectionQueryZipcode collectionQueryStreet collectionQueryHouseNumber collectionQueryFilter =
       do
         let collectionQuery = CollectionQuery {..}
         collections <- runCollectionQuery collectionQuery
@@ -107,6 +107,7 @@ runCollectionQuery CollectionQuery {..} = do
     mkVCalendar
       collectionQueryLangCode
       collectionQueryFractionEncoding
+      collectionQueryFilter
       collections
 
 calculateDateRange :: HasTime m => DateRange -> m (Range Day)
