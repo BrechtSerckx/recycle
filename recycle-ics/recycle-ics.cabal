@@ -4,15 +4,15 @@ cabal-version:       3.4
 
 name:                recycle-ics
 version:             0.1.0.0
--- synopsis:
--- description:
+synopsis:            Recycle ICS generator
+description:         Server and CLI tool to generate ICS files from the recycleapp.be API.
 -- bug-reports:
--- license:
--- license-file:        LICENSE
+license:             MIT
+license-file:        LICENSE
 author:              Brecht Serckx
 maintainer:          services+git@brechtserckx.be
--- copyright:
--- category:
+copyright:           (c) 2021-2022 Brecht Serckx
+category:            Service
 build-type:          Simple
 data-files:
   www/index.html
@@ -63,6 +63,8 @@ library
     Paths_recycle_ics
     Recycle.Types.Orphans
     Servant.API.QueryParamForm
+  autogen-modules:
+    Paths_recycle_ics
   build-depends:
       base >= 4.12
     , recycle-client
@@ -117,8 +119,9 @@ executable recycle-ics
   other-modules:
     Opts
     Paths_recycle_ics
+  autogen-modules:
+    Paths_recycle_ics
   ghc-options:
-    -O2
     -Wall
     -threaded
     -rtsopts

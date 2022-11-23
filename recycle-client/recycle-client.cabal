@@ -4,16 +4,18 @@ cabal-version:       3.4
 
 name:                recycle-client
 version:             0.1.0.0
--- synopsis:
--- description:
+synopsis:            recycleapp.be API and client
+description:         API definition and client for the recycleapp.be API
 -- bug-reports:
--- license:
--- license-file:        LICENSE
+license:             MIT
+license-file:        LICENSE
 author:              Brecht Serckx
 maintainer:          services+git@brechtserckx.be
--- copyright:
--- category:
+copyright:           (c) 2021-2022 Brecht Serckx
+category:            API
 build-type:          Simple
+extra-source-files:
+  test/responses/*.json
 
 Tested-With: GHC ==9.0.2
 
@@ -59,6 +61,8 @@ library
     Recycle.Types.Geo
     Recycle.Utils
   other-modules:
+    Paths_recycle_client
+  autogen-modules:
     Paths_recycle_client
   build-depends:
       base >= 4.12
@@ -114,7 +118,6 @@ executable recycle-client
   main-is:             Main.hs
   hs-source-dirs:      app
   ghc-options:
-    -O2
     -Wall
     -threaded
     -rtsopts
