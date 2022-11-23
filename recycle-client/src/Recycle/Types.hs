@@ -155,7 +155,7 @@ instance ToJSON (CollectionEvent (Union '[FullFraction, Event])) where
           S (S x) -> case x of {}
 
 newtype FractionId = FractionId Text
-  deriving newtype (Show, FromJSON, ToJSON, FromHttpApiData)
+  deriving newtype (Show, Eq, IsString, FromJSON, ToJSON, FromHttpApiData)
 
 partitionCollectionEvents ::
   [CollectionEvent (Union '[FullFraction, Event])] ->
