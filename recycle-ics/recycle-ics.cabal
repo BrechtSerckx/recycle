@@ -3,7 +3,7 @@ cabal-version:       3.4
 -- For further documentation, see http://haskell.org/cabal/users-guide/
 
 name:                recycle-ics
-version:             0.1.0.0
+version:             0.2.0.0
 synopsis:            Recycle ICS generator
 description:         Server and CLI tool to generate ICS files from the recycleapp.be API.
 -- bug-reports:
