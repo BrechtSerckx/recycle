@@ -263,8 +263,9 @@ function main() {
                 nodes = fractions.map(fraction => {
                 let input = document.createElement("input");
                 input.type = "checkbox";
-                input.name = fraction.id;
+                input.name = "ff";
                 input.id = `fraction_${fraction.id}`;
+                input.value = fraction.id;
                 input.checked = true;
                 let label = document.createElement("label");
                 label.textContent = fraction.name[lc];
