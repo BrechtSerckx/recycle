@@ -32,10 +32,10 @@ X-Consumer: :consumer
 Authorization: :accessToken
 
 # Street id
-:streetId = https://data.vlaanderen.be/id/straatnaam-34637
+:streetId = https://data.vlaanderen.be/id/straatnaam-34867
 
 # Request calendar
-:houseNumber = 73
+:houseNumber = 1
 :fromDate = 2021-09-15
 :untilDate = 2021-12-14
 :size = 200
