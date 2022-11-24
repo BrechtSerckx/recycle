@@ -267,16 +267,24 @@ function main() {
                 input.id = `fraction_${fraction.id}`;
                 input.value = fraction.id;
                 input.checked = true;
+                input.disabled = true;
                 let label = document.createElement("label");
                 label.textContent = fraction.name[lc];
                 label.for = `fraction_${fraction.id}`;
                 let container = document.createElement("div");
                 container.replaceChildren(input, label);
                 return container;
-            });
+            }); 
             document.getElementById("fraction_container").replaceChildren(...nodes);
         });
     }, 250);
+    document.getElementById("fractions").onchange = (e) => {
+      e.target.labels[0].textContent = e.target.checked ? "All fractions" : "Selected fractions";
+      Array.from(document.getElementById("fraction_container").getElementsByTagName("input"))
+             .map((node) => {
+                 node.disabled = e.target.checked;
+             });
+    };
 
     createEditableList(document.getElementById("reminder_list"), document.getElementById("reminder_prototype"), document.getElementById("add_reminder_button"));
 };
