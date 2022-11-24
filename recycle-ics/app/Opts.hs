@@ -4,7 +4,7 @@ module Opts
     parseOpts,
     GenerateIcsOpts (..),
     ServeIcsOpts (..),
-    module Recycle.Types.Optparse
+    module Recycle.Types.Optparse,
   )
 where
 
@@ -80,22 +80,18 @@ pCollectionQuery = do
         <> showDefault
         <> help "Preferred language for titles and descriptions"
   collectionQueryFractionEncoding <- pFractionEncoding
-  -- let readFraction = \case
-  --       "todo"  -> Right EncodeFractionAsVTodo
-  --       "event" -> Right EncodeFractionAsVEvent
-  --       _       -> Left "One of `todo` or `event`"
-  --     showFraction = \case
-  --       EncodeFractionAsVTodo  -> "todo"
-  --       EncodeFractionAsVEvent -> "event"
-  -- in  option (eitherReader readFraction)
-  --     $  long "fraction-encoding"
-  --     <> metavar "ENCODING"
-  --     <> value EncodeFractionAsVTodo
-  --     <> showDefaultWith showFraction
-  --     <> help "Encode fraction collections as event or todo"
   collectionQueryZipcode <- pZipcodeId
   collectionQueryStreet <- pStreetId
   collectionQueryHouseNumber <- pHouseNumber
+  collectionQueryFilter <- do
+    filterEvents <-
+      not
+        <$> switch (long "filter-events" <> help "Don't include events.")
+    filterFractions <-
+      optional $
+        switch (long "filter-fractions" <> help "Only include specified fractions.")
+          *> many (strOption $ long "include-fraction" <> help "Include this fraction.")
+    pure Filter {..}
   pure CollectionQuery {..}
 
 pFractionEncoding :: Parser FractionEncoding

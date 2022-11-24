@@ -26,6 +26,11 @@ type RecycleIcsAPI =
                :> QueryParam' '[Required] "zipcode" ZipcodeId
                :> QueryParam' '[Required] "q" (SearchQuery Text)
                :> UVerb 'GET '[JSON] '[WithStatus 200 [Street]]
+             :<|> "fractions"
+               :> QueryParam' '[Required] "zipcode" ZipcodeId
+               :> QueryParam' '[Required] "street" StreetId
+               :> QueryParam' '[Required] "house_number" HouseNumber
+               :> UVerb 'GET '[JSON] '[WithStatus 200 [Fraction]]
              :<|> "generate"
                :> QueryParamForm DateRange
                :> QueryParam' '[Required] "lc" LangCode
@@ -33,6 +38,7 @@ type RecycleIcsAPI =
                :> QueryParam' '[Required] "z" ZipcodeId
                :> QueryParam' '[Required] "s" StreetId
                :> QueryParam' '[Required] "hn" HouseNumber
+               :> QueryParamForm Filter
                :> UVerb 'GET '[ICalendar] '[WithStatus 200 BSL.ByteString]
          )
       :<|> Raw

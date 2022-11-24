@@ -3,7 +3,7 @@
 
 PORT=3332
 
-CMD=(cabal run exe:recycle-client --)
+CMD=(cabal run exe:recycle-ics --)
 # CMD=(docker run -p "$PORT:$PORT" recycle:latest)
 
 SECRET="<REDACTED>"

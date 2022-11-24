@@ -3,6 +3,7 @@ module Recycle.Ics.Types
     Reminder (..),
     TodoDue (..),
     CollectionQuery (..),
+    Filter (..),
   )
 where
 
@@ -73,5 +74,24 @@ data CollectionQuery = CollectionQuery
     collectionQueryFractionEncoding :: FractionEncoding,
     collectionQueryZipcode :: ZipcodeId,
     collectionQueryStreet :: StreetId,
-    collectionQueryHouseNumber :: HouseNumber
+    collectionQueryHouseNumber :: HouseNumber,
+    collectionQueryFilter :: Filter
   }
+
+data Filter = Filter
+  { -- | Include events
+    filterEvents :: Bool,
+    -- | Include these fractions (or all of them)
+    filterFractions :: Maybe [FractionId]
+  }
+
+instance FromForm Filter where
+  fromForm f = do
+    let fi = parseAll "fi" f
+    fractions <- parseAll "fif" f
+    pure
+      Filter
+        { filterEvents = "e" `elem` fi,
+          filterFractions =
+            if "f" `elem` fi then Nothing else Just fractions
+        }

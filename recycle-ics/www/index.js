@@ -124,6 +124,11 @@ function searchStreets(zipcode, q) {
         .then(response => response.json());
 }
 
+function getFractions(zipcode, street, house_number) {
+    return fetch(`/api/fractions?zipcode=${zipcode}&street=${street}&house_number=${house_number}`)
+        .then(response => response.json());
+}
+
 function removeChildren(node) {
     while (node.firstChild) {
         node.removeChild(node.lastChild);
@@ -185,7 +190,6 @@ function createStreetCompleter(input, container, target, zipcodeInput, houseNumb
         res => {
             target.value = res.id;
             houseNumberInput.disabled = false;
-            submitButton.disabled = false;
         }
     );
 }
@@ -246,6 +250,41 @@ function main() {
         document.getElementById("house_number"),
         submitButton
     );
+
+    document.getElementById("house_number").oninput = debounce(function() {
+        submitButton.disabled = false;
+        getFractions(
+            document.getElementById("zipcode").value,
+            document.getElementById("street").value,
+            document.getElementById("house_number").value
+        ).then(fractions => {
+            let lc = getLangCode();
+                names = fractions.map(fraction => fraction.name[lc]);
+                nodes = fractions.map(fraction => {
+                let input = document.createElement("input");
+                input.type = "checkbox";
+                input.name = "fif";
+                input.id = `fraction_${fraction.id}`;
+                input.value = fraction.id;
+                input.checked = true;
+                input.disabled = true;
+                let label = document.createElement("label");
+                label.textContent = fraction.name[lc];
+                label.for = `fraction_${fraction.id}`;
+                let container = document.createElement("div");
+                container.replaceChildren(input, label);
+                return container;
+            }); 
+            document.getElementById("fraction_container").replaceChildren(...nodes);
+        });
+    }, 250);
+    document.getElementById("fractions").onchange = (e) => {
+      e.target.labels[0].textContent = e.target.checked ? "All fractions" : "Selected fractions";
+      Array.from(document.getElementById("fraction_container").getElementsByTagName("input"))
+             .map((node) => {
+                 node.disabled = e.target.checked;
+             });
+    };
 
     createEditableList(document.getElementById("reminder_list"), document.getElementById("reminder_prototype"), document.getElementById("add_reminder_button"));
 };
