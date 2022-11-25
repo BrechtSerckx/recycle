@@ -15,6 +15,9 @@ type Inputs = {
   zipcode_q: string;
   zipcode_id: string;
   zipcode_name: string;
+  street_q: string;
+  street_id: string;
+  street_name: string;
 };
 
 function Autocompleter<Q, V>({
@@ -136,6 +139,52 @@ export default function App() {
           />
           {errors.zipcode_id && <span>{errors.zipcode_id.message}</span>}
         </label>
+
+        <h4>Street</h4>
+
+        <div>
+          <p>
+            Search for your street and choose the correct street from the list.
+          </p>
+        </div>
+        <label>
+          Search your street:
+          <input
+            type="text"
+            placeholder="Grote Markt"
+            {...register("street_q")}
+          />
+        </label>
+        <Autocompleter<string, string>
+          query={watch("street_q")}
+          fetchValues={(query) => ["foo", "bar", "baz"]}
+          onSelect={(street) => {
+            setValue("street_id", street);
+            setValue("street_name", street);
+          }}
+          displayValue={(v) => <span>{v}</span>}
+        />
+        <label>
+          Street name:
+          <input
+            type="text"
+            readOnly
+            {...register("street_name", { required: true })}
+          />
+        </label>
+        <label>
+          Street ID:
+          <input
+            type="text"
+            readOnly
+            {...register("street_id", {
+              required: "Please select street",
+            })}
+          />
+          {errors.street_id && <span>{errors.street_id.message}</span>}
+        </label>
+
+        <h3>Submit</h3>
 
         <input type="submit" />
       </form>
