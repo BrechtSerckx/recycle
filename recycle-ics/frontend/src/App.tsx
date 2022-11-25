@@ -59,6 +59,8 @@ export default function App() {
     setValue,
   } = useForm<Inputs>({ shouldFocusError: false });
   const onSubmit: SubmitHandler<Inputs> = (data) => console.log(data);
+  const [zipcodeSelected, setZipcodeSelected] = React.useState(false);
+  const [streetSelected, setStreetSelected] = React.useState(false);
 
   return (
     <>
@@ -109,7 +111,9 @@ export default function App() {
             type="text"
             inputMode="numeric"
             placeholder="3000"
-            {...register("zipcode_q")}
+            {...register("zipcode_q", {
+              onChange: () => setZipcodeSelected(false),
+            })}
           />
         </label>
         <Autocompleter<string, string>
@@ -118,85 +122,97 @@ export default function App() {
           onSelect={(zipcode) => {
             setValue("zipcode_id", zipcode);
             setValue("zipcode_name", zipcode);
+            setZipcodeSelected(true);
           }}
           displayValue={(v) => <span>{v}</span>}
         />
-        <label>
-          City/town:
-          <input
-            type="text"
-            readOnly
-            {...register("zipcode_name", { required: true })}
-          />
-        </label>
-        <label>
-          Zip code:
-          <input
-            type="text"
-            readOnly
-            {...register("zipcode_id", {
-              required: "Please select zip code",
-            })}
-          />
-          {errors.zipcode_id && <span>{errors.zipcode_id.message}</span>}
-        </label>
+        {zipcodeSelected && (
+          <>
+            <label>
+              City/town:
+              <input
+                type="text"
+                readOnly
+                {...register("zipcode_name", { required: true })}
+              />
+            </label>
+            <label>
+              Zip code:
+              <input
+                type="text"
+                readOnly
+                {...register("zipcode_id", {
+                  required: "Please select zip code",
+                })}
+              />
+              {errors.zipcode_id && <span>{errors.zipcode_id.message}</span>}
+            </label>
 
-        <h4>Street</h4>
+            <h4>Street</h4>
 
-        <div>
-          <p>
-            Search for your street and choose the correct street from the list.
-          </p>
-        </div>
-        <label>
-          Search your street:
-          <input
-            type="text"
-            placeholder="Grote Markt"
-            {...register("street_q")}
-          />
-        </label>
-        <Autocompleter<string, string>
-          query={watch("street_q")}
-          fetchValues={(query) => ["foo", "bar", "baz"]}
-          onSelect={(street) => {
-            setValue("street_id", street);
-            setValue("street_name", street);
-          }}
-          displayValue={(v) => <span>{v}</span>}
-        />
-        <label>
-          Street name:
-          <input
-            type="text"
-            readOnly
-            {...register("street_name", { required: true })}
-          />
-        </label>
-        <label>
-          Street ID:
-          <input
-            type="text"
-            readOnly
-            {...register("street_id", {
-              required: "Please select street",
-            })}
-          />
-          {errors.street_id && <span>{errors.street_id.message}</span>}
-        </label>
-
-        <div>
-          <h4>House number</h4>
-          <p>Enter your house number.</p>
-          <label>
-            House number:
-            <input
-              type="number"
-              placeholder="1"
-              {...register("house_number", { required: true })}
+            <div>
+              <p>
+                Search for your street and choose the correct street from the
+                list.
+              </p>
+            </div>
+            <label>
+              Search your street:
+              <input
+                type="text"
+                placeholder="Grote Markt"
+                {...register("street_q")}
+              />
+            </label>
+            <Autocompleter<string, string>
+              query={watch("street_q")}
+              fetchValues={(query) => ["foo", "bar", "baz"]}
+              onSelect={(street) => {
+                setValue("street_id", street);
+                setValue("street_name", street);
+                setStreetSelected(true);
+              }}
+              displayValue={(v) => <span>{v}</span>}
             />
-          </label>
-        </div>
+            {streetSelected && (
+              <>
+                <label>
+                  Street name:
+                  <input
+                    type="text"
+                    readOnly
+                    {...register("street_name", { required: true })}
+                  />
+                </label>
+                <label>
+                  Street ID:
+                  <input
+                    type="text"
+                    readOnly
+                    {...register("street_id", {
+                      required: "Please select street",
+                      onChange: () => setStreetSelected(false),
+                    })}
+                  />
+                  {errors.street_id && <span>{errors.street_id.message}</span>}
+                </label>
+
+                <div>
+                  <h4>House number</h4>
+                  <p>Enter your house number.</p>
+                  <label>
+                    House number:
+                    <input
+                      type="number"
+                      placeholder="1"
+                      {...register("house_number", { required: true })}
+                    />
+                  </label>
+                </div>
+              </>
+            )}
+          </>
+        )}
 
         <h3>Submit</h3>
 
