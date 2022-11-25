@@ -21,8 +21,15 @@ in (import ./default.nix {}).shellFor {
     nixfmt
     # haskell ci/cd generator
     haskell-ci
+    # nodejs for frontend
+    nodejs
   ]) ++ (with nixpkgs.nodePackages; [
+    # create-react-app
+    create-react-app
+    # package manager
+    npm
     # web formatter
+    prettier
     js-beautify
     # js linter
     eslint
