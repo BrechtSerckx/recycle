@@ -1,4 +1,5 @@
 import { useForm, SubmitHandler } from "react-hook-form";
+import * as React from "react";
 
 enum LangCode {
   NL = "nl",
@@ -11,7 +12,39 @@ type Inputs = {
   example: string;
   exampleRequired: string;
   lc: LangCode;
+  zipcode_q: string;
+  zipcode_id: string;
+  zipcode_name: string;
 };
+
+function Autocompleter<Q, V>({
+  query,
+  fetchValues,
+  onSelect,
+  displayValue,
+}: {
+  query: Q;
+  fetchValues: (q: Q) => V[];
+  onSelect: (v: V) => any;
+  displayValue: (v: V) => React.ReactNode;
+}) {
+  const [values, setValues] = React.useState<V[]>([]);
+  React.useEffect(() => {
+    if (query) {
+      console.log(`Autocompleting ${query}`);
+      setValues(fetchValues(query));
+    }
+  }, [query, fetchValues]);
+  return (
+    <ul>
+      {values.map((value, index) => (
+        <li key={index} onClick={() => onSelect(value)}>
+          {displayValue(value)}
+        </li>
+      ))}
+    </ul>
+  );
+}
 
 export default function App() {
   const {
@@ -19,10 +52,9 @@ export default function App() {
     handleSubmit,
     watch,
     formState: { errors },
-  } = useForm<Inputs>();
+    setValue,
+  } = useForm<Inputs>({ shouldFocusError: false });
   const onSubmit: SubmitHandler<Inputs> = (data) => console.log(data);
-
-  console.log(watch("example")); // watch input value by passing the name of it
 
   return (
     <>
@@ -59,12 +91,51 @@ export default function App() {
             English
           </label>
         </fieldset>
-        <input defaultValue="test" {...register("example")} />
 
-        {/* include validation with required or other standard HTML validation rules */}
-        <input {...register("exampleRequired", { required: true })} />
-        {/* errors will return when field validation fails  */}
-        {errors.exampleRequired && <span>This field is required</span>}
+        <h3>Address</h3>
+        <p>Waste collections are specific to your address.</p>
+        <h4>Zip code</h4>
+        <div>
+          <p>Search for your city and choose the correct city from the list.</p>
+        </div>
+
+        <label>
+          Search your zip code:
+          <input
+            type="text"
+            inputMode="numeric"
+            placeholder="3000"
+            {...register("zipcode_q")}
+          />
+        </label>
+        <Autocompleter<string, string>
+          query={watch("zipcode_q")}
+          fetchValues={(query) => ["foo", "bar", "baz"]}
+          onSelect={(zipcode) => {
+            setValue("zipcode_id", zipcode);
+            setValue("zipcode_name", zipcode);
+          }}
+          displayValue={(v) => <span>{v}</span>}
+        />
+        <label>
+          City/town:
+          <input
+            type="text"
+            readOnly
+            {...register("zipcode_name", { required: true })}
+          />
+        </label>
+        <label>
+          Zip code:
+          <input
+            type="text"
+            readOnly
+            {...register("zipcode_id", {
+              required: "Please select zip code",
+            })}
+          />
+          {errors.zipcode_id && <span>{errors.zipcode_id.message}</span>}
+        </label>
 
         <input type="submit" />
       </form>
