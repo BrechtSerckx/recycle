@@ -18,6 +18,7 @@ type Inputs = {
   street_q: string;
   street_id: string;
   street_name: string;
+  house_number: string;
 };
 
 function Autocompleter<Q, V>({
@@ -183,6 +184,19 @@ export default function App() {
           />
           {errors.street_id && <span>{errors.street_id.message}</span>}
         </label>
+
+        <div>
+          <h4>House number</h4>
+          <p>Enter your house number.</p>
+          <label>
+            House number:
+            <input
+              type="number"
+              placeholder="1"
+              {...register("house_number", { required: true })}
+            />
+          </label>
+        </div>
 
         <h3>Submit</h3>
 
