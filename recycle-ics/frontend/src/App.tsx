@@ -2,6 +2,8 @@ import { useForm, SubmitHandler } from "react-hook-form";
 import * as React from "react";
 import { LangCode, LanguageSection } from "./section/language";
 import AddressSection from "./section/address";
+import DateRangeSection from "./section/daterange";
+import EncodingSection from "./section/encoding";
 
 type Inputs = {
   example: string;
@@ -39,6 +41,8 @@ export default function App() {
           errors={errors}
           setValue={setValue}
         />
+        <DateRangeSection />
+        <EncodingSection />
 
         <h3>Submit</h3>
 
