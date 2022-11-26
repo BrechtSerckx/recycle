@@ -6,6 +6,15 @@ export enum LangCode {
 }
 
 export function LanguageSection({ register }: any) {
+  const field = "lc";
+  const LangCodeRadio = ({ children, ...props }: any) => {
+    return (
+      <label>
+        <input type="radio" {...props} {...register(field)} />
+        {children}
+      </label>
+    );
+  };
   return (
     <>
       <h3>Language</h3>
@@ -15,27 +24,12 @@ export function LanguageSection({ register }: any) {
       </p>
       <fieldset>
         <legend>Language</legend>
-        <label>
-          <input
-            type="radio"
-            value={LangCode.NL}
-            {...register("lc")}
-            defaultChecked
-          />
+        <LangCodeRadio value={LangCode.NL} defaultChecked>
           Nederlands
-        </label>
-        <label>
-          <input type="radio" value={LangCode.FR} {...register("lc")} />
-          Francais
-        </label>
-        <label>
-          <input type="radio" value={LangCode.DE} {...register("lc")} />
-          Deutsch
-        </label>
-        <label>
-          <input type="radio" value={LangCode.EN} {...register("lc")} />
-          English
-        </label>
+        </LangCodeRadio>
+        <LangCodeRadio value={LangCode.FR}>Francais</LangCodeRadio>
+        <LangCodeRadio value={LangCode.DE}>Deutsch</LangCodeRadio>
+        <LangCodeRadio value={LangCode.EN}>English</LangCodeRadio>
       </fieldset>
     </>
   );
