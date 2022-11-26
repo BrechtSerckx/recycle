@@ -1,13 +1,7 @@
 import { useForm, SubmitHandler } from "react-hook-form";
 import * as React from "react";
 import Autocompleter from "./Autocompleter";
-
-enum LangCode {
-  NL = "nl",
-  FR = "fr",
-  DE = "de",
-  EN = "en",
-}
+import { LangCode, LanguageSection } from "./section/language";
 
 type Inputs = {
   example: string;
@@ -40,35 +34,7 @@ export default function App() {
       <p>Generate ICS files and links for your waste collections. </p>
       <form onSubmit={handleSubmit(onSubmit)}>
         <h2>Generator form</h2>
-        <h3>Language</h3>
-        <p>
-          Choose in which language the waste collection titles and descriptions
-          should be.
-        </p>
-        <fieldset>
-          <legend>Language</legend>
-          <label>
-            <input
-              type="radio"
-              value={LangCode.NL}
-              {...register("lc")}
-              defaultChecked
-            />
-            Nederlands
-          </label>
-          <label>
-            <input type="radio" value={LangCode.FR} {...register("lc")} />
-            Francais
-          </label>
-          <label>
-            <input type="radio" value={LangCode.DE} {...register("lc")} />
-            Deutsch
-          </label>
-          <label>
-            <input type="radio" value={LangCode.EN} {...register("lc")} />
-            English
-          </label>
-        </fieldset>
+        <LanguageSection register={register} />
 
         <h3>Address</h3>
         <p>Waste collections are specific to your address.</p>
