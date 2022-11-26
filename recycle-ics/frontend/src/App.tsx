@@ -1,5 +1,6 @@
 import { useForm, SubmitHandler } from "react-hook-form";
 import * as React from "react";
+import Autocompleter from "./Autocompleter";
 
 enum LangCode {
   NL = "nl",
@@ -20,35 +21,6 @@ type Inputs = {
   street_name: string;
   house_number: string;
 };
-
-function Autocompleter<Q, V>({
-  query,
-  fetchValues,
-  onSelect,
-  displayValue,
-}: {
-  query: Q;
-  fetchValues: (q: Q) => V[];
-  onSelect: (v: V) => any;
-  displayValue: (v: V) => React.ReactNode;
-}) {
-  const [values, setValues] = React.useState<V[]>([]);
-  React.useEffect(() => {
-    if (query) {
-      console.log(`Autocompleting ${query}`);
-      setValues(fetchValues(query));
-    }
-  }, [query, fetchValues]);
-  return (
-    <ul>
-      {values.map((value, index) => (
-        <li key={index} onClick={() => onSelect(value)}>
-          {displayValue(value)}
-        </li>
-      ))}
-    </ul>
-  );
-}
 
 export default function App() {
   const {
