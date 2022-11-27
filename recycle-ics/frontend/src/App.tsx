@@ -30,7 +30,7 @@ export function App() {
       <FormProvider {...formContext}>
         <form onSubmit={handleSubmit(onSubmit)}>
           <h2>Generator form</h2>
-          <LanguageSection lcProps={register("lc")} />
+          <LanguageSection />
           <AddressSection
             register={register}
             watch={watch}
