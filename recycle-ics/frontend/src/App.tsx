@@ -1,11 +1,11 @@
-import { useForm, SubmitHandler } from "react-hook-form";
+import { useForm, FormProvider, SubmitHandler } from "react-hook-form";
 import * as React from "react";
 import { LangCode, LanguageSection } from "./section/language";
 import AddressSection from "./section/address";
 import DateRangeSection from "./section/daterange";
 import EncodingSection from "./section/encoding";
 
-type Inputs = {
+export type Inputs = {
   example: string;
   exampleRequired: string;
   lc: LangCode;
@@ -18,36 +18,33 @@ type Inputs = {
   house_number: string;
 };
 
-export default function App() {
-  const {
-    register,
-    handleSubmit,
-    watch,
-    formState: { errors },
-    setValue,
-  } = useForm<Inputs>({ shouldFocusError: false });
+export function App() {
+  const formContext = useForm<Inputs>({ shouldFocusError: false });
+  const { handleSubmit } = formContext;
   const onSubmit: SubmitHandler<Inputs> = (data) => console.log(data);
 
   return (
     <>
       <h1>Recycle ICS generator</h1>
       <p>Generate ICS files and links for your waste collections. </p>
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <h2>Generator form</h2>
-        <LanguageSection lcProps={register("lc")} />
-        <AddressSection
-          register={register}
-          watch={watch}
-          errors={errors}
-          setValue={setValue}
-        />
-        <DateRangeSection />
-        <EncodingSection />
+      <FormProvider {...formContext}>
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <h2>Generator form</h2>
+          <LanguageSection lcProps={register("lc")} />
+          <AddressSection
+            register={register}
+            watch={watch}
+            errors={errors}
+            setValue={setValue}
+          />
+          <DateRangeSection />
+          <EncodingSection />
 
-        <h3>Submit</h3>
+          <h3>Submit</h3>
 
-        <input type="submit" />
-      </form>
+          <input type="submit" />
+        </form>
+      </FormProvider>
     </>
   );
 }
