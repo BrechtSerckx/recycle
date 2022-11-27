@@ -1,7 +1,15 @@
+import { useFormContext } from "react-hook-form";
 import Autocompleter from "../Autocompleter";
 import * as React from "react";
+import { Inputs } from "../App";
 
-function ZipcodeSection({ register, watch, setValue, errors, children }: any) {
+function ZipcodeSection({ children }: { children: any }) {
+  const {
+    register,
+    watch,
+    formState: { errors },
+    setValue,
+  } = useFormContext<Inputs>();
   const [zipcodeSelected, setZipcodeSelected] = React.useState(false);
 
   const QueryInput = () => {
@@ -72,7 +80,13 @@ function ZipcodeSection({ register, watch, setValue, errors, children }: any) {
   );
 }
 
-function StreetSection({ register, watch, setValue, errors, children }: any) {
+function StreetSection({ children }: { children: any }) {
+  const {
+    register,
+    watch,
+    formState: { errors },
+    setValue,
+  } = useFormContext<Inputs>();
   const [streetSelected, setStreetSelected] = React.useState(false);
   const QueryInput = () => {
     return (
@@ -142,7 +156,8 @@ function StreetSection({ register, watch, setValue, errors, children }: any) {
   );
 }
 
-function HouseNumberSection({ register }: any) {
+function HouseNumberSection() {
+  const { register } = useFormContext();
   return (
     <>
       <h4>House number</h4>
@@ -159,29 +174,14 @@ function HouseNumberSection({ register }: any) {
   );
 }
 
-export default function AddressSection({
-  register,
-  setValue,
-  errors,
-  watch,
-}: any) {
+export default function AddressSection() {
   return (
     <>
       <h3>Address</h3>
       <p>Waste collections are specific to your address.</p>
-      <ZipcodeSection
-        register={register}
-        watch={watch}
-        errors={errors}
-        setValue={setValue}
-      >
-        <StreetSection
-          register={register}
-          watch={watch}
-          errors={errors}
-          setValue={setValue}
-        >
-          <HouseNumberSection register={register} />
+      <ZipcodeSection>
+        <StreetSection>
+          <HouseNumberSection />
         </StreetSection>
       </ZipcodeSection>
     </>

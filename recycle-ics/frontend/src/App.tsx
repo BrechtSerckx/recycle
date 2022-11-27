@@ -31,12 +31,7 @@ export function App() {
         <form onSubmit={handleSubmit(onSubmit)}>
           <h2>Generator form</h2>
           <LanguageSection />
-          <AddressSection
-            register={register}
-            watch={watch}
-            errors={errors}
-            setValue={setValue}
-          />
+          <AddressSection />
           <DateRangeSection />
           <EncodingSection />
 
