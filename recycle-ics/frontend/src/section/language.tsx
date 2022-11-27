@@ -7,16 +7,21 @@ export enum LangCode {
   EN = "en",
 }
 
+const LangCodeRadio = ({ children, ...props }: any) => (
+  <label>
+    <input type="radio" {...props} />
+    {children}
+  </label>
+);
+
 export function LanguageSection() {
   const { register } = useFormContext();
-  const LangCodeRadio = ({ children, ...props }: any) => {
-    return (
-      <label>
-        <input type="radio" {...props} {...register("lc")} />
-        {children}
-      </label>
-    );
-  };
+  const languages = [
+    { lc: LangCode.NL, name: "Nederlands", defaultChecked: true },
+    { lc: LangCode.FR, name: "Francais" },
+    { lc: LangCode.DE, name: "Deutsch" },
+    { lc: LangCode.EN, name: "English" },
+  ];
   return (
     <>
       <h3>Language</h3>
@@ -26,12 +31,11 @@ export function LanguageSection() {
       </p>
       <fieldset>
         <legend>Language</legend>
-        <LangCodeRadio value={LangCode.NL} defaultChecked>
-          Nederlands
-        </LangCodeRadio>
-        <LangCodeRadio value={LangCode.FR}>Francais</LangCodeRadio>
-        <LangCodeRadio value={LangCode.DE}>Deutsch</LangCodeRadio>
-        <LangCodeRadio value={LangCode.EN}>English</LangCodeRadio>
+        {languages.map(({ lc, name, ...props }) => (
+          <LangCodeRadio value={lc} {...props} {...register("lc")}>
+            {name}
+          </LangCodeRadio>
+        ))}
       </fieldset>
     </>
   );
