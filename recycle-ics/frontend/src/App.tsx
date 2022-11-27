@@ -34,7 +34,7 @@ export default function App() {
       <p>Generate ICS files and links for your waste collections. </p>
       <form onSubmit={handleSubmit(onSubmit)}>
         <h2>Generator form</h2>
-        <LanguageSection register={register} />
+        <LanguageSection lcProps={register("lc")} />
         <AddressSection
           register={register}
           watch={watch}

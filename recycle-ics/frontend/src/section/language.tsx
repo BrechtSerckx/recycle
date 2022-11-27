@@ -5,12 +5,11 @@ export enum LangCode {
   EN = "en",
 }
 
-export function LanguageSection({ register }: any) {
-  const field = "lc";
+export function LanguageSection({ lcProps }: { lcProps: any }) {
   const LangCodeRadio = ({ children, ...props }: any) => {
     return (
       <label>
-        <input type="radio" {...props} {...register(field)} />
+        <input type="radio" {...props} {...lcProps} />
         {children}
       </label>
     );
