@@ -32,7 +32,7 @@ export function LanguageSection() {
       <fieldset>
         <legend>Language</legend>
         {languages.map(({ lc, name, ...props }) => (
-          <LangCodeRadio value={lc} {...props} {...register("lc")}>
+          <LangCodeRadio key={lc} value={lc} {...props} {...register("lc")}>
             {name}
           </LangCodeRadio>
         ))}
