@@ -3,12 +3,18 @@ import Autocompleter from "../Autocompleter";
 import * as React from "react";
 import { Inputs } from "../App";
 
-const ZipcodeQueryInput = (props: any) => (
+const ZipcodeQueryInput = React.forwardRef((props: any, ref: any) => (
   <label>
     Search your zip code:
-    <input type="text" inputMode="numeric" placeholder="3000" {...props} />
+    <input
+      ref={ref}
+      type="text"
+      inputMode="numeric"
+      placeholder="3000"
+      {...props}
+    />
   </label>
-);
+));
 
 const ZipcodeAutocompleter = (props: any) => (
   <Autocompleter<string, string>
@@ -18,25 +24,25 @@ const ZipcodeAutocompleter = (props: any) => (
   />
 );
 
-const ZipcodeNameInput = (props: any) => (
+const ZipcodeNameInput = React.forwardRef((props: any, ref: any) => (
   <label>
-    City/town: <input type="text" readOnly />
+    City/town: <input ref={ref} type="text" readOnly {...props} />
   </label>
-);
+));
 
-const ZipcodeIdInput = (props: any) => (
+const ZipcodeIdInput = React.forwardRef((props: any, ref: any) => (
   <label>
     Zip code:
-    <input type="text" readOnly {...props} />
+    <input ref={ref} type="text" readOnly {...props} />
   </label>
-);
+));
 
-const StreetQueryInput = (props: any) => (
+const StreetQueryInput = React.forwardRef((props: any, ref: any) => (
   <label>
     Search your street:
-    <input type="text" placeholder="Grote Markt" {...props} />
+    <input ref={ref} type="text" placeholder="Grote Markt" {...props} />
   </label>
-);
+));
 
 const StreetAutocompleter = (props: any) => (
   <Autocompleter<string, string>
@@ -46,26 +52,26 @@ const StreetAutocompleter = (props: any) => (
   />
 );
 
-const StreetNameInput = (props: any) => (
+const StreetNameInput = React.forwardRef((props: any, ref: any) => (
   <label>
     Street name:
-    <input type="text" readOnly {...props} />
+    <input ref={ref} type="text" readOnly {...props} />
   </label>
-);
+));
 
-const StreetIdInput = (props: any) => (
+const StreetIdInput = React.forwardRef((props: any, ref: any) => (
   <label>
     Street ID:
-    <input type="text" readOnly {...props} />
+    <input ref={ref} type="text" readOnly {...props} />
   </label>
-);
+));
 
-const HouseNumberInput = (props: any) => (
+const HouseNumberInput = React.forwardRef((props: any, ref: any) => (
   <label>
     House number:
-    <input type="number" placeholder="1" {...props} />
+    <input ref={ref} type="number" placeholder="1" {...props} />
   </label>
-);
+));
 
 export default function AddressSection() {
   const [zipcodeSelected, setZipcodeSelected] = React.useState(false);
