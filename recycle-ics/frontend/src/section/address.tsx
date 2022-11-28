@@ -82,17 +82,18 @@ export default function AddressSection() {
     formState: { errors },
     setValue,
   } = useFormContext<Inputs>();
+  const resetStreet = () => {
+    setValue("street_id", "");
+    setValue("street_name", "");
+    setStreetSelected(false);
+  };
   return (
     <>
       <h3>Address</h3>
       <p>Waste collections are specific to your address.</p>
       <h4>Zip code</h4>
       <p>Search for your city and choose the correct city from the list.</p>
-      <ZipcodeQueryInput
-        {...register("zipcode_q", {
-          onChange: () => setZipcodeSelected(false),
-        })}
-      />
+      <ZipcodeQueryInput {...register("zipcode_q")} />
 
       <ZipcodeAutocompleter
         query={watch("zipcode_q")}
@@ -100,6 +101,7 @@ export default function AddressSection() {
           setValue("zipcode_id", zipcode);
           setValue("zipcode_name", zipcode);
           setZipcodeSelected(true);
+          resetStreet();
         }}
       />
 
