@@ -1,3 +1,4 @@
+import * as React from "react";
 import { useFormContext } from "react-hook-form";
 
 export enum LangCode {
@@ -7,11 +8,13 @@ export enum LangCode {
   EN = "en",
 }
 
-const LangCodeRadio = ({ children, ...props }: any) => (
-  <label>
-    <input type="radio" {...props} />
-    {children}
-  </label>
+const LangCodeRadio = React.forwardRef(
+  ({ children, ...props }: any, ref: any) => (
+    <label>
+      <input ref={ref} type="radio" {...props} />
+      {children}
+    </label>
+  )
 );
 
 export function LanguageSection() {
