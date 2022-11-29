@@ -69,43 +69,74 @@ export default function EncodingSection() {
     {
       label: "Todo",
       value: "todo",
-      mkChildren: (isChecked: boolean) => (
-        <>
-          <p>
-            Represent waste collections as a todo or task.
-            <strong>Does not work with Google Calendar! </strong>Maybe with
-            Outlook, that's untested.
-          </p>
-          <fieldset>
-            <legend>Due type</legend>
-            <EncodingRadio label="Full day" name="tdt" value="date">
+      mkChildren: (isChecked: boolean) => {
+        const dueTypes = [
+          {
+            label: "Full day",
+            value: "date",
+            mkChildren: (isChecked2: boolean) => (
               <TodoDaysBeforeInput
                 label="Days before"
                 name="tdb"
                 required
                 value="1"
-                disabled={!isChecked}
+                disabled={!(isChecked && isChecked2)}
               />
-            </EncodingRadio>
-            <EncodingRadio label="Specific time" name="tdt" value="datetime">
-              <TodoDaysBeforeInput
-                label="Days before"
-                name="tdb"
-                required
-                value="1"
-                disabled={!isChecked}
-              />
-              <TodoTimeInput
-                label="Time"
-                name="tt"
-                required
-                value="20:00"
-                disabled={!isChecked}
-              />
-            </EncodingRadio>
-          </fieldset>
-        </>
-      ),
+            ),
+          },
+          {
+            label: "Specific time",
+            value: "datetime",
+            defaultChecked: true,
+            mkChildren: (isChecked2: boolean) => (
+              <>
+                <TodoDaysBeforeInput
+                  label="Days before"
+                  name="tdb"
+                  required
+                  value="1"
+                  disabled={!(isChecked && isChecked2)}
+                />
+                <TodoTimeInput
+                  label="Time"
+                  name="tt"
+                  required
+                  value="20:00"
+                  disabled={!(isChecked && isChecked2)}
+                />
+              </>
+            ),
+          },
+        ];
+        return (
+          <>
+            <p>
+              Represent waste collections as a todo or task.
+              <strong>Does not work with Google Calendar! </strong>Maybe with
+              Outlook, that's untested.
+            </p>
+            <fieldset>
+              <legend>Due type</legend>
+              {dueTypes.map(({ mkChildren, ...props }: any) => {
+                const { value, defaultChecked } = props;
+                return (
+                  <EncodingRadio
+                    key={value}
+                    {...props}
+                    disabled={!isChecked}
+                    {...register("tdt")}
+                  >
+                    {mkChildren(
+                      watch("tdt", isChecked && defaultChecked && value) ===
+                        value
+                    )}
+                  </EncodingRadio>
+                );
+              })}
+            </fieldset>
+          </>
+        );
+      },
     },
   ];
   return (
