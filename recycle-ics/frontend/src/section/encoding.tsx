@@ -20,6 +20,34 @@ const EventTimeInput = React.forwardRef(
   )
 );
 
+const EventInputs = ({ isChecked }: any) => {
+  const { register, watch } = useFormContext();
+  return (
+    <>
+      <p>Represent waste collections as an event.</p>
+      <EventTimeInput
+        label="Start time"
+        name="es"
+        required
+        value="07:00"
+        disabled={!isChecked}
+      />
+      <EventTimeInput
+        label="End time"
+        name="ee"
+        required
+        value="10:00"
+        disabled={!isChecked}
+      />
+      <p>Reminders: </p>
+      <ul id="reminder_list"> </ul>
+      <button id="add_reminder_button" type="button">
+        Add reminder
+      </button>
+    </>
+  );
+};
+
 const TodoDaysBeforeInput = React.forwardRef(
   ({ label, ...props }: any, ref: any) => (
     <label>
@@ -34,6 +62,84 @@ const TodoTimeInput = React.forwardRef(({ label, ...props }: any, ref: any) => (
   </label>
 ));
 
+const TodoFullDayInputs = ({ isChecked }: any) => (
+  <TodoDaysBeforeInput
+    label="Days before"
+    name="tdb"
+    required
+    value="1"
+    disabled={!isChecked}
+  />
+);
+
+const TodoSpecificTimeInputs = ({ isChecked }: any) => (
+  <>
+    <TodoDaysBeforeInput
+      label="Days before"
+      name="tdb"
+      required
+      value="1"
+      disabled={!isChecked}
+    />
+    <TodoTimeInput
+      label="Time"
+      name="tt"
+      required
+      value="20:00"
+      disabled={!isChecked}
+    />
+  </>
+);
+
+const TodoInputs = ({ isParentChecked }: any) => {
+  const { register, watch } = useFormContext();
+  const dueTypes = [
+    {
+      label: "Full day",
+      value: "date",
+      mkChildren: (isChecked: boolean) => (
+        <TodoFullDayInputs isChecked={isChecked} />
+      ),
+    },
+    {
+      label: "Specific time",
+      value: "datetime",
+      defaultChecked: true,
+      mkChildren: (isChecked: boolean) => (
+        <TodoSpecificTimeInputs isChecked={isChecked} />
+      ),
+    },
+  ];
+  return (
+    <>
+      <p>
+        Represent waste collections as a todo or task.
+        <strong>Does not work with Google Calendar! </strong>Maybe with Outlook,
+        that's untested.
+      </p>
+      <fieldset>
+        <legend>Due type</legend>
+        {dueTypes.map(({ mkChildren, ...props }: any) => {
+          const { value, defaultChecked } = props;
+          return (
+            <EncodingRadio
+              key={value}
+              {...props}
+              disabled={!isParentChecked}
+              {...register("tdt")}
+            >
+              {mkChildren(
+                isParentChecked &&
+                  watch("tdt", defaultChecked && value) === value
+              )}
+            </EncodingRadio>
+          );
+        })}
+      </fieldset>
+    </>
+  );
+};
+
 export default function EncodingSection() {
   const { register, watch } = useFormContext();
   const encodings = [
@@ -41,102 +147,14 @@ export default function EncodingSection() {
       label: "Event",
       value: "event",
       defaultChecked: true,
-      mkChildren: (isChecked: boolean) => (
-        <>
-          <p>Represent waste collections as an event.</p>
-          <EventTimeInput
-            label="Start time"
-            name="es"
-            required
-            value="07:00"
-            disabled={!isChecked}
-          />
-          <EventTimeInput
-            label="End time"
-            name="ee"
-            required
-            value="10:00"
-            disabled={!isChecked}
-          />
-          <p>Reminders: </p>
-          <ul id="reminder_list"> </ul>
-          <button id="add_reminder_button" type="button">
-            Add reminder
-          </button>
-        </>
-      ),
+      mkChildren: (isChecked: boolean) => <EventInputs isChecked={isChecked} />,
     },
     {
       label: "Todo",
       value: "todo",
-      mkChildren: (isChecked: boolean) => {
-        const dueTypes = [
-          {
-            label: "Full day",
-            value: "date",
-            mkChildren: (isChecked2: boolean) => (
-              <TodoDaysBeforeInput
-                label="Days before"
-                name="tdb"
-                required
-                value="1"
-                disabled={!(isChecked && isChecked2)}
-              />
-            ),
-          },
-          {
-            label: "Specific time",
-            value: "datetime",
-            defaultChecked: true,
-            mkChildren: (isChecked2: boolean) => (
-              <>
-                <TodoDaysBeforeInput
-                  label="Days before"
-                  name="tdb"
-                  required
-                  value="1"
-                  disabled={!(isChecked && isChecked2)}
-                />
-                <TodoTimeInput
-                  label="Time"
-                  name="tt"
-                  required
-                  value="20:00"
-                  disabled={!(isChecked && isChecked2)}
-                />
-              </>
-            ),
-          },
-        ];
-        return (
-          <>
-            <p>
-              Represent waste collections as a todo or task.
-              <strong>Does not work with Google Calendar! </strong>Maybe with
-              Outlook, that's untested.
-            </p>
-            <fieldset>
-              <legend>Due type</legend>
-              {dueTypes.map(({ mkChildren, ...props }: any) => {
-                const { value, defaultChecked } = props;
-                return (
-                  <EncodingRadio
-                    key={value}
-                    {...props}
-                    disabled={!isChecked}
-                    {...register("tdt")}
-                  >
-                    {mkChildren(
-                      watch("tdt", isChecked && defaultChecked && value) ===
-                        value
-                    )}
-                  </EncodingRadio>
-                );
-              })}
-            </fieldset>
-          </>
-        );
-      },
+      mkChildren: (isChecked: boolean) => (
+        <TodoInputs isParentChecked={isChecked} />
+      ),
     },
   ];
   return (
