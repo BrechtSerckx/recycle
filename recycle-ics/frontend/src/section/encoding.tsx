@@ -1,3 +1,27 @@
+import * as React from "react";
+
+const EventTimeInput = React.forwardRef(
+  ({ label, ...props }: any, ref: any) => (
+    <label>
+      {label} <input type="time" {...props} />
+    </label>
+  )
+);
+
+const TodoDaysBeforeInput = React.forwardRef(
+  ({ label, ...props }: any, ref: any) => (
+    <label>
+      {label} <input type="number" {...props} />
+    </label>
+  )
+);
+
+const TodoTimeInput = React.forwardRef(({ label, ...props }: any, ref: any) => (
+  <label>
+    {label} <input type="time" {...props} />
+  </label>
+));
+
 export default function EncodingSection() {
   return (
     <>
@@ -9,14 +33,20 @@ export default function EncodingSection() {
           Event
         </label>
         <p>Represent waste collections as an event.</p>
-        <label>
-          Start time:
-          <input type="time" name="es" required value="07:00" disabled />
-        </label>
-        <label>
-          End time:
-          <input type="time" name="ee" required value="10:00" disabled />
-        </label>
+        <EventTimeInput
+          label="Start time"
+          name="es"
+          required
+          value="07:00"
+          disabled
+        />
+        <EventTimeInput
+          label="End time"
+          name="ee"
+          required
+          value="10:00"
+          disabled
+        />
         <p>Reminders: </p>
         <ul id="reminder_list"> </ul>
         <button id="add_reminder_button" type="button">
@@ -37,22 +67,31 @@ export default function EncodingSection() {
             <input type="radio" name="tdt" value="date" />
             Full day:
           </label>
-          <label>
-            Days before:
-            <input type="number" name="tdb" required value="1" disabled />
-          </label>
+          <TodoDaysBeforeInput
+            label="Days before"
+            name="tdb"
+            required
+            value="1"
+            disabled
+          />
           <label>
             <input type="radio" name="tdt" value="datetime" />
             Specific time:
           </label>
-          <label>
-            Days before:
-            <input type="number" name="tdb" required value="1" disabled />
-          </label>
-          <label>
-            Time:
-            <input type="time" name="tt" required value="20:00" disabled />
-          </label>
+          <TodoDaysBeforeInput
+            label="Days before"
+            name="tdb"
+            required
+            value="1"
+            disabled
+          />
+          <TodoTimeInput
+            label="Time"
+            name="tt"
+            required
+            value="20:00"
+            disabled
+          />
         </fieldset>
       </fieldset>
     </>
