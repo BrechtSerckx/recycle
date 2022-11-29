@@ -9,6 +9,7 @@ where
 
 import Data.Time
 import Recycle.Types
+import Data.Text (Text)
 import Recycle.Types.Orphans ()
 import Web.FormUrlEncoded
   ( FromForm (..),
@@ -87,7 +88,7 @@ data Filter = Filter
 
 instance FromForm Filter where
   fromForm f = do
-    let fi = parseAll "fi" f
+    fi <- parseAll @Text "fi" f
     fractions <- parseAll "fif" f
     pure
       Filter
