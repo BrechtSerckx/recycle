@@ -1,4 +1,5 @@
 import * as React from "react";
+import { useFormContext } from "react-hook-form";
 
 const EncodingRadio = React.forwardRef(
   ({ children, label, ...props }: any, ref: any) => (
@@ -34,34 +35,42 @@ const TodoTimeInput = React.forwardRef(({ label, ...props }: any, ref: any) => (
 ));
 
 export default function EncodingSection() {
-  return (
-    <>
-      <h3>Encoding</h3>
-      <fieldset>
-        <legend>Fraction encoding</legend>
-        <EncodingRadio label="Event" name="fe" value="event">
+  const { register, watch } = useFormContext();
+  const encodings = [
+    {
+      label: "Event",
+      value: "event",
+      defaultChecked: true,
+      mkChildren: (isChecked: boolean) => (
+        <>
           <p>Represent waste collections as an event.</p>
           <EventTimeInput
             label="Start time"
             name="es"
             required
             value="07:00"
-            disabled
+            disabled={!isChecked}
           />
           <EventTimeInput
             label="End time"
             name="ee"
             required
             value="10:00"
-            disabled
+            disabled={!isChecked}
           />
           <p>Reminders: </p>
           <ul id="reminder_list"> </ul>
           <button id="add_reminder_button" type="button">
             Add reminder
           </button>
-        </EncodingRadio>
-        <EncodingRadio label="Todo" name="fe" value="todo">
+        </>
+      ),
+    },
+    {
+      label: "Todo",
+      value: "todo",
+      mkChildren: (isChecked: boolean) => (
+        <>
           <p>
             Represent waste collections as a todo or task.
             <strong>Does not work with Google Calendar! </strong>Maybe with
@@ -75,7 +84,7 @@ export default function EncodingSection() {
                 name="tdb"
                 required
                 value="1"
-                disabled
+                disabled={!isChecked}
               />
             </EncodingRadio>
             <EncodingRadio label="Specific time" name="tdt" value="datetime">
@@ -84,18 +93,34 @@ export default function EncodingSection() {
                 name="tdb"
                 required
                 value="1"
-                disabled
+                disabled={!isChecked}
               />
               <TodoTimeInput
                 label="Time"
                 name="tt"
                 required
                 value="20:00"
-                disabled
+                disabled={!isChecked}
               />
             </EncodingRadio>
           </fieldset>
-        </EncodingRadio>
+        </>
+      ),
+    },
+  ];
+  return (
+    <>
+      <h3>Encoding</h3>
+      <fieldset>
+        <legend>Fraction encoding</legend>
+        {encodings.map(({ mkChildren, ...props }: any) => {
+          const { value, defaultChecked } = props;
+          return (
+            <EncodingRadio key={value} {...props} {...register("fe")}>
+              {mkChildren(watch("fe", defaultChecked && value) === value)}
+            </EncodingRadio>
+          );
+        })}
       </fieldset>
     </>
   );
