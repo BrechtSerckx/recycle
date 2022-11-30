@@ -21,23 +21,21 @@ const EventTimeInput = React.forwardRef(
 );
 
 const EventInputs = ({ isChecked }: any) => {
-  const { register, watch } = useFormContext();
+  const { register } = useFormContext();
   return (
     <>
       <p>Represent waste collections as an event.</p>
       <EventTimeInput
         label="Start time"
-        name="es"
-        required
         value="07:00"
         disabled={!isChecked}
+        {...register("es", { required: true })}
       />
       <EventTimeInput
         label="End time"
-        name="ee"
-        required
         value="10:00"
         disabled={!isChecked}
+        {...register("ee", { required: true })}
       />
       <p>Reminders: </p>
       <ul id="reminder_list"> </ul>
@@ -62,34 +60,37 @@ const TodoTimeInput = React.forwardRef(({ label, ...props }: any, ref: any) => (
   </label>
 ));
 
-const TodoFullDayInputs = ({ isChecked }: any) => (
-  <TodoDaysBeforeInput
-    label="Days before"
-    name="tdb"
-    required
-    value="1"
-    disabled={!isChecked}
-  />
-);
-
-const TodoSpecificTimeInputs = ({ isChecked }: any) => (
-  <>
+const TodoFullDayInputs = ({ isChecked }: any) => {
+  const { register } = useFormContext();
+  return (
     <TodoDaysBeforeInput
       label="Days before"
-      name="tdb"
-      required
       value="1"
       disabled={!isChecked}
+      {...register("tdb", { required: true })}
     />
-    <TodoTimeInput
-      label="Time"
-      name="tt"
-      required
-      value="20:00"
-      disabled={!isChecked}
-    />
-  </>
-);
+  );
+};
+
+const TodoSpecificTimeInputs = ({ isChecked }: any) => {
+  const { register } = useFormContext();
+  return (
+    <>
+      <TodoDaysBeforeInput
+        label="Days before"
+        value="1"
+        disabled={!isChecked}
+        {...register("tdb", { required: true })}
+      />
+      <TodoTimeInput
+        label="Time"
+        value="20:00"
+        disabled={!isChecked}
+        {...register("tt", { required: true })}
+      />
+    </>
+  );
+};
 
 const TodoInputs = ({ isParentChecked }: any) => {
   const { register, watch } = useFormContext();
