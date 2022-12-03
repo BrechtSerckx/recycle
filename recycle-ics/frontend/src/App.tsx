@@ -19,7 +19,7 @@ export type Inputs = {
 };
 
 export function App() {
-  const formContext = useForm<Inputs>({ shouldFocusError: false });
+  const formContext = useForm<Inputs>();
   const { handleSubmit } = formContext;
   const onSubmit: SubmitHandler<Inputs> = (data) => console.log(data);
 
