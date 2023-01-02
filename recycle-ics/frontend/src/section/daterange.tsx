@@ -36,15 +36,13 @@ const AbsoluteDateRangeInputs = () => {
       <p>This will get the waste collections between two dates.</p>
       <AbsoluteDateInput
         label="From: "
-        required
         disabled={!isChecked}
-        {...register("adrf")}
+        {...register("adrf", { required: isChecked })}
       />
       <AbsoluteDateInput
         label="To: "
-        required
         disabled={!isChecked}
-        {...register("adrt")}
+        {...register("adrt", { required: isChecked })}
       />
     </DateRangeRadio>
   );
@@ -81,15 +79,13 @@ const RelativeDateRangeInputs = () => {
       </p>
       <RelativeDateInput
         label="Days before:"
-        defaultValue={-14}
         disabled={!isChecked}
-        {...register("rdrf")}
+        {...register("rdrf", { required: isChecked, value: -14 })}
       />
       <RelativeDateInput
         label="Days before:"
-        defaultValue={28}
         disabled={!isChecked}
-        {...register("rdrt")}
+        {...register("rdrt", { required: isChecked, value: 28 })}
       />
     </DateRangeRadio>
   );
