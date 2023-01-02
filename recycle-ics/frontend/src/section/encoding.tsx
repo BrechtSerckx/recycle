@@ -73,7 +73,7 @@ const TodoFullDayInputs = ({ isParentChecked }: any) => {
   const value = "date";
   const defaultChecked = true;
   var isChecked =
-    useWatch({ name: "fe", defaultValue: defaultChecked && value }) === value;
+    useWatch({ name: "tdt", defaultValue: defaultChecked && value }) === value;
   return (
     <EncodingRadio
       label="Full day"
@@ -82,12 +82,14 @@ const TodoFullDayInputs = ({ isParentChecked }: any) => {
       defaultChecked={defaultChecked}
       {...register("tdt")}
     >
-      <TodoDaysBeforeInput
-        label="Days before"
-        defaultValue="1"
-        disabled={!isChecked}
-        {...register("tdb", { required: true })}
-      />
+      <p>
+        <TodoDaysBeforeInput
+          label="Days before"
+          defaultValue="1"
+          disabled={!(isParentChecked && isChecked)}
+          {...register("tdb", { required: false })}
+        />
+      </p>
     </EncodingRadio>
   );
 };
@@ -97,7 +99,7 @@ const TodoSpecificTimeInputs = ({ isParentChecked }: any) => {
   const value = "datetime";
   const defaultChecked = false;
   var isChecked =
-    useWatch({ name: "fe", defaultValue: defaultChecked && value }) === value;
+    useWatch({ name: "tdt", defaultValue: defaultChecked && value }) === value;
   return (
     <EncodingRadio
       label="Specific time"
@@ -106,25 +108,27 @@ const TodoSpecificTimeInputs = ({ isParentChecked }: any) => {
       disabled={!isParentChecked}
       {...register("tdt")}
     >
-      <TodoDaysBeforeInput
-        label="Days before"
-        defaultValue="1"
-        disabled={!isChecked}
-        {...register("tdb", { required: true })}
-      />
-      <TodoTimeInput
-        label="Time"
-        defaultValue="20:00"
-        disabled={!isChecked}
-        {...register("tt", { required: true })}
-      />
+      <p>
+        <TodoDaysBeforeInput
+          label="Days before"
+          defaultValue="1"
+          disabled={!(isParentChecked && isChecked)}
+          {...register("tdb", { required: false })}
+        />
+        <TodoTimeInput
+          label="Time"
+          defaultValue="20:00"
+          disabled={!(isParentChecked && isChecked)}
+          {...register("tt", { required: false })}
+        />
+      </p>
     </EncodingRadio>
   );
 };
 
 const TodoInputs = () => {
   const { register } = useFormContext();
-  const defaultChecked = false;
+  const defaultChecked = true;
   const value = "todo";
   var isChecked =
     useWatch({ name: "fe", defaultValue: defaultChecked && value }) === value;
@@ -142,8 +146,8 @@ const TodoInputs = () => {
       </p>
       <fieldset>
         <legend>Due type</legend>
-        <TodoFullDayInputs parentChecked={isChecked} />
-        <TodoSpecificTimeInputs parentChecked={isChecked} />
+        <TodoFullDayInputs isParentChecked={isChecked} />
+        <TodoSpecificTimeInputs isParentChecked={isChecked} />
       </fieldset>
     </EncodingRadio>
   );
