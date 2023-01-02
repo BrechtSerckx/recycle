@@ -22,6 +22,7 @@ export type FormInputs = {
   fe: "event" | "todo";
   es: string;
   ee: string;
+  reminders: [{ rdb: number; rhb: number; rmb: number }];
   tdt: "date" | "datetime";
   tdb: number;
   tt: string;
@@ -35,7 +36,12 @@ export type Form = {
     | { drt: "absolute"; f: string; t: string }
     | { drt: "relative"; f: number; t: number };
   fraction_encoding:
-    | { fe: "event"; es: string; ee: string }
+    | {
+        fe: "event";
+        es: string;
+        ee: string;
+        reminders: [{ rdb: number; rhb: number; rmb: number }];
+      }
     | {
         fe: "todo";
         todo_due:
@@ -56,10 +62,10 @@ const inputsToForm = ({
   fe,
   es,
   ee,
+  reminders,
   tdt,
   tdb,
   tt,
-  ...inputs
 }: FormInputs): Form => {
   var date_range;
   switch (drt) {
@@ -73,7 +79,7 @@ const inputsToForm = ({
   var fraction_encoding;
   switch (fe) {
     case "event":
-      fraction_encoding = { fe: fe as "event", es, ee };
+      fraction_encoding = { fe: fe as "event", es, ee, reminders };
       break;
     case "todo":
       var todo_due;
@@ -95,7 +101,6 @@ const inputsToForm = ({
     house_number,
     date_range,
     fraction_encoding,
-    ...inputs,
   };
 };
 
