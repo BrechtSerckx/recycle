@@ -38,7 +38,7 @@ const AbsoluteDateRangeInputs = () => {
         label="From: "
         required
         disabled={!isChecked}
-        {...register("adrf")} /* FIXME: convert to legacy `f` and `t` */
+        {...register("adrf")}
       />
       <AbsoluteDateInput
         label="To: "

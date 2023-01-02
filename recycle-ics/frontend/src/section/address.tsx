@@ -1,7 +1,7 @@
 import { useFormContext } from "react-hook-form";
 import Autocompleter from "../Autocompleter";
 import * as React from "react";
-import { Inputs } from "../App";
+import { FormInputs } from "../App";
 
 const ZipcodeQueryInput = React.forwardRef((props: any, ref: any) => (
   <label>
@@ -81,7 +81,7 @@ export default function AddressSection() {
     watch,
     formState: { errors },
     setValue,
-  } = useFormContext<Inputs>();
+  } = useFormContext<FormInputs>();
   const resetStreet = () => {
     setValue("street_id", "");
     setValue("street_name", "");
