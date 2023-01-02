@@ -15,7 +15,7 @@ const DateRangeRadio = React.forwardRef(
 const AbsoluteDateInput = React.forwardRef(
   ({ label, ...props }: any, ref: any) => (
     <label>
-      {label} <input type="date" {...props} />
+      {label} <input ref={ref} type="date" {...props} />
     </label>
   )
 );
@@ -23,7 +23,7 @@ const AbsoluteDateInput = React.forwardRef(
 const AbsoluteDateRangeInputs = () => {
   const { register } = useFormContext();
   const value = "absolute";
-  const defaultChecked = true;
+  const defaultChecked = false;
   var isChecked =
     useWatch({ name: "drt", defaultValue: defaultChecked && value }) === value;
   return (
@@ -36,11 +36,16 @@ const AbsoluteDateRangeInputs = () => {
       <p>This will get the waste collections between two dates.</p>
       <AbsoluteDateInput
         label="From: "
-        name="f"
         required
         disabled={!isChecked}
+        {...register("adrf")} /* FIXME: convert to legacy `f` and `t` */
       />
-      <AbsoluteDateInput label="To: " name="t" required disabled={!isChecked} />
+      <AbsoluteDateInput
+        label="To: "
+        required
+        disabled={!isChecked}
+        {...register("adrt")}
+      />
     </DateRangeRadio>
   );
 };
@@ -49,7 +54,7 @@ const RelativeDateInput = React.forwardRef(
   ({ label, ...props }: any, ref: any) => (
     <label>
       {label}
-      <input type="number" step={1} {...props} />
+      <input ref={ref} type="number" step={1} {...props} />
     </label>
   )
 );
@@ -57,11 +62,16 @@ const RelativeDateInput = React.forwardRef(
 const RelativeDateRangeInputs = () => {
   const { register } = useFormContext();
   const value = "relative";
-  const defaultChecked = false;
+  const defaultChecked = true;
   var isChecked =
     useWatch({ name: "drt", defaultValue: defaultChecked && value }) === value;
   return (
-    <DateRangeRadio label="Relative" value="relative" {...register("drt")}>
+    <DateRangeRadio
+      label="Relative"
+      value="relative"
+      defaultChecked={defaultChecked}
+      {...register("drt")}
+    >
       <p>
         This will get the waste collections relative to the current date. This
         is is particularly useful when auto-importing the waste collections
@@ -71,17 +81,15 @@ const RelativeDateRangeInputs = () => {
       </p>
       <RelativeDateInput
         label="Days before:"
-        name="f"
-        defaultValue="-14"
-        required
+        defaultValue={-14}
         disabled={!isChecked}
+        {...register("rdrf")}
       />
       <RelativeDateInput
         label="Days before:"
-        name="t"
-        defaultValue="28"
-        required
+        defaultValue={28}
         disabled={!isChecked}
+        {...register("rdrt")}
       />
     </DateRangeRadio>
   );
