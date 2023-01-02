@@ -85,9 +85,11 @@ const TodoFullDayInputs = ({ isParentChecked }: any) => {
       <p>
         <TodoDaysBeforeInput
           label="Days before"
-          defaultValue="1"
           disabled={!(isParentChecked && isChecked)}
-          {...register("tdb", { required: false })}
+          {...register("tdb", {
+            required: isParentChecked && isChecked,
+            value: 1,
+          })}
         />
       </p>
     </EncodingRadio>
@@ -111,15 +113,19 @@ const TodoSpecificTimeInputs = ({ isParentChecked }: any) => {
       <p>
         <TodoDaysBeforeInput
           label="Days before"
-          defaultValue="1"
           disabled={!(isParentChecked && isChecked)}
-          {...register("tdb", { required: false })}
+          {...register("tdb", {
+            required: isParentChecked && isChecked,
+            value: 1,
+          })}
         />
         <TodoTimeInput
           label="Time"
-          defaultValue="20:00"
           disabled={!(isParentChecked && isChecked)}
-          {...register("tt", { required: false })}
+          {...register("tt", {
+            required: isParentChecked && isChecked,
+            value: "20:00",
+          })}
         />
       </p>
     </EncodingRadio>
