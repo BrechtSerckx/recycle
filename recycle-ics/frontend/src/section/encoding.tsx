@@ -15,7 +15,8 @@ const EncodingRadio = React.forwardRef(
 const EventTimeInput = React.forwardRef(
   ({ label, ...props }: any, ref: any) => (
     <label>
-      {label} <input ref={ref} type="time" {...props} />
+      {label}
+      <input ref={ref} type="time" {...props} />
     </label>
   )
 );
@@ -36,15 +37,13 @@ const EventInputs = () => {
       <p>Represent waste collections as an event.</p>
       <EventTimeInput
         label="Start time"
-        defaultValue="07:00"
         disabled={!isChecked}
-        {...register("es", { required: true })}
+        {...register("es", { required: isChecked, value: "07:00" })}
       />
       <EventTimeInput
         label="End time"
-        defaultValue="10:00"
         disabled={!isChecked}
-        {...register("ee", { required: true })}
+        {...register("ee", { required: isChecked, value: "10:00" })}
       />
       <p>Reminders: </p>
       <ul id="reminder_list"> </ul>
@@ -58,14 +57,14 @@ const EventInputs = () => {
 const TodoDaysBeforeInput = React.forwardRef(
   ({ label, ...props }: any, ref: any) => (
     <label>
-      {label} <input type="number" {...props} />
+      {label} <input ref={ref} type="number" {...props} />
     </label>
   )
 );
 
 const TodoTimeInput = React.forwardRef(({ label, ...props }: any, ref: any) => (
   <label>
-    {label} <input type="time" {...props} />
+    {label} <input ref={ref} type="time" {...props} />
   </label>
 ));
 
@@ -130,7 +129,12 @@ const TodoInputs = () => {
   var isChecked =
     useWatch({ name: "fe", defaultValue: defaultChecked && value }) === value;
   return (
-    <EncodingRadio value={value} label="Todo" {...register("fe")}>
+    <EncodingRadio
+      value={value}
+      label="Todo"
+      defaultChecked={defaultChecked}
+      {...register("fe")}
+    >
       <p>
         Represent waste collections as a todo or task.
         <strong>Does not work with Google Calendar! </strong>Maybe with Outlook,
