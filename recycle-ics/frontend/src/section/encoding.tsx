@@ -57,19 +57,42 @@ const EventInputs = () => {
       <ul id="reminder_list">
         {reminders.map((reminder, index) => (
           <li key={reminder.id}>
-            <label>
-              Days before:
-              <input
-                type="number"
-                {...register(`reminders.${index}.rdb`, {
-                  required: true,
-                  value: 0,
-                })}
-              />
-            </label>
-            <button type="button" onClick={() => remove(index)}>
-              Delete reminder
-            </button>
+            <fieldset>
+              <legend>Reminder</legend>
+              <label>
+                Days before:
+                <input
+                  type="number"
+                  {...register(`reminders.${index}.rdb`, {
+                    required: true,
+                    value: 0,
+                  })}
+                />
+              </label>
+              <label>
+                Hours before:
+                <input
+                  type="number"
+                  {...register(`reminders.${index}.rhb`, {
+                    required: true,
+                    value: 10,
+                  })}
+                />
+              </label>
+              <label>
+                Minutes before:
+                <input
+                  type="number"
+                  {...register(`reminders.${index}.rmb`, {
+                    required: true,
+                    value: 0,
+                  })}
+                />
+              </label>
+              <button type="button" onClick={() => remove(index)}>
+                Delete reminder
+              </button>
+            </fieldset>
           </li>
         ))}
       </ul>
