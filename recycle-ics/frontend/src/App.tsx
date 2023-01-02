@@ -44,6 +44,10 @@ export type Form = {
       };
 };
 const inputsToForm = ({
+  lc,
+  zipcode_id,
+  street_id,
+  house_number,
   drt,
   adrf,
   adrt,
@@ -84,14 +88,26 @@ const inputsToForm = ({
       fraction_encoding = { fe: fe as "todo", todo_due };
       break;
   }
-  return { date_range, fraction_encoding, ...inputs };
-};
+  return {
+    lc,
+    zipcode_id,
+    street_id,
+    house_number,
+    date_range,
+    fraction_encoding,
+    ...inputs,
+  };
 };
 
 export function App() {
-  const formContext = useForm<Inputs>();
+  const formContext = useForm<FormInputs>();
   const { handleSubmit } = formContext;
-  const onSubmit: SubmitHandler<Inputs> = (data) => console.log(data);
+  const [values, setValues] = React.useState<Form | null>(null);
+  const onSubmit: SubmitHandler<FormInputs> = (data) => {
+    const formData = inputsToForm(data);
+    console.log(formData);
+    setValues(formData);
+  };
 
   return (
     <>
@@ -108,6 +124,8 @@ export function App() {
           <h3>Submit</h3>
 
           <input type="submit" />
+          <h2>Form submit</h2>
+          <p>{values && JSON.stringify(values)}</p>
         </form>
       </FormProvider>
     </>
