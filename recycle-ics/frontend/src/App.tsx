@@ -19,6 +19,12 @@ export type FormInputs = {
   adrt: string;
   rdrf: number;
   rdrt: number;
+  fe: "event" | "todo";
+  es: string;
+  ee: string;
+  tdt: "date" | "datetime";
+  tdb: number;
+  tt: string;
 };
 export type Form = {
   lc: LangCode;
@@ -28,6 +34,14 @@ export type Form = {
   date_range:
     | { drt: "absolute"; f: string; t: string }
     | { drt: "relative"; f: number; t: number };
+  fraction_encoding:
+    | { fe: "event"; es: string; ee: string }
+    | {
+        fe: "todo";
+        todo_due:
+          | { tdt: "date"; tdb: number }
+          | { tdt: "datetime"; tdb: number; tt: string };
+      };
 };
 const inputsToForm = ({
   drt,
@@ -35,18 +49,42 @@ const inputsToForm = ({
   adrt,
   rdrf,
   rdrt,
+  fe,
+  es,
+  ee,
+  tdt,
+  tdb,
+  tt,
   ...inputs
 }: FormInputs): Form => {
   var date_range;
   switch (drt) {
     case "absolute":
-      date_range = { drt: "absolute" as "absolute", f: adrf, t: adrt };
+      date_range = { drt: drt as "absolute", f: adrf, t: adrt };
       break;
     case "relative":
-      date_range = { drt: "relative" as "relative", f: rdrf, t: rdrt };
+      date_range = { drt: drt as "relative", f: rdrf, t: rdrt };
       break;
   }
-  return { date_range, ...inputs };
+  var fraction_encoding;
+  switch (fe) {
+    case "event":
+      fraction_encoding = { fe: fe as "event", es, ee };
+      break;
+    case "todo":
+      var todo_due;
+      switch (tdt) {
+        case "date":
+          todo_due = { tdt: tdt as "date", tdb };
+          break;
+        case "datetime":
+          todo_due = { tdt: tdt as "datetime", tdb, tt };
+          break;
+      }
+      fraction_encoding = { fe: fe as "todo", todo_due };
+      break;
+  }
+  return { date_range, fraction_encoding, ...inputs };
 };
 };
 
