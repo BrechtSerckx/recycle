@@ -1,5 +1,5 @@
 import * as React from "react";
-import { useFormContext, useWatch } from "react-hook-form";
+import { useFormContext, useWatch, useFieldArray } from "react-hook-form";
 
 const EncodingRadio = React.forwardRef(
   ({ children, label, ...props }: any, ref: any) => (
@@ -22,11 +22,19 @@ const EventTimeInput = React.forwardRef(
 );
 
 const EventInputs = () => {
-  const { register } = useFormContext();
+  const { control, register } = useFormContext();
   const defaultChecked = true;
   const value = "event";
   var isChecked =
     useWatch({ name: "fe", defaultValue: defaultChecked && value }) === value;
+  const {
+    fields: reminders,
+    append,
+    remove,
+  } = useFieldArray({
+    control,
+    name: "reminders",
+  });
   return (
     <EncodingRadio
       label="Event"
@@ -46,8 +54,26 @@ const EventInputs = () => {
         {...register("ee", { required: isChecked, value: "10:00" })}
       />
       <p>Reminders: </p>
-      <ul id="reminder_list"> </ul>
-      <button id="add_reminder_button" type="button">
+      <ul id="reminder_list">
+        {reminders.map((reminder, index) => (
+          <li key={reminder.id}>
+            <label>
+              Days before:
+              <input
+                type="number"
+                {...register(`reminders.${index}.rdb`, {
+                  required: true,
+                  value: 0,
+                })}
+              />
+            </label>
+            <button type="button" onClick={() => remove(index)}>
+              Delete reminder
+            </button>
+          </li>
+        ))}
+      </ul>
+      <button type="button" onClick={() => append({})}>
         Add reminder
       </button>
     </EncodingRadio>
