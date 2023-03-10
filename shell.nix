@@ -1,7 +1,6 @@
 let
   sources = import ./nix/sources.nix { };
-  haskellNix = import sources.haskellNix { };
-  nixpkgs = haskellNix.pkgs-unstable;
+  nixpkgs = import ./nix/pkgs.nix;
 in (import ./default.nix {}).shellFor {
   packages = ps: with ps; [ recycle-client recycle-ics ];
 

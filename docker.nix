@@ -1,7 +1,5 @@
 let
-  sources = import ./nix/sources.nix { };
-  haskellNix = import sources.haskellNix { };
-  nixpkgs = haskellNix.pkgs-unstable;
+  nixpkgs = import ./nix/pkgs.nix;
 in { name ? "recycle", tag ? "latest" }:
 
 let
