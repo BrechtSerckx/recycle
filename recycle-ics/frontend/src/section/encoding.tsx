@@ -63,6 +63,7 @@ const EventInputs = () => {
                 Days before:
                 <input
                   type="number"
+                  disabled={!isChecked}
                   {...register(`reminders.${index}.rdb`, {
                     required: true,
                     value: 0,
@@ -73,6 +74,7 @@ const EventInputs = () => {
                 Hours before:
                 <input
                   type="number"
+                  disabled={!isChecked}
                   {...register(`reminders.${index}.rhb`, {
                     required: true,
                     value: 10,
@@ -83,20 +85,25 @@ const EventInputs = () => {
                 Minutes before:
                 <input
                   type="number"
+                  disabled={!isChecked}
                   {...register(`reminders.${index}.rmb`, {
                     required: true,
                     value: 0,
                   })}
                 />
               </label>
-              <button type="button" onClick={() => remove(index)}>
+              <button
+                type="button"
+                disabled={!isChecked}
+                onClick={() => remove(index)}
+              >
                 Delete reminder
               </button>
             </fieldset>
           </li>
         ))}
       </ul>
-      <button type="button" onClick={() => append({})}>
+      <button type="button" disabled={!isChecked} onClick={() => append({})}>
         Add reminder
       </button>
     </EncodingRadio>
