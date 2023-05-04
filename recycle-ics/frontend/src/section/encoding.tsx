@@ -1,8 +1,24 @@
 import * as React from "react";
-import { useFormContext, useWatch, useFieldArray } from "react-hook-form";
+import {
+  useFormContext,
+  useWatch,
+  useFieldArray,
+  UseFormRegisterReturn,
+} from "react-hook-form";
 
 const EncodingRadio = React.forwardRef(
-  ({ children, label, ...props }: any, ref: any) => (
+  (
+    {
+      children,
+      label,
+      ...props
+    }: Partial<UseFormRegisterReturn> & {
+      label: React.ReactNode;
+      children: React.ReactNode;
+      value: string;
+    },
+    ref: React.ForwardedRef<HTMLInputElement>
+  ) => (
     <div>
       <label>
         <input ref={ref} type="radio" {...props} />
@@ -13,7 +29,15 @@ const EncodingRadio = React.forwardRef(
 );
 
 const EventTimeInput = React.forwardRef(
-  ({ label, ...props }: any, ref: any) => (
+  (
+    {
+      label,
+      ...props
+    }: Partial<UseFormRegisterReturn> & {
+      label: React.ReactNode;
+    },
+    ref: React.ForwardedRef<HTMLInputElement>
+  ) => (
     <label>
       {label}
       <input ref={ref} type="time" {...props} />
@@ -104,20 +128,42 @@ const EventInputs = () => {
 };
 
 const TodoDaysBeforeInput = React.forwardRef(
-  ({ label, ...props }: any, ref: any) => (
+  (
+    {
+      label,
+      ...props
+    }: Partial<UseFormRegisterReturn> & {
+      label: React.ReactNode;
+    },
+    ref: React.ForwardedRef<HTMLInputElement>
+  ) => (
     <label>
       {label} <input ref={ref} type="number" {...props} />
     </label>
   )
 );
 
-const TodoTimeInput = React.forwardRef(({ label, ...props }: any, ref: any) => (
-  <label>
-    {label} <input ref={ref} type="time" {...props} />
-  </label>
-));
+const TodoTimeInput = React.forwardRef(
+  (
+    {
+      label,
+      ...props
+    }: Partial<UseFormRegisterReturn> & {
+      label: React.ReactNode;
+    },
+    ref: React.ForwardedRef<HTMLInputElement>
+  ) => (
+    <label>
+      {label} <input ref={ref} type="time" {...props} />
+    </label>
+  )
+);
 
-const TodoFullDayInputs = ({ isParentChecked }: any) => {
+const TodoFullDayInputs = ({
+  isParentChecked,
+}: {
+  isParentChecked: boolean;
+}) => {
   const { register } = useFormContext();
   const value = "date";
   var isChecked = useWatch({ name: "tdt" }) === value;
@@ -141,7 +187,11 @@ const TodoFullDayInputs = ({ isParentChecked }: any) => {
   );
 };
 
-const TodoSpecificTimeInputs = ({ isParentChecked }: any) => {
+const TodoSpecificTimeInputs = ({
+  isParentChecked,
+}: {
+  isParentChecked: boolean;
+}) => {
   const { register } = useFormContext();
   const value = "datetime";
   var isChecked = useWatch({ name: "tdt" }) === value;

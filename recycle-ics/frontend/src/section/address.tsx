@@ -1,22 +1,32 @@
-import { useFormContext } from "react-hook-form";
+import { useFormContext, UseFormRegisterReturn } from "react-hook-form";
 import Autocompleter from "../Autocompleter";
 import * as React from "react";
 import { FormInputs } from "../App";
 
-const ZipcodeQueryInput = React.forwardRef((props: any, ref: any) => (
-  <label>
-    Search your zip code:
-    <input
-      ref={ref}
-      type="text"
-      inputMode="numeric"
-      placeholder="3000"
-      {...props}
-    />
-  </label>
-));
+const ZipcodeQueryInput = React.forwardRef(
+  (
+    props: Partial<UseFormRegisterReturn>,
+    ref: React.ForwardedRef<HTMLInputElement>
+  ) => (
+    <label>
+      Search your zip code:
+      <input
+        ref={ref}
+        type="text"
+        inputMode="numeric"
+        placeholder="3000"
+        {...props}
+      />
+    </label>
+  )
+);
 
-const ZipcodeAutocompleter = (props: any) => (
+const ZipcodeAutocompleter = (
+  props: Partial<UseFormRegisterReturn> & {
+    query: string;
+    onSelect: (v: string) => any;
+  }
+) => (
   <Autocompleter<string, string>
     fetchValues={(query) => ["foo", "bar", "baz"]}
     displayValue={(v) => <span>{v}</span>}
@@ -24,27 +34,47 @@ const ZipcodeAutocompleter = (props: any) => (
   />
 );
 
-const ZipcodeNameInput = React.forwardRef((props: any, ref: any) => (
-  <label>
-    City/town: <input ref={ref} type="text" readOnly {...props} />
-  </label>
-));
+const ZipcodeNameInput = React.forwardRef(
+  (
+    props: Partial<UseFormRegisterReturn>,
+    ref: React.ForwardedRef<HTMLInputElement>
+  ) => (
+    <label>
+      City/town: <input ref={ref} type="text" readOnly {...props} />
+    </label>
+  )
+);
 
-const ZipcodeIdInput = React.forwardRef((props: any, ref: any) => (
-  <label>
-    Zip code:
-    <input ref={ref} type="text" readOnly {...props} />
-  </label>
-));
+const ZipcodeIdInput = React.forwardRef(
+  (
+    props: Partial<UseFormRegisterReturn>,
+    ref: React.ForwardedRef<HTMLInputElement>
+  ) => (
+    <label>
+      Zip code:
+      <input ref={ref} type="text" readOnly {...props} />
+    </label>
+  )
+);
 
-const StreetQueryInput = React.forwardRef((props: any, ref: any) => (
-  <label>
-    Search your street:
-    <input ref={ref} type="text" placeholder="Grote Markt" {...props} />
-  </label>
-));
+const StreetQueryInput = React.forwardRef(
+  (
+    props: Partial<UseFormRegisterReturn>,
+    ref: React.ForwardedRef<HTMLInputElement>
+  ) => (
+    <label>
+      Search your street:
+      <input ref={ref} type="text" placeholder="Grote Markt" {...props} />
+    </label>
+  )
+);
 
-const StreetAutocompleter = (props: any) => (
+const StreetAutocompleter = (
+  props: Partial<UseFormRegisterReturn> & {
+    query: string;
+    onSelect: (v: string) => any;
+  }
+) => (
   <Autocompleter<string, string>
     fetchValues={(query) => ["foo", "bar", "baz"]}
     displayValue={(v) => <span>{v}</span>}
@@ -52,26 +82,41 @@ const StreetAutocompleter = (props: any) => (
   />
 );
 
-const StreetNameInput = React.forwardRef((props: any, ref: any) => (
-  <label>
-    Street name:
-    <input ref={ref} type="text" readOnly {...props} />
-  </label>
-));
+const StreetNameInput = React.forwardRef(
+  (
+    props: Partial<UseFormRegisterReturn>,
+    ref: React.ForwardedRef<HTMLInputElement>
+  ) => (
+    <label>
+      Street name:
+      <input ref={ref} type="text" readOnly {...props} />
+    </label>
+  )
+);
 
-const StreetIdInput = React.forwardRef((props: any, ref: any) => (
-  <label>
-    Street ID:
-    <input ref={ref} type="text" readOnly {...props} />
-  </label>
-));
+const StreetIdInput = React.forwardRef(
+  (
+    props: Partial<UseFormRegisterReturn>,
+    ref: React.ForwardedRef<HTMLInputElement>
+  ) => (
+    <label>
+      Street ID:
+      <input ref={ref} type="text" readOnly {...props} />
+    </label>
+  )
+);
 
-const HouseNumberInput = React.forwardRef((props: any, ref: any) => (
-  <label>
-    House number:
-    <input ref={ref} type="number" placeholder="1" {...props} />
-  </label>
-));
+const HouseNumberInput = React.forwardRef(
+  (
+    props: Partial<UseFormRegisterReturn>,
+    ref: React.ForwardedRef<HTMLInputElement>
+  ) => (
+    <label>
+      House number:
+      <input ref={ref} type="number" placeholder="1" {...props} />
+    </label>
+  )
+);
 
 export default function AddressSection() {
   const [zipcodeSelected, setZipcodeSelected] = React.useState(false);

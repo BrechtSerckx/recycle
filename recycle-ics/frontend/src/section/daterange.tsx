@@ -1,8 +1,23 @@
 import * as React from "react";
-import { useFormContext, useWatch } from "react-hook-form";
+import {
+  useFormContext,
+  UseFormRegisterReturn,
+  useWatch,
+} from "react-hook-form";
 
 const DateRangeRadio = React.forwardRef(
-  ({ children, label, ...props }: any, ref: any) => (
+  (
+    {
+      children,
+      label,
+      ...props
+    }: Partial<UseFormRegisterReturn> & {
+      label: React.ReactNode;
+      children: React.ReactNode;
+      value: string;
+    },
+    ref: React.ForwardedRef<HTMLInputElement>
+  ) => (
     <div>
       <label>
         <input ref={ref} type="radio" {...props} />
@@ -13,7 +28,15 @@ const DateRangeRadio = React.forwardRef(
 );
 
 const AbsoluteDateInput = React.forwardRef(
-  ({ label, ...props }: any, ref: any) => (
+  (
+    {
+      label,
+      ...props
+    }: Partial<UseFormRegisterReturn> & {
+      label: React.ReactNode;
+    },
+    ref: React.ForwardedRef<HTMLInputElement>
+  ) => (
     <label>
       {label} <input ref={ref} type="date" {...props} />
     </label>
@@ -42,7 +65,15 @@ const AbsoluteDateRangeInputs = () => {
 };
 
 const RelativeDateInput = React.forwardRef(
-  ({ label, ...props }: any, ref: any) => (
+  (
+    {
+      label,
+      ...props
+    }: Partial<UseFormRegisterReturn> & {
+      label: React.ReactNode;
+    },
+    ref: React.ForwardedRef<HTMLInputElement>
+  ) => (
     <label>
       {label}
       <input ref={ref} type="number" step={1} {...props} />

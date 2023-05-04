@@ -1,5 +1,5 @@
 import * as React from "react";
-import { useFormContext } from "react-hook-form";
+import { useFormContext, UseFormRegisterReturn } from "react-hook-form";
 
 export enum LangCode {
   NL = "nl",
@@ -9,7 +9,16 @@ export enum LangCode {
 }
 
 const LangCodeRadio = React.forwardRef(
-  ({ children, ...props }: any, ref: any) => (
+  (
+    {
+      children,
+      ...props
+    }: Partial<UseFormRegisterReturn> & {
+      value: LangCode;
+      children: React.ReactNode;
+    },
+    ref: React.ForwardedRef<HTMLInputElement>
+  ) => (
     <label>
       <input ref={ref} type="radio" {...props} />
       {children}
