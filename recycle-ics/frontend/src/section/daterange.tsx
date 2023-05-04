@@ -23,16 +23,9 @@ const AbsoluteDateInput = React.forwardRef(
 const AbsoluteDateRangeInputs = () => {
   const { register } = useFormContext();
   const value = "absolute";
-  const defaultChecked = false;
-  var isChecked =
-    useWatch({ name: "drt", defaultValue: defaultChecked && value }) === value;
+  var isChecked = useWatch({ name: "drt" }) === value;
   return (
-    <DateRangeRadio
-      label="Absolute"
-      value={value}
-      defaultChecked={defaultChecked}
-      {...register("drt")}
-    >
+    <DateRangeRadio label="Absolute" value={value} {...register("drt")}>
       <p>This will get the waste collections between two dates.</p>
       <AbsoluteDateInput
         label="From: "
@@ -60,16 +53,9 @@ const RelativeDateInput = React.forwardRef(
 const RelativeDateRangeInputs = () => {
   const { register } = useFormContext();
   const value = "relative";
-  const defaultChecked = true;
-  var isChecked =
-    useWatch({ name: "drt", defaultValue: defaultChecked && value }) === value;
+  var isChecked = useWatch({ name: "drt" }) === value;
   return (
-    <DateRangeRadio
-      label="Relative"
-      value="relative"
-      defaultChecked={defaultChecked}
-      {...register("drt")}
-    >
+    <DateRangeRadio label="Relative" value="relative" {...register("drt")}>
       <p>
         This will get the waste collections relative to the current date. This
         is is particularly useful when auto-importing the waste collections

@@ -20,7 +20,7 @@ const LangCodeRadio = React.forwardRef(
 export function LanguageSection() {
   const { register } = useFormContext();
   const languages = [
-    { lc: LangCode.NL, name: "Nederlands", defaultChecked: true },
+    { lc: LangCode.NL, name: "Nederlands" },
     { lc: LangCode.FR, name: "Francais" },
     { lc: LangCode.DE, name: "Deutsch" },
     { lc: LangCode.EN, name: "English" },

@@ -23,10 +23,8 @@ const EventTimeInput = React.forwardRef(
 
 const EventInputs = () => {
   const { control, register } = useFormContext();
-  const defaultChecked = true;
   const value = "event";
-  var isChecked =
-    useWatch({ name: "fe", defaultValue: defaultChecked && value }) === value;
+  var isChecked = useWatch({ name: "fe" }) === value;
   const {
     fields: reminders,
     append,
@@ -36,22 +34,17 @@ const EventInputs = () => {
     name: "reminders",
   });
   return (
-    <EncodingRadio
-      label="Event"
-      value="event"
-      defaultChecked={defaultChecked}
-      {...register("fe")}
-    >
+    <EncodingRadio label="Event" value={value} {...register("fe")}>
       <p>Represent waste collections as an event.</p>
       <EventTimeInput
         label="Start time"
         disabled={!isChecked}
-        {...register("es", { required: isChecked, value: "07:00" })}
+        {...register("es", { required: isChecked })}
       />
       <EventTimeInput
         label="End time"
         disabled={!isChecked}
-        {...register("ee", { required: isChecked, value: "10:00" })}
+        {...register("ee", { required: isChecked })}
       />
       <p>Reminders: </p>
       <ul id="reminder_list">
@@ -127,15 +120,12 @@ const TodoTimeInput = React.forwardRef(({ label, ...props }: any, ref: any) => (
 const TodoFullDayInputs = ({ isParentChecked }: any) => {
   const { register } = useFormContext();
   const value = "date";
-  const defaultChecked = true;
-  var isChecked =
-    useWatch({ name: "tdt", defaultValue: defaultChecked && value }) === value;
+  var isChecked = useWatch({ name: "tdt" }) === value;
   return (
     <EncodingRadio
       label="Full day"
       value={value}
       disabled={!isParentChecked}
-      defaultChecked={defaultChecked}
       {...register("tdt")}
     >
       <p>
@@ -144,7 +134,6 @@ const TodoFullDayInputs = ({ isParentChecked }: any) => {
           disabled={!(isParentChecked && isChecked)}
           {...register("tdb", {
             required: isParentChecked && isChecked,
-            value: 1,
           })}
         />
       </p>
@@ -155,14 +144,11 @@ const TodoFullDayInputs = ({ isParentChecked }: any) => {
 const TodoSpecificTimeInputs = ({ isParentChecked }: any) => {
   const { register } = useFormContext();
   const value = "datetime";
-  const defaultChecked = false;
-  var isChecked =
-    useWatch({ name: "tdt", defaultValue: defaultChecked && value }) === value;
+  var isChecked = useWatch({ name: "tdt" }) === value;
   return (
     <EncodingRadio
       label="Specific time"
       value={value}
-      defaultChecked={defaultChecked}
       disabled={!isParentChecked}
       {...register("tdt")}
     >
@@ -172,7 +158,6 @@ const TodoSpecificTimeInputs = ({ isParentChecked }: any) => {
           disabled={!(isParentChecked && isChecked)}
           {...register("tdb", {
             required: isParentChecked && isChecked,
-            value: 1,
           })}
         />
         <TodoTimeInput
@@ -180,7 +165,6 @@ const TodoSpecificTimeInputs = ({ isParentChecked }: any) => {
           disabled={!(isParentChecked && isChecked)}
           {...register("tt", {
             required: isParentChecked && isChecked,
-            value: "20:00",
           })}
         />
       </p>
@@ -190,17 +174,10 @@ const TodoSpecificTimeInputs = ({ isParentChecked }: any) => {
 
 const TodoInputs = () => {
   const { register } = useFormContext();
-  const defaultChecked = false;
   const value = "todo";
-  var isChecked =
-    useWatch({ name: "fe", defaultValue: defaultChecked && value }) === value;
+  var isChecked = useWatch({ name: "fe" }) === value;
   return (
-    <EncodingRadio
-      value={value}
-      label="Todo"
-      defaultChecked={defaultChecked}
-      {...register("fe")}
-    >
+    <EncodingRadio value={value} label="Todo" {...register("fe")}>
       <p>
         Represent waste collections as a todo or task.
         <strong>Does not work with Google Calendar! </strong>Maybe with Outlook,

@@ -105,7 +105,19 @@ const inputsToForm = ({
 };
 
 export function App() {
-  const formContext = useForm<FormInputs>();
+  const formContext = useForm<FormInputs>({
+    defaultValues: {
+      lc: LangCode.NL,
+      drt: "relative",
+      fe: "event",
+      es: "07:00",
+      ee: "10:00",
+      tdb: 1,
+      tdt: "datetime",
+      reminders: [],
+      tt: "20:00",
+    },
+  });
   const { handleSubmit } = formContext;
   const [values, setValues] = React.useState<Form | null>(null);
   const onSubmit: SubmitHandler<FormInputs> = (data) => {
