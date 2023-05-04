@@ -190,7 +190,7 @@ const TodoSpecificTimeInputs = ({ isParentChecked }: any) => {
 
 const TodoInputs = () => {
   const { register } = useFormContext();
-  const defaultChecked = true;
+  const defaultChecked = false;
   const value = "todo";
   var isChecked =
     useWatch({ name: "fe", defaultValue: defaultChecked && value }) === value;
