@@ -143,6 +143,7 @@ executable recycle-ics
     , http-client >= 0.6
     , http-client-tls >= 0.3
     , servant-client >= 0.16
+    , wai-cors >= 0.2
     , wai-extra >= 3.1
     , warp >= 3.3
 
