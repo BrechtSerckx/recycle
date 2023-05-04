@@ -2,6 +2,7 @@ import { useFormContext, UseFormRegisterReturn } from "react-hook-form";
 import Autocompleter from "../Autocompleter";
 import * as React from "react";
 import { FormInputs } from "../App";
+import * as Api from "../api";
 
 const ZipcodeQueryInput = React.forwardRef(
   (
@@ -27,9 +28,13 @@ const ZipcodeAutocompleter = (
     onSelect: (v: string) => any;
   }
 ) => (
-  <Autocompleter<string, string>
-    fetchValues={(query) => ["foo", "bar", "baz"]}
-    displayValue={(v) => <span>{v}</span>}
+  <Autocompleter<string, any>
+    fetchValues={(query) => Api.searchZipcodes(query)}
+    displayValue={(v) => (
+      <span>
+        {v.city.name} ({v.code})
+      </span>
+    )}
     {...props}
   />
 );
@@ -69,15 +74,17 @@ const StreetQueryInput = React.forwardRef(
   )
 );
 
-const StreetAutocompleter = (
-  props: Partial<UseFormRegisterReturn> & {
-    query: string;
-    onSelect: (v: string) => any;
-  }
-) => (
-  <Autocompleter<string, string>
-    fetchValues={(query) => ["foo", "bar", "baz"]}
-    displayValue={(v) => <span>{v}</span>}
+const StreetAutocompleter = ({
+  zipcode,
+  ...props
+}: Partial<UseFormRegisterReturn> & {
+  zipcode: string;
+  query: string;
+  onSelect: (v: string) => any;
+}) => (
+  <Autocompleter<string, any>
+    fetchValues={(query) => Api.searchStreets(zipcode, query)}
+    displayValue={(v) => <span>{v.name} (v.id)</span>}
     {...props}
   />
 );
@@ -142,9 +149,9 @@ export default function AddressSection() {
 
       <ZipcodeAutocompleter
         query={watch("zipcode_q")}
-        onSelect={(zipcode: string) => {
-          setValue("zipcode_id", zipcode);
-          setValue("zipcode_name", zipcode);
+        onSelect={(zipcode: any) => {
+          setValue("zipcode_id", zipcode.id);
+          setValue("zipcode_name", zipcode.city.name);
           setZipcodeSelected(true);
           resetStreet();
         }}
@@ -165,10 +172,11 @@ export default function AddressSection() {
           </p>
           <StreetQueryInput {...register("street_q")} />
           <StreetAutocompleter
+            zipcode={watch("zipcode_id")}
             query={watch("street_q")}
-            onSelect={(street: string) => {
-              setValue("street_id", street);
-              setValue("street_name", street);
+            onSelect={(street: any) => {
+              setValue("street_id", street.id);
+              setValue("street_name", street.name);
               setStreetSelected(true);
             }}
           />

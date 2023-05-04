@@ -7,7 +7,7 @@ export default function Autocompleter<Q, V>({
   displayValue,
 }: {
   query: Q;
-  fetchValues: (q: Q) => V[];
+  fetchValues: (q: Q) => Promise<V[]>;
   onSelect: (v: V) => any;
   displayValue: (v: V) => React.ReactNode;
 }) {
@@ -15,7 +15,7 @@ export default function Autocompleter<Q, V>({
   React.useEffect(() => {
     if (query) {
       console.log(`Autocompleting ${query}`);
-      setValues(fetchValues(query));
+      fetchValues(query).then((newValues) => setValues(newValues));
     }
   }, [query, fetchValues]);
   return (
