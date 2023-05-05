@@ -14,9 +14,9 @@ export function searchStreets(zipcode: string, q: string) {
 export function getFractions(
   zipcode: string,
   street: string,
-  house_number: number
+  houseNumber: number
 ) {
   return fetch(
-    `${host}/api/fractions?zipcode=${zipcode}&street=${street}&house_number=${house_number}`
+    `${host}/api/fractions?zipcode=${zipcode}&street=${street}&house_number=${houseNumber}`
   ).then((response) => response.json());
 }

@@ -5,6 +5,7 @@ import {
   useFieldArray,
   UseFormRegisterReturn,
 } from "react-hook-form";
+import { FormInputs } from "../types";
 
 const EncodingRadio = React.forwardRef(
   (
@@ -46,9 +47,9 @@ const EventTimeInput = React.forwardRef(
 );
 
 const EventInputs = () => {
-  const { control, register } = useFormContext();
+  const { control, register } = useFormContext<FormInputs>();
   const value = "event";
-  var isChecked = useWatch({ name: "fe" }) === value;
+  var isChecked = useWatch({ name: "fractionEncodingType" }) === value;
   const {
     fields: reminders,
     append,
@@ -58,17 +59,21 @@ const EventInputs = () => {
     name: "reminders",
   });
   return (
-    <EncodingRadio label="Event" value={value} {...register("fe")}>
+    <EncodingRadio
+      label="Event"
+      value={value}
+      {...register("fractionEncodingType")}
+    >
       <p>Represent waste collections as an event.</p>
       <EventTimeInput
         label="Start time"
         disabled={!isChecked}
-        {...register("es", { required: isChecked })}
+        {...register("feEventStart", { required: isChecked })}
       />
       <EventTimeInput
         label="End time"
         disabled={!isChecked}
-        {...register("ee", { required: isChecked })}
+        {...register("feEventEnd", { required: isChecked })}
       />
       <p>Reminders: </p>
       <ul id="reminder_list">
@@ -120,7 +125,11 @@ const EventInputs = () => {
           </li>
         ))}
       </ul>
-      <button type="button" disabled={!isChecked} onClick={() => append({})}>
+      <button
+        type="button"
+        disabled={!isChecked}
+        onClick={() => append({} as any)}
+      >
         Add reminder
       </button>
     </EncodingRadio>
@@ -164,21 +173,21 @@ const TodoFullDayInputs = ({
 }: {
   isParentChecked: boolean;
 }) => {
-  const { register } = useFormContext();
+  const { register } = useFormContext<FormInputs>();
   const value = "date";
-  var isChecked = useWatch({ name: "tdt" }) === value;
+  var isChecked = useWatch({ name: "feTodoDueType" }) === value;
   return (
     <EncodingRadio
       label="Full day"
       value={value}
       disabled={!isParentChecked}
-      {...register("tdt")}
+      {...register("feTodoDueType")}
     >
       <p>
         <TodoDaysBeforeInput
           label="Days before"
           disabled={!(isParentChecked && isChecked)}
-          {...register("tdb", {
+          {...register("feTodoDueDaysBefore", {
             required: isParentChecked && isChecked,
           })}
         />
@@ -192,28 +201,28 @@ const TodoSpecificTimeInputs = ({
 }: {
   isParentChecked: boolean;
 }) => {
-  const { register } = useFormContext();
+  const { register } = useFormContext<FormInputs>();
   const value = "datetime";
-  var isChecked = useWatch({ name: "tdt" }) === value;
+  var isChecked = useWatch({ name: "feTodoDueType" }) === value;
   return (
     <EncodingRadio
       label="Specific time"
       value={value}
       disabled={!isParentChecked}
-      {...register("tdt")}
+      {...register("feTodoDueType")}
     >
       <p>
         <TodoDaysBeforeInput
           label="Days before"
           disabled={!(isParentChecked && isChecked)}
-          {...register("tdb", {
+          {...register("feTodoDueDaysBefore", {
             required: isParentChecked && isChecked,
           })}
         />
         <TodoTimeInput
           label="Time"
           disabled={!(isParentChecked && isChecked)}
-          {...register("tt", {
+          {...register("feTodoDueTimeOfDay", {
             required: isParentChecked && isChecked,
           })}
         />
@@ -223,11 +232,15 @@ const TodoSpecificTimeInputs = ({
 };
 
 const TodoInputs = () => {
-  const { register } = useFormContext();
+  const { register } = useFormContext<FormInputs>();
   const value = "todo";
-  var isChecked = useWatch({ name: "fe" }) === value;
+  var isChecked = useWatch({ name: "fractionEncodingType" }) === value;
   return (
-    <EncodingRadio value={value} label="Todo" {...register("fe")}>
+    <EncodingRadio
+      value={value}
+      label="Todo"
+      {...register("fractionEncodingType")}
+    >
       <p>
         Represent waste collections as a todo or task.
         <strong>Does not work with Google Calendar! </strong>Maybe with Outlook,

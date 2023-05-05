@@ -84,7 +84,7 @@ const StreetAutocompleter = ({
 }) => (
   <Autocompleter<any>
     fetchValues={(query) => Api.searchStreets(zipcode, query)}
-    displayValue={(v) => <span>{v.name} (v.id)</span>}
+    displayValue={(v) => <span>{v.name}</span>}
     {...props}
   />
 );
@@ -135,8 +135,8 @@ export default function AddressSection() {
     setValue,
   } = useFormContext<FormInputs>();
   const resetStreet = () => {
-    setValue("street_id", "");
-    setValue("street_name", "");
+    setValue("streetId", "");
+    setValue("streetName", "");
     setStreetSelected(false);
   };
   return (
@@ -145,56 +145,56 @@ export default function AddressSection() {
       <p>Waste collections are specific to your address.</p>
       <h4>Zip code</h4>
       <p>Search for your city and choose the correct city from the list.</p>
-      <ZipcodeQueryInput {...register("zipcode_q")} />
+      <ZipcodeQueryInput {...register("zipcodeQuery")} />
 
       <ZipcodeAutocompleter
-        query={watch("zipcode_q")}
+        query={watch("zipcodeQuery")}
         onSelect={(zipcode: any) => {
-          setValue("zipcode_id", zipcode.id);
-          setValue("zipcode_name", zipcode.city.name);
+          setValue("zipcodeId", zipcode.id);
+          setValue("zipcodeName", zipcode.city.name);
           setZipcodeSelected(true);
           resetStreet();
         }}
       />
 
-      <ZipcodeNameInput {...register("zipcode_name", { required: true })} />
+      <ZipcodeNameInput {...register("zipcodeName", { required: true })} />
       <ZipcodeIdInput
-        {...register("zipcode_id", {
+        {...register("zipcodeId", {
           required: "Please select zip code",
         })}
       />
-      {errors.zipcode_id && <span>{errors.zipcode_id.message}</span>}
+      {errors.zipcodeId && <span>{errors.zipcodeId.message}</span>}
       {zipcodeSelected && (
         <>
           <h4>Street</h4>
           <p>
             Search for your street and choose the correct street from the list.
           </p>
-          <StreetQueryInput {...register("street_q")} />
+          <StreetQueryInput {...register("streetQuery")} />
           <StreetAutocompleter
-            zipcode={watch("zipcode_id")}
-            query={watch("street_q")}
+            zipcode={watch("zipcodeId")}
+            query={watch("streetQuery")}
             onSelect={(street: any) => {
-              setValue("street_id", street.id);
-              setValue("street_name", street.name);
+              setValue("streetId", street.id);
+              setValue("streetName", street.name);
               setStreetSelected(true);
             }}
           />
-          <StreetNameInput {...register("street_name", { required: true })} />
+          <StreetNameInput {...register("streetName", { required: true })} />
           <StreetIdInput
-            {...register("street_id", {
+            {...register("streetId", {
               required: "Please select street",
               onChange: () => setStreetSelected(false),
             })}
           />
-          {errors.street_id && <span>{errors.street_id.message}</span>}
+          {errors.streetId && <span>{errors.streetId.message}</span>}
         </>
       )}
       {streetSelected && (
         <>
           <h4>House number</h4>
           <p>Enter your house number.</p>
-          <HouseNumberInput {...register("house_number", { required: true })} />
+          <HouseNumberInput {...register("houseNumber", { required: true })} />
         </>
       )}
     </>

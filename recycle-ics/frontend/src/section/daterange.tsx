@@ -4,6 +4,7 @@ import {
   UseFormRegisterReturn,
   useWatch,
 } from "react-hook-form";
+import { FormInputs } from "../types";
 
 const DateRangeRadio = React.forwardRef(
   (
@@ -44,21 +45,25 @@ const AbsoluteDateInput = React.forwardRef(
 );
 
 const AbsoluteDateRangeInputs = () => {
-  const { register } = useFormContext();
+  const { register } = useFormContext<FormInputs>();
   const value = "absolute";
-  var isChecked = useWatch({ name: "drt" }) === value;
+  var isChecked = useWatch({ name: "dateRangeType" }) === value;
   return (
-    <DateRangeRadio label="Absolute" value={value} {...register("drt")}>
+    <DateRangeRadio
+      label="Absolute"
+      value={value}
+      {...register("dateRangeType")}
+    >
       <p>This will get the waste collections between two dates.</p>
       <AbsoluteDateInput
         label="From: "
         disabled={!isChecked}
-        {...register("adrf", { required: isChecked })}
+        {...register("absoluteDateRangeFrom", { required: isChecked })}
       />
       <AbsoluteDateInput
         label="To: "
         disabled={!isChecked}
-        {...register("adrt", { required: isChecked })}
+        {...register("absoluteDateRangeTo", { required: isChecked })}
       />
     </DateRangeRadio>
   );
@@ -82,11 +87,15 @@ const RelativeDateInput = React.forwardRef(
 );
 
 const RelativeDateRangeInputs = () => {
-  const { register } = useFormContext();
+  const { register } = useFormContext<FormInputs>();
   const value = "relative";
-  var isChecked = useWatch({ name: "drt" }) === value;
+  var isChecked = useWatch({ name: "dateRangeType" }) === value;
   return (
-    <DateRangeRadio label="Relative" value="relative" {...register("drt")}>
+    <DateRangeRadio
+      label="Relative"
+      value="relative"
+      {...register("dateRangeType")}
+    >
       <p>
         This will get the waste collections relative to the current date. This
         is is particularly useful when auto-importing the waste collections
@@ -97,12 +106,15 @@ const RelativeDateRangeInputs = () => {
       <RelativeDateInput
         label="Days before:"
         disabled={!isChecked}
-        {...register("rdrf", { required: isChecked, value: -14 })}
+        {...register("relativeDateRangeFrom", {
+          required: isChecked,
+          value: -14,
+        })}
       />
       <RelativeDateInput
         label="Days before:"
         disabled={!isChecked}
-        {...register("rdrt", { required: isChecked, value: 28 })}
+        {...register("relativeDateRangeTo", { required: isChecked, value: 28 })}
       />
     </DateRangeRadio>
   );

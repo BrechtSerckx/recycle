@@ -1,200 +1,220 @@
 import { LangCode } from "./section/language";
 
 export type FormInputs = {
-  lc: LangCode;
-  zipcode_q: string;
-  zipcode_id: string;
-  zipcode_name: string;
-  street_q: string;
-  street_id: string;
-  street_name: string;
-  house_number: string;
-  fi_e: boolean;
-  fi_f: boolean;
-  fif: string[];
-  drt: "absolute" | "relative";
-  adrf: string;
-  adrt: string;
-  rdrf: number;
-  rdrt: number;
-  fe: "event" | "todo";
-  es: string;
-  ee: string;
+  langCode: LangCode;
+  zipcodeQuery: string;
+  zipcodeId: string;
+  zipcodeName: string;
+  streetQuery: string;
+  streetId: string;
+  streetName: string;
+  houseNumber: string;
+  filterAllEvents: boolean;
+  filterAllFractions: boolean;
+  filterSelectedFractions: string[];
+  dateRangeType: "absolute" | "relative";
+  absoluteDateRangeFrom: string;
+  absoluteDateRangeTo: string;
+  relativeDateRangeFrom: number;
+  relativeDateRangeTo: number;
+  fractionEncodingType: "event" | "todo";
+  feEventStart: string;
+  feEventEnd: string;
   reminders: { rdb: number; rhb: number; rmb: number }[];
-  tdt: "date" | "datetime";
-  tdb: number;
-  tt: string;
+  feTodoDueType: "date" | "datetime";
+  feTodoDueDaysBefore: number;
+  feTodoDueTimeOfDay: string;
 };
 
 export type Form = {
-  lc: LangCode;
-  zipcode_id: string;
-  street_id: string;
-  house_number: string;
-  fi_e: boolean;
-  fi_f: boolean;
-  fif: string[];
-  date_range:
-    | { drt: "absolute"; f: string; t: string }
-    | { drt: "relative"; f: number; t: number };
-  fraction_encoding:
+  langCode: LangCode;
+  zipcodeId: string;
+  streetId: string;
+  houseNumber: string;
+  filterAllEvents: boolean;
+  filterAllFractions: boolean;
+  filterSelectedFractions: string[];
+  dateRange:
+    | { type: "absolute"; from: string; to: string }
+    | { type: "relative"; from: number; to: number };
+  fractionEncoding:
     | {
-        fe: "event";
-        es: string;
-        ee: string;
+        type: "event";
+        start: string;
+        end: string;
         reminders: { rdb: number; rhb: number; rmb: number }[];
       }
     | {
-        fe: "todo";
-        todo_due:
-          | { tdt: "date"; tdb: number }
-          | { tdt: "datetime"; tdb: number; tt: string };
+        type: "todo";
+        due:
+          | { type: "date"; date: number }
+          | { type: "datetime"; date: number; time: string };
       };
 };
 export const inputsToForm = ({
-  lc,
-  zipcode_id,
-  street_id,
-  house_number,
-  fi_e,
-  fi_f,
-  fif,
-  drt,
-  adrf,
-  adrt,
-  rdrf,
-  rdrt,
-  fe,
-  es,
-  ee,
+  langCode,
+  zipcodeId,
+  streetId,
+  houseNumber,
+  filterAllEvents,
+  filterAllFractions,
+  filterSelectedFractions,
+  dateRangeType,
+  absoluteDateRangeFrom,
+  absoluteDateRangeTo,
+  relativeDateRangeFrom,
+  relativeDateRangeTo,
+  fractionEncodingType,
+  feEventStart,
+  feEventEnd,
   reminders,
-  tdt,
-  tdb,
-  tt,
+  feTodoDueType,
+  feTodoDueDaysBefore,
+  feTodoDueTimeOfDay,
 }: FormInputs): Form | null => {
-  if (!lc || !zipcode_id || !street_id || !house_number) {
+  if (!langCode || !zipcodeId || !streetId || !houseNumber) {
     return null;
   }
-  var date_range;
-  switch (drt) {
+  var dateRange;
+  switch (dateRangeType) {
     case "absolute":
-      date_range = { drt: drt as "absolute", f: adrf, t: adrt };
+      dateRange = {
+        type: dateRangeType as "absolute",
+        from: absoluteDateRangeFrom,
+        to: absoluteDateRangeTo,
+      };
       break;
     case "relative":
-      date_range = { drt: drt as "relative", f: rdrf, t: rdrt };
+      dateRange = {
+        type: dateRangeType as "relative",
+        from: relativeDateRangeFrom,
+        to: relativeDateRangeTo,
+      };
       break;
     default:
       return null;
   }
-  var fraction_encoding;
-  switch (fe) {
+  var fractionEncoding;
+  switch (fractionEncodingType) {
     case "event":
-      fraction_encoding = { fe: fe as "event", es, ee, reminders };
+      fractionEncoding = {
+        type: fractionEncodingType as "event",
+        start: feEventStart,
+        end: feEventEnd,
+        reminders,
+      };
       break;
     case "todo":
-      var todo_due;
-      switch (tdt) {
+      var todoDue;
+      switch (feTodoDueType) {
         case "date":
-          todo_due = { tdt: tdt as "date", tdb };
+          todoDue = {
+            type: feTodoDueType as "date",
+            date: feTodoDueDaysBefore,
+          };
           break;
         case "datetime":
-          todo_due = { tdt: tdt as "datetime", tdb, tt };
+          todoDue = {
+            type: feTodoDueType as "datetime",
+            date: feTodoDueDaysBefore,
+            time: feTodoDueTimeOfDay,
+          };
           break;
         default:
           return null;
       }
-      fraction_encoding = { fe: fe as "todo", todo_due };
+      fractionEncoding = { type: fractionEncodingType as "todo", due: todoDue };
       break;
     default:
       return null;
   }
   return {
-    lc,
-    zipcode_id,
-    street_id,
-    house_number,
-    fi_e,
-    fi_f,
-    fif: fi_f ? [] : fif,
-    date_range,
-    fraction_encoding,
+    langCode,
+    zipcodeId,
+    streetId,
+    houseNumber,
+    filterAllEvents,
+    filterAllFractions,
+    filterSelectedFractions: filterAllFractions ? [] : filterSelectedFractions,
+    dateRange,
+    fractionEncoding,
   };
 };
 
 export const defaultFormInputs: Partial<FormInputs> = {
-  lc: LangCode.NL,
-  drt: "relative",
-  fe: "event",
-  es: "07:00",
-  ee: "10:00",
-  tdb: 1,
-  tdt: "datetime",
+  langCode: LangCode.NL,
+  dateRangeType: "relative",
+  fractionEncodingType: "event",
+  feEventStart: "07:00",
+  feEventEnd: "10:00",
   reminders: [],
-  tt: "20:00",
-  fi_e: true,
-  fi_f: true,
+  feTodoDueType: "datetime",
+  feTodoDueDaysBefore: 1,
+  feTodoDueTimeOfDay: "20:00",
+  filterAllEvents: true,
+  filterAllFractions: true,
 };
 
 export const formToParams = ({
-  lc,
-  zipcode_id,
-  street_id,
-  house_number,
-  fi_e,
-  fi_f,
-  fif,
-  date_range,
-  fraction_encoding,
+  langCode,
+  zipcodeId,
+  streetId,
+  houseNumber,
+  filterAllEvents,
+  filterAllFractions,
+  filterSelectedFractions,
+  dateRange,
+  fractionEncoding,
 }: Form): URLSearchParams => {
   var params = new URLSearchParams({
-    lc,
-    z: zipcode_id,
-    s: street_id,
-    hn: house_number,
+    lc: langCode,
+    z: zipcodeId,
+    s: streetId,
+    hn: houseNumber,
   });
 
-  if (fi_e) {
+  if (filterAllEvents) {
     params.append("fi", "e");
   }
-  if (fi_f) {
+  if (filterAllFractions) {
     params.append("fi", "f");
   }
-  for (const f of fif) {
+  for (const f of filterSelectedFractions) {
     params.append("fif", f);
   }
 
-  params.append("drt", date_range.drt);
-  switch (date_range.drt) {
+  params.append("drt", dateRange.type);
+  switch (dateRange.type) {
     case "absolute":
-      params.append("f", date_range.f);
-      params.append("t", date_range.t);
+      params.append("f", dateRange.from);
+      params.append("t", dateRange.to);
       break;
     case "relative":
-      params.append("f", date_range.f.toString());
-      params.append("t", date_range.t.toString());
+      params.append("f", dateRange.from.toString());
+      params.append("t", dateRange.to.toString());
       break;
   }
 
-  params.append("fe", fraction_encoding.fe);
-  switch (fraction_encoding.fe) {
+  params.append("fe", fractionEncoding.type);
+  switch (fractionEncoding.type) {
     case "event":
-      params.append("es", fraction_encoding.es);
-      params.append("ee", fraction_encoding.ee);
-      for (const { rdb, rhb, rmb } of fraction_encoding.reminders) {
+      params.append("es", fractionEncoding.start);
+      params.append("ee", fractionEncoding.end);
+      for (const { rdb, rhb, rmb } of fractionEncoding.reminders) {
         params.append("rdb", rdb.toString());
         params.append("rhb", rhb.toString());
         params.append("rmb", rmb.toString());
       }
       break;
     case "todo":
-      params.append("tdt", fraction_encoding.todo_due.tdt);
-      switch (fraction_encoding.todo_due.tdt) {
+      params.append("tdt", fractionEncoding.due.type);
+      switch (fractionEncoding.due.type) {
         case "date":
-          params.append("tdb", fraction_encoding.todo_due.tdb.toString());
+          params.append("tdb", fractionEncoding.due.date.toString());
           break;
         case "datetime":
-          params.append("tdb", fraction_encoding.todo_due.tdb.toString());
-          params.append("tt", fraction_encoding.todo_due.tt);
+          params.append("tdb", fractionEncoding.due.date.toString());
+          params.append("tt", fractionEncoding.due.time);
           break;
       }
       break;

@@ -1,40 +1,40 @@
 import * as React from "react";
 import { useFormContext, useWatch } from "react-hook-form";
 import * as Api from "../api";
+import { FormInputs } from "../types";
 
-export default function LanguageSection() {
-  const zipcode_id = useWatch({ name: "zipcode_id" }),
-    street_id = useWatch({ name: "street_id" }),
-    house_number = useWatch({ name: "house_number" });
-  const selectedFractions = useWatch({ name: "fif" }),
-    setSelectedFractions = (fs: string[]) => setValue("fif", fs);
-  const allFractions = useWatch({ name: "fi_f" }),
-    setAllFractions = (b: boolean) => setValue("fi_f", b);
-  const { register, setValue } = useFormContext();
+export default function FilterSection() {
+  const zipcodeId = useWatch({ name: "zipcodeId" }),
+    streetId = useWatch({ name: "streetId" }),
+    houseNumber = useWatch({ name: "houseNumber" });
+  const selectedFractions = useWatch({ name: "filterSelectedFractions" }),
+    setSelectedFractions = (fs: string[]) =>
+      setValue("filterSelectedFractions", fs);
+  const allFractions = useWatch({ name: "filterAllFractions" }),
+    setAllFractions = (b: boolean) => setValue("filterAllFractions", b);
+  const { register, setValue } = useFormContext<FormInputs>();
   const [fractions, setFractions] = React.useState([] as any[]);
   React.useEffect(() => {
-    if (zipcode_id && street_id && house_number) {
-      Api.getFractions(zipcode_id, street_id, house_number).then(
-        (fs: any[]) => {
-          const oldFractions = fractions || [];
-          setFractions(fs);
-          setValue(
-            "fif",
-            fs
-              .map((f) => f.id)
-              .filter((f) =>
-                oldFractions.map((v) => v.id).includes(f)
-                  ? selectedFractions
-                    ? selectedFractions.includes(f)
-                    : allFractions
+    if (zipcodeId && streetId && houseNumber) {
+      Api.getFractions(zipcodeId, streetId, houseNumber).then((fs: any[]) => {
+        const oldFractions = fractions || [];
+        setFractions(fs);
+        setValue(
+          "filterSelectedFractions",
+          fs
+            .map((f) => f.id)
+            .filter((f) =>
+              oldFractions.map((v) => v.id).includes(f)
+                ? selectedFractions
+                  ? selectedFractions.includes(f)
                   : allFractions
-              )
-          );
-        }
-      );
+                : allFractions
+            )
+        );
+      });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [zipcode_id, street_id, house_number, setValue]);
+  }, [zipcodeId, streetId, houseNumber, setValue]);
   return (
     <>
       <h3>Filter</h3>
@@ -44,7 +44,7 @@ export default function LanguageSection() {
         <div>
           <div>
             <label>
-              <input type="checkbox" {...register("fi_e")} />
+              <input type="checkbox" {...register("filterAllEvents")} />
               All events
             </label>
           </div>
@@ -52,7 +52,7 @@ export default function LanguageSection() {
             <label>
               <input
                 type="checkbox"
-                {...register("fi_f", {
+                {...register("filterAllFractions", {
                   onChange: (e: any) =>
                     e.target.checked
                       ? setSelectedFractions(fractions.map((f) => f.id))
@@ -72,7 +72,7 @@ export default function LanguageSection() {
                     <input
                       type="checkbox"
                       value={fraction.id}
-                      {...register("fif", {
+                      {...register("filterSelectedFractions", {
                         onChange: (e: any) => {
                           if (e.target.checked) {
                             if (

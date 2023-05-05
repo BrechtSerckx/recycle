@@ -1,5 +1,6 @@
 import * as React from "react";
 import { useFormContext, UseFormRegisterReturn } from "react-hook-form";
+import { FormInputs } from "../types";
 
 export enum LangCode {
   NL = "nl",
@@ -27,12 +28,12 @@ const LangCodeRadio = React.forwardRef(
 );
 
 export function LanguageSection() {
-  const { register } = useFormContext();
+  const { register } = useFormContext<FormInputs>();
   const languages = [
-    { lc: LangCode.NL, name: "Nederlands" },
-    { lc: LangCode.FR, name: "Francais" },
-    { lc: LangCode.DE, name: "Deutsch" },
-    { lc: LangCode.EN, name: "English" },
+    { langCode: LangCode.NL, name: "Nederlands" },
+    { langCode: LangCode.FR, name: "Francais" },
+    { langCode: LangCode.DE, name: "Deutsch" },
+    { langCode: LangCode.EN, name: "English" },
   ];
   return (
     <>
@@ -43,8 +44,13 @@ export function LanguageSection() {
       </p>
       <fieldset>
         <legend>Language</legend>
-        {languages.map(({ lc, name, ...props }) => (
-          <LangCodeRadio key={lc} value={lc} {...props} {...register("lc")}>
+        {languages.map(({ langCode, name, ...props }) => (
+          <LangCodeRadio
+            key={langCode}
+            value={langCode}
+            {...props}
+            {...register("langCode")}
+          >
             {name}
           </LangCodeRadio>
         ))}
