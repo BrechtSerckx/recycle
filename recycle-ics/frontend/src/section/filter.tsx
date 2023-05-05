@@ -8,8 +8,8 @@ export default function LanguageSection() {
     house_number = useWatch({ name: "house_number" });
   const selectedFractions = useWatch({ name: "fif" }),
     setSelectedFractions = (fs: string[]) => setValue("fif", fs);
-  const allFractions = useWatch({ name: "fi" }),
-    setAllFractions = (b: boolean) => setValue("fi", b);
+  const allFractions = useWatch({ name: "fi_f" }),
+    setAllFractions = (b: boolean) => setValue("fi_f", b);
   const { register, setValue } = useFormContext();
   const [fractions, setFractions] = React.useState([] as any[]);
   React.useEffect(() => {
@@ -42,18 +42,26 @@ export default function LanguageSection() {
       <fieldset>
         <legend>Filter</legend>
         <div>
-          <label>
-            <input
-              type="checkbox"
-              {...register("fi", {
-                onChange: (e: any) =>
-                  e.target.checked
-                    ? setSelectedFractions(fractions.map((f) => f.id))
-                    : setSelectedFractions([]),
-              })}
-            />
-            All fractions
-          </label>
+          <div>
+            <label>
+              <input type="checkbox" {...register("fi_e")} />
+              All events
+            </label>
+          </div>
+          <div>
+            <label>
+              <input
+                type="checkbox"
+                {...register("fi_f", {
+                  onChange: (e: any) =>
+                    e.target.checked
+                      ? setSelectedFractions(fractions.map((f) => f.id))
+                      : setSelectedFractions([]),
+                })}
+              />
+              All fractions
+            </label>
+          </div>
           <p>Choose which fractions need to be included.</p>
           <fieldset>
             <legend>Fractions</legend>
@@ -63,7 +71,6 @@ export default function LanguageSection() {
                   <label>
                     <input
                       type="checkbox"
-                      id={`fraction_${fraction.id}`}
                       value={fraction.id}
                       {...register("fif", {
                         onChange: (e: any) => {

@@ -9,7 +9,8 @@ export type FormInputs = {
   street_id: string;
   street_name: string;
   house_number: string;
-  fi: boolean;
+  fi_e: boolean;
+  fi_f: boolean;
   fif: string[];
   drt: "absolute" | "relative";
   adrf: string;
@@ -30,7 +31,8 @@ export type Form = {
   zipcode_id: string;
   street_id: string;
   house_number: string;
-  fi: boolean;
+  fi_e: boolean;
+  fi_f: boolean;
   fif: string[];
   date_range:
     | { drt: "absolute"; f: string; t: string }
@@ -54,7 +56,8 @@ export const inputsToForm = ({
   zipcode_id,
   street_id,
   house_number,
-  fi,
+  fi_e,
+  fi_f,
   fif,
   drt,
   adrf,
@@ -110,8 +113,9 @@ export const inputsToForm = ({
     zipcode_id,
     street_id,
     house_number,
-    fi,
-    fif: fi ? [] : fif,
+    fi_e,
+    fi_f,
+    fif: fi_f ? [] : fif,
     date_range,
     fraction_encoding,
   };
@@ -127,7 +131,8 @@ export const defaultFormInputs: Partial<FormInputs> = {
   tdt: "datetime",
   reminders: [],
   tt: "20:00",
-  fi: true,
+  fi_e: true,
+  fi_f: true,
 };
 
 export const formToParams = ({
@@ -135,7 +140,8 @@ export const formToParams = ({
   zipcode_id,
   street_id,
   house_number,
-  fi,
+  fi_e,
+  fi_f,
   fif,
   date_range,
   fraction_encoding,
@@ -147,8 +153,11 @@ export const formToParams = ({
     hn: house_number,
   });
 
-  if (fi) {
-    params.append("fi", "");
+  if (fi_e) {
+    params.append("fi", "e");
+  }
+  if (fi_f) {
+    params.append("fi", "f");
   }
   for (const f of fif) {
     params.append("fif", f);
