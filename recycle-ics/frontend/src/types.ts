@@ -120,3 +120,57 @@ export const defaultFormInputs: Partial<FormInputs> = {
   reminders: [],
   tt: "20:00",
 };
+
+export const formToParams = ({
+  lc,
+  zipcode_id,
+  street_id,
+  house_number,
+  date_range,
+  fraction_encoding,
+}: Form): URLSearchParams => {
+  var params = new URLSearchParams({
+    lc,
+    z: zipcode_id,
+    s: street_id,
+    hn: house_number,
+  });
+
+  params.append("drt", date_range.drt);
+  switch (date_range.drt) {
+    case "absolute":
+      params.append("f", date_range.f);
+      params.append("t", date_range.t);
+      break;
+    case "relative":
+      params.append("f", date_range.f.toString());
+      params.append("t", date_range.t.toString());
+      break;
+  }
+
+  params.append("fe", fraction_encoding.fe);
+  switch (fraction_encoding.fe) {
+    case "event":
+      params.append("es", fraction_encoding.es);
+      params.append("ee", fraction_encoding.ee);
+      for (const { rdb, rhb, rmb } of fraction_encoding.reminders) {
+        params.append("rdb", rdb.toString());
+        params.append("rhb", rhb.toString());
+        params.append("rmb", rmb.toString());
+      }
+      break;
+    case "todo":
+      params.append("tdt", fraction_encoding.todo_due.tdt);
+      switch (fraction_encoding.todo_due.tdt) {
+        case "date":
+          params.append("tdb", fraction_encoding.todo_due.tdb.toString());
+          break;
+        case "datetime":
+          params.append("tdb", fraction_encoding.todo_due.tdb.toString());
+          params.append("tt", fraction_encoding.todo_due.tt);
+          break;
+      }
+      break;
+  }
+  return params;
+};

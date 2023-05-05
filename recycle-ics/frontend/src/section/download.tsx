@@ -1,36 +1,41 @@
 import * as React from "react";
 import { useWatch } from "react-hook-form";
-import { FormInputs, inputsToForm } from "../types";
+import { FormInputs, inputsToForm, Form, formToParams } from "../types";
 
 export default function DownloadSection() {
-  const formValues = useWatch() as FormInputs;
-  const path = "/foobar",
-    host = window.location.host,
-    webcalLink = `webcal://${host}${path}`,
-    httpLink = path,
+  const formInputs = useWatch() as FormInputs,
+    mForm = inputsToForm(formInputs);
+  const mkUrl = (base: string, form: Form): URL => {
+      var url = new URL("/api/generate", base);
+      url.search = new URLSearchParams(formToParams(form)).toString();
+      return url;
+    },
+    mkWebcalLink = (form: Form): URL =>
+      mkUrl(`webcal://${window.location.host}`, form),
+    mkHttpLink = (form: Form): URL => mkUrl(window.location.origin, form),
     filename = "recycle.ics";
   return (
     <>
       <section>
-        <p>{JSON.stringify(formValues)}</p>
-        <p>{JSON.stringify(inputsToForm(formValues))}</p>
         <p>
           <input
             type="text"
             readOnly
             placeholder="permalink"
             size={50}
-            value={webcalLink}
+            value={(mForm && mkWebcalLink(mForm).toString()) || undefined}
           />
         </p>
-        <p>
-          <a download={filename} href={webcalLink}>
-            Open
-          </a>
-          <a download={filename} href={httpLink}>
-            Download
-          </a>
-        </p>
+        {mForm && (
+          <p>
+            <a download={filename} href={mkWebcalLink(mForm).toString()}>
+              Open
+            </a>
+            <a download={filename} href={mkHttpLink(mForm).toString()}>
+              Download
+            </a>
+          </p>
+        )}
       </section>
     </>
   );
