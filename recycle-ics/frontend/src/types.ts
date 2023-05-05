@@ -121,6 +121,7 @@ export const defaultFormInputs: Partial<FormInputs> = {
   tdt: "datetime",
   reminders: [],
   tt: "20:00",
+  fi: true,
 };
 
 export const formToParams = ({
