@@ -30,6 +30,8 @@ export type Form = {
   zipcode_id: string;
   street_id: string;
   house_number: string;
+  fi: boolean;
+  fif: string[];
   date_range:
     | { drt: "absolute"; f: string; t: string }
     | { drt: "relative"; f: number; t: number };
@@ -52,6 +54,8 @@ export const inputsToForm = ({
   zipcode_id,
   street_id,
   house_number,
+  fi,
+  fif,
   drt,
   adrf,
   adrt,
@@ -106,6 +110,8 @@ export const inputsToForm = ({
     zipcode_id,
     street_id,
     house_number,
+    fi,
+    fif: fi ? [] : fif,
     date_range,
     fraction_encoding,
   };
@@ -129,6 +135,8 @@ export const formToParams = ({
   zipcode_id,
   street_id,
   house_number,
+  fi,
+  fif,
   date_range,
   fraction_encoding,
 }: Form): URLSearchParams => {
@@ -138,6 +146,13 @@ export const formToParams = ({
     s: street_id,
     hn: house_number,
   });
+
+  if (fi) {
+    params.append("fi", "");
+  }
+  for (const f of fif) {
+    params.append("fif", f);
+  }
 
   params.append("drt", date_range.drt);
   switch (date_range.drt) {
