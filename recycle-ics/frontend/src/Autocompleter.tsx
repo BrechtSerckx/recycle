@@ -20,7 +20,8 @@ export default function Autocompleter<V>({
         }
       }, 250)();
     }
-  }, [query, fetchValues]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [query]);
   return (
     <ul>
       {values.map((value, index) => (
