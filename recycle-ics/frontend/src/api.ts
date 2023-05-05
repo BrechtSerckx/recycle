@@ -10,3 +10,13 @@ export function searchStreets(zipcode: string, q: string) {
     (response) => response.json()
   );
 }
+
+export function getFractions(
+  zipcode: string,
+  street: string,
+  house_number: number
+) {
+  return fetch(
+    `${host}/api/fractions?zipcode=${zipcode}&street=${street}&house_number=${house_number}`
+  ).then((response) => response.json());
+}

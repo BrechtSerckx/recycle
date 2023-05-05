@@ -9,6 +9,8 @@ export type FormInputs = {
   street_id: string;
   street_name: string;
   house_number: string;
+  fi: boolean;
+  fif: string[];
   drt: "absolute" | "relative";
   adrf: string;
   adrt: string;
