@@ -28,7 +28,7 @@ const ZipcodeAutocompleter = (
     onSelect: (v: string) => any;
   }
 ) => (
-  <Autocompleter<string, any>
+  <Autocompleter<any>
     fetchValues={(query) => Api.searchZipcodes(query)}
     displayValue={(v) => (
       <span>
@@ -82,7 +82,7 @@ const StreetAutocompleter = ({
   query: string;
   onSelect: (v: string) => any;
 }) => (
-  <Autocompleter<string, any>
+  <Autocompleter<any>
     fetchValues={(query) => Api.searchStreets(zipcode, query)}
     displayValue={(v) => <span>{v.name} (v.id)</span>}
     {...props}
