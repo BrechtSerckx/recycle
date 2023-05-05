@@ -62,7 +62,10 @@ export const inputsToForm = ({
   tdt,
   tdb,
   tt,
-}: FormInputs): Form => {
+}: FormInputs): Form | null => {
+  if (!lc || !zipcode_id || !street_id || !house_number) {
+    return null;
+  }
   var date_range;
   switch (drt) {
     case "absolute":
@@ -71,6 +74,8 @@ export const inputsToForm = ({
     case "relative":
       date_range = { drt: drt as "relative", f: rdrf, t: rdrt };
       break;
+    default:
+      return null;
   }
   var fraction_encoding;
   switch (fe) {
@@ -86,9 +91,13 @@ export const inputsToForm = ({
         case "datetime":
           todo_due = { tdt: tdt as "datetime", tdb, tt };
           break;
+        default:
+          return null;
       }
       fraction_encoding = { fe: fe as "todo", todo_due };
       break;
+    default:
+      return null;
   }
   return {
     lc,
