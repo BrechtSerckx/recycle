@@ -1,7 +1,7 @@
 import { useFormContext, UseFormRegisterReturn } from "react-hook-form";
 import Autocompleter from "../Autocompleter";
 import * as React from "react";
-import { FormInputs } from "../App";
+import { FormInputs } from "../types";
 import * as Api from "../api";
 
 const ZipcodeQueryInput = React.forwardRef(
