@@ -14,10 +14,6 @@ maintainer:          services+git@brechtserckx.be
 copyright:           (c) 2021-2022 Brecht Serckx
 category:            Service
 build-type:          Simple
-data-files:
-  www/index.html
-  www/index.js
-  www/favicon.ico
 
 Tested-With: GHC ==9.0.2
 

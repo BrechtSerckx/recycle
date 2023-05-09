@@ -139,8 +139,9 @@ pFractionEncoding =
         pure $ EncodeFractionAsVTodo due
    in pAsEvent <|> pAsTodo
 
-newtype ServeIcsOpts = ServeIcsOpts
+data ServeIcsOpts = ServeIcsOpts
   { port :: Warp.Port
+  , wwwDir :: FilePath
   }
 
 pServeIcsOpts :: Parser ServeIcsOpts
@@ -152,4 +153,10 @@ pServeIcsOpts = do
         <> metavar "PORT"
         <> help
           "port"
+  wwwDir <-
+    strOption $
+      long "www-dir"
+        <> metavar "WWW_DIR"
+        <> help
+          "Directory containing static files, e.g. the `index.html` file and favicons"
   pure ServeIcsOpts {..}

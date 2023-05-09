@@ -19,7 +19,6 @@ import Network.Wai.Handler.Warp
 import Network.Wai.Middleware.Cors (simpleCors)
 import Network.Wai.Middleware.RequestLogger
 import Opts
-import Paths_recycle_ics
 import Recycle.AppM
 import Recycle.Ics.ICalendar
 import Recycle.Ics.Server
@@ -28,7 +27,6 @@ import Servant.Client
     Scheme (..),
     mkClientEnv,
   )
-import System.FilePath
 
 main :: IO ()
 main = do
@@ -48,8 +46,6 @@ main = do
         Just f -> BSL.writeFile f bs
         Nothing -> BSL.putStr bs
     ServeIcs ServeIcsOpts {..} -> do
-      dataDir <- getDataDir
-      let wwwDir = dataDir </> "www"
       putStrLn "Starting server"
       run port
         . logStdoutDev
