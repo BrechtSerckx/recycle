@@ -1,7 +1,7 @@
 let
-  sources = import ./nix/sources.nix { };
-  nixpkgs = import ./nix/pkgs.nix;
-in (import ./default.nix {}).shellFor {
+  inherit (import ./default.nix {}) sources nixpkgs hsPkgs;
+  nixpkgs-node = import sources.nixpkgs-node {};
+in hsPkgs.shellFor {
   packages = ps: with ps; [ recycle-client recycle-ics ];
 
   withHoogle = true;

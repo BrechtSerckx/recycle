@@ -1,15 +1,23 @@
 { release ? false }:
 let
-  nixpkgs = import ./nix/pkgs.nix;
-in nixpkgs.haskell-nix.project {
-  src = nixpkgs.haskell-nix.haskellLib.cleanGit {
-    name = "recycle";
-    src = ./.;
+  sources = import ./nix/sources.nix { };
+  nixpkgs = import haskellNix.sources.nixpkgs-unstable haskellNix.nixpkgsArgs;
+
+  # haskell projects
+  haskellNix = import sources.haskellNix { };
+  hsPkgs = nixpkgs.haskell-nix.project {
+    src = nixpkgs.haskell-nix.haskellLib.cleanGit {
+      name = "recycle";
+      src = ./.;
+    };
+    modules = [{ reinstallableLibGhc = true; }] ++ (if release then [{
+      packages.recycle-client.components.exes.recycle-client.dontStrip = false;
+      packages.recycle-ics.components.exes.recycle-ics.dontStrip = false;
+    }] else
+      [ ]);
+    compiler-nix-name = "ghc902";
   };
-  modules = [{ reinstallableLibGhc = true; }] ++ (if release then [{
-    packages.recycle-client.components.exes.recycle-client.dontStrip = false;
-    packages.recycle-ics.components.exes.recycle-ics.dontStrip = false;
-  }] else
-    [ ]);
-  compiler-nix-name = "ghc902";
+in {
+  inherit sources nixpkgs hsPkgs;
+  inherit (hsPkgs) recycle-client recycle-ics;
 }
