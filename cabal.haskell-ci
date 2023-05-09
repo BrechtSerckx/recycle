@@ -5,7 +5,7 @@ cabal-install-version: 3.6
 jobs:
 
 -- distribution version (xenial, bionic, focal)
-distribution: bionic
+distribution: focal
 
 -- Jobs selection across packages
 jobs-selection: uniform
