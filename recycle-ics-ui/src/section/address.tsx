@@ -118,7 +118,7 @@ const HouseNumberInput = React.forwardRef(
   ) => (
     <label>
       House number:
-      <input ref={ref} type="number" placeholder="1" {...props} />
+      <input ref={ref} type="number" placeholder="1" min={1} {...props} />
     </label>
   )
 );
