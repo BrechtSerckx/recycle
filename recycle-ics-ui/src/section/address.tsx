@@ -1,5 +1,9 @@
-import { useWatch, useFormContext, UseFormRegisterReturn } from "react-hook-form";
-import Autocompleter from "../Autocompleter";
+import {
+  useWatch,
+  useFormContext,
+  UseFormRegisterReturn,
+} from "react-hook-form";
+import { debounce } from "../Autocompleter";
 import * as React from "react";
 import { FormInputs } from "../types";
 import * as Api from "../api";
@@ -22,48 +26,40 @@ const ZipcodeQueryInput = React.forwardRef(
   )
 );
 
-const ZipcodeAutocompleter = (
-  props: Partial<UseFormRegisterReturn> & {
-    query: string;
-    onSelect: (v: string) => any;
-  }
-) => {
-  const lc = useWatch({name: "langCode"});
-  return  (
-        <Autocompleter<any>
-          fetchValues={(query) => Api.searchZipcodes(query)}
-          displayValue={(v) => (
-              <span>
-                {v.city.names[lc]} ({v.code})
-              </span>
-          )}
-          {...props}
-          />
-    );
+const ZipcodeAutocompleter = (props: Partial<UseFormRegisterReturn>) => {
+  const lc = useWatch({ name: "langCode" });
+  const query = useWatch({ name: "zipcodeQuery" });
+  const { register, setValue } = useFormContext<FormInputs>();
+  const [values, setValues] = React.useState<any[]>([]);
+  React.useEffect(() => {
+    setValue("zipcodeId", null);
+    if (query) {
+      debounce(() => {
+        if (query.length >= 2) {
+          Api.searchZipcodes(query).then((newValues) => setValues(newValues));
+        } else {
+          setValues([]);
+        }
+      }, 250)();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [query]);
+  return (
+    <fieldset>
+      <legend>Zip code</legend>
+      {values.map((v) => (
+        <div>
+          <label key={v.id}>
+            <input type="radio" value={v.id} {...register("zipcodeId")} />
+            <span>
+              {v.city.names[lc]} ({v.code})
+            </span>
+          </label>
+        </div>
+      ))}
+    </fieldset>
+  );
 };
-
-const ZipcodeNameInput = React.forwardRef(
-  (
-    props: Partial<UseFormRegisterReturn>,
-    ref: React.ForwardedRef<HTMLInputElement>
-  ) => (
-    <label>
-      City/town: <input ref={ref} type="text" readOnly {...props} />
-    </label>
-  )
-);
-
-const ZipcodeIdInput = React.forwardRef(
-  (
-    props: Partial<UseFormRegisterReturn>,
-    ref: React.ForwardedRef<HTMLInputElement>
-  ) => (
-    <label>
-      Zip code:
-      <input ref={ref} type="text" readOnly {...props} />
-    </label>
-  )
-);
 
 const StreetQueryInput = React.forwardRef(
   (
@@ -80,44 +76,40 @@ const StreetQueryInput = React.forwardRef(
 const StreetAutocompleter = ({
   zipcode,
   ...props
-}: Partial<UseFormRegisterReturn> & {
-  zipcode: string;
-  query: string;
-  onSelect: (v: string) => any;
-}) => {
+}: Partial<UseFormRegisterReturn> & { zipcode: string }) => {
   const lc = useWatch({ name: "langCode" });
+  const query = useWatch({ name: "streetQuery" });
+  const { register, setValue } = useFormContext<FormInputs>();
+  const [values, setValues] = React.useState<any[]>([]);
+  React.useEffect(() => {
+    setValue("streetId", null);
+    if (query) {
+      debounce(() => {
+        if (query.length >= 3) {
+          Api.searchStreets(zipcode, query).then((newValues) =>
+            setValues(newValues)
+          );
+        } else {
+          setValues([]);
+        }
+      }, 250)();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [query, zipcode]);
   return (
-    <Autocompleter<any>
-      fetchValues={(query) => Api.searchStreets(zipcode, query)}
-      displayValue={(v) => <span>{v.names[lc]}</span>}
-      {...props}
-    />
+    <fieldset>
+      <legend>Street</legend>
+      {values.map((v) => (
+        <div>
+          <label key={v.id}>
+            <input type="radio" value={v.id} {...register("streetId")} />
+            {v.names[lc]}
+          </label>
+        </div>
+      ))}
+    </fieldset>
   );
 };
-
-const StreetNameInput = React.forwardRef(
-  (
-    props: Partial<UseFormRegisterReturn>,
-    ref: React.ForwardedRef<HTMLInputElement>
-  ) => (
-    <label>
-      Street name:
-      <input ref={ref} type="text" readOnly {...props} />
-    </label>
-  )
-);
-
-const StreetIdInput = React.forwardRef(
-  (
-    props: Partial<UseFormRegisterReturn>,
-    ref: React.ForwardedRef<HTMLInputElement>
-  ) => (
-    <label>
-      Street ID:
-      <input ref={ref} type="text" readOnly {...props} />
-    </label>
-  )
-);
 
 const HouseNumberInput = React.forwardRef(
   (
@@ -132,20 +124,9 @@ const HouseNumberInput = React.forwardRef(
 );
 
 export default function AddressSection() {
-  const [zipcodeSelected, setZipcodeSelected] = React.useState(false);
-  const [streetSelected, setStreetSelected] = React.useState(false);
-  const {
-    register,
-    watch,
-    formState: { errors },
-    setValue,
-  } = useFormContext<FormInputs>();
-  const lc = useWatch({ name: "langCode" });
-  const resetStreet = () => {
-    setValue("streetId", "");
-    setValue("streetName", "");
-    setStreetSelected(false);
-  };
+  const { register } = useFormContext<FormInputs>();
+  const zipcodeId = useWatch({ name: "zipcodeId" });
+  const streetId = useWatch({ name: "streetId" });
   return (
     <>
       <h3>Address</h3>
@@ -153,51 +134,18 @@ export default function AddressSection() {
       <h4>Zip code</h4>
       <p>Search for your city and choose the correct city from the list.</p>
       <ZipcodeQueryInput {...register("zipcodeQuery")} />
-
-      <ZipcodeAutocompleter
-        query={watch("zipcodeQuery")}
-        onSelect={(zipcode: any) => {
-          setValue("zipcodeId", zipcode.id);
-          setValue("zipcodeName", zipcode.city.names[lc]);
-          setZipcodeSelected(true);
-          resetStreet();
-        }}
-      />
-
-      <ZipcodeNameInput {...register("zipcodeName", { required: true })} />
-      <ZipcodeIdInput
-        {...register("zipcodeId", {
-          required: "Please select zip code",
-        })}
-      />
-      {errors.zipcodeId && <span>{errors.zipcodeId.message}</span>}
-      {zipcodeSelected && (
+      <ZipcodeAutocompleter />
+      {zipcodeId && (
         <>
           <h4>Street</h4>
           <p>
             Search for your street and choose the correct street from the list.
           </p>
           <StreetQueryInput {...register("streetQuery")} />
-          <StreetAutocompleter
-            zipcode={watch("zipcodeId")}
-            query={watch("streetQuery")}
-            onSelect={(street: any) => {
-              setValue("streetId", street.id);
-              setValue("streetName", street.names[lc]);
-              setStreetSelected(true);
-            }}
-          />
-          <StreetNameInput {...register("streetName", { required: true })} />
-          <StreetIdInput
-            {...register("streetId", {
-              required: "Please select street",
-              onChange: () => setStreetSelected(false),
-            })}
-          />
-          {errors.streetId && <span>{errors.streetId.message}</span>}
+          <StreetAutocompleter zipcode={zipcodeId} />
         </>
       )}
-      {streetSelected && (
+      {streetId && (
         <>
           <h4>House number</h4>
           <p>Enter your house number.</p>

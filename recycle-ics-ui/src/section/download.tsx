@@ -22,7 +22,7 @@ export default function DownloadSection() {
             readOnly
             placeholder="Please fill in your address above to generate a permalink."
             wrap="soft"
-            value={(mForm && mkWebcalLink(mForm).toString()) || undefined}
+            value={(mForm && mkWebcalLink(mForm).toString()) || ""}
             style={{ width: "100%" }}
           />
         </p>

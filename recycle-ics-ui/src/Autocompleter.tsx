@@ -1,45 +1,12 @@
 import * as React from "react";
 
-export default function Autocompleter<V>({
-  query,
-  fetchValues,
-  onSelect,
-  displayValue,
-}: {
-  query: string;
-  fetchValues: (q: string) => Promise<V[]>;
-  onSelect: (v: V) => any;
-  displayValue: (v: V) => React.ReactNode;
-}) {
-  const [values, setValues] = React.useState<V[]>([]);
-  React.useEffect(() => {
-    if (query) {
-      debounce(() => {
-        if (query.length >= 3) {
-          fetchValues(query).then((newValues) => setValues(newValues));
-        }
-      }, 250)();
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [query]);
-  return (
-    <ul>
-      {values.map((value, index) => (
-        <li key={index} onClick={() => onSelect(value)}>
-          {displayValue(value)}
-        </li>
-      ))}
-    </ul>
-  );
-}
-
 // Returns a function, that, as long as it continues to be invoked, will not
 // be triggered. The function will be called after it stops being called for
 // N milliseconds. If `immediate` is passed, trigger the function on the
 // leading edge, instead of the trailing.
 //
 // See: https://stackoverflow.com/questions/24004791/can-someone-explain-the-debounce-function-in-javascript
-function debounce(func: () => void, wait: number): () => void {
+export function debounce(func: () => void, wait: number): () => void {
   // 'private' variable for instance
   // The returned function will be able to reference this due to closure.
   // Each call to the returned function will share this common timer.

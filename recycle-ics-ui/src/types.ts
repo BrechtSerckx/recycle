@@ -3,11 +3,9 @@ import { LangCode } from "./section/language";
 export type FormInputs = {
   langCode: LangCode;
   zipcodeQuery: string;
-  zipcodeId: string;
-  zipcodeName: string;
+  zipcodeId: string | null;
   streetQuery: string;
-  streetId: string;
-  streetName: string;
+  streetId: string | null;
   houseNumber: string;
   filterAllEvents: boolean;
   filterAllFractions: boolean;
