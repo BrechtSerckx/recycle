@@ -6,6 +6,7 @@ import FilterSection from "./section/filter";
 import DateRangeSection from "./section/daterange";
 import EncodingSection from "./section/encoding";
 import DownloadSection from "./section/download";
+import DescriptionSection from "./section/description";
 import { FormInputs, defaultFormInputs } from "./types";
 
 export function App() {
@@ -16,7 +17,7 @@ export function App() {
   return (
     <>
       <h1>Recycle ICS generator</h1>
-      <p>Generate ICS files and links for your waste collections. </p>
+      <DescriptionSection />
       <FormProvider {...formContext}>
         <form>
           <h2>Generator form</h2>
