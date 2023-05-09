@@ -64,7 +64,7 @@ test-output-direct: True
 cabal-check: False
 
 -- Enable builds only for specific branches
-branches:
+branches: master
 
 -- Enable IRC notifications to given channel (e.g. 'irc.libera.chat#haskell-lens')
 irc-channels:
