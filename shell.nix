@@ -10,7 +10,8 @@ in (import ./default.nix {}).shellFor {
     cabal = { version = "latest"; };
     ghcid = { version = "latest"; };
     hlint = { version = "latest"; };
-    ormolu = { version = "latest"; };
+    # 2023-05-09: "latest" did not work
+    ormolu = { version = "0.5.1.0"; };
   };
 
   buildInputs = (with nixpkgs; [
