@@ -14,6 +14,7 @@ export default function FilterSection() {
     setAllFractions = (b: boolean) => setValue("filterAllFractions", b);
   const { register, setValue } = useFormContext<FormInputs>();
   const [fractions, setFractions] = React.useState([] as any[]);
+  const lc = useWatch({ name: "langCode" });
   React.useEffect(() => {
     if (zipcodeId && streetId && houseNumber) {
       Api.getFractions(zipcodeId, streetId, houseNumber).then((fs: any[]) => {
@@ -96,7 +97,7 @@ export default function FilterSection() {
                         },
                       })}
                     />
-                    {fraction.name.en}
+                    {fraction.name[lc]}
                   </label>
                 </div>
               ))

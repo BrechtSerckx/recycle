@@ -1,4 +1,4 @@
-import { useFormContext, UseFormRegisterReturn } from "react-hook-form";
+import { useWatch, useFormContext, UseFormRegisterReturn } from "react-hook-form";
 import Autocompleter from "../Autocompleter";
 import * as React from "react";
 import { FormInputs } from "../types";
@@ -27,17 +27,20 @@ const ZipcodeAutocompleter = (
     query: string;
     onSelect: (v: string) => any;
   }
-) => (
-  <Autocompleter<any>
-    fetchValues={(query) => Api.searchZipcodes(query)}
-    displayValue={(v) => (
-      <span>
-        {v.city.name} ({v.code})
-      </span>
-    )}
-    {...props}
-  />
-);
+) => {
+  const lc = useWatch({name: "langCode"});
+  return  (
+        <Autocompleter<any>
+          fetchValues={(query) => Api.searchZipcodes(query)}
+          displayValue={(v) => (
+              <span>
+                {v.city.names[lc]} ({v.code})
+              </span>
+          )}
+          {...props}
+          />
+    );
+};
 
 const ZipcodeNameInput = React.forwardRef(
   (
@@ -81,13 +84,16 @@ const StreetAutocompleter = ({
   zipcode: string;
   query: string;
   onSelect: (v: string) => any;
-}) => (
-  <Autocompleter<any>
-    fetchValues={(query) => Api.searchStreets(zipcode, query)}
-    displayValue={(v) => <span>{v.name}</span>}
-    {...props}
-  />
-);
+}) => {
+  const lc = useWatch({ name: "langCode" });
+  return (
+    <Autocompleter<any>
+      fetchValues={(query) => Api.searchStreets(zipcode, query)}
+      displayValue={(v) => <span>{v.names[lc]}</span>}
+      {...props}
+    />
+  );
+};
 
 const StreetNameInput = React.forwardRef(
   (
@@ -134,6 +140,7 @@ export default function AddressSection() {
     formState: { errors },
     setValue,
   } = useFormContext<FormInputs>();
+  const lc = useWatch({ name: "langCode" });
   const resetStreet = () => {
     setValue("streetId", "");
     setValue("streetName", "");
@@ -151,7 +158,7 @@ export default function AddressSection() {
         query={watch("zipcodeQuery")}
         onSelect={(zipcode: any) => {
           setValue("zipcodeId", zipcode.id);
-          setValue("zipcodeName", zipcode.city.name);
+          setValue("zipcodeName", zipcode.city.names[lc]);
           setZipcodeSelected(true);
           resetStreet();
         }}
@@ -176,7 +183,7 @@ export default function AddressSection() {
             query={watch("streetQuery")}
             onSelect={(street: any) => {
               setValue("streetId", street.id);
-              setValue("streetName", street.name);
+              setValue("streetName", street.names[lc]);
               setStreetSelected(true);
             }}
           />
