@@ -18,12 +18,12 @@ export default function DownloadSection() {
     <>
       <section>
         <p>
-          <input
-            type="text"
+          <textarea
             readOnly
-            placeholder="permalink"
-            size={50}
+            placeholder="Please fill in your address above to generate a permalink."
+            wrap="soft"
             value={(mForm && mkWebcalLink(mForm).toString()) || undefined}
+            style={{ width: "100%" }}
           />
         </p>
         {mForm && (
