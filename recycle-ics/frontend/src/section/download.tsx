@@ -31,6 +31,7 @@ export default function DownloadSection() {
             <a download={filename} href={mkWebcalLink(mForm).toString()}>
               Open
             </a>
+            <span> - </span>
             <a download={filename} href={mkHttpLink(mForm).toString()}>
               Download
             </a>
