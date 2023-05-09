@@ -17,7 +17,9 @@ let
       [ ]);
     compiler-nix-name = "ghc902";
   };
+
+  recycle-ics-ui = nixpkgs.callPackage ./recycle-ics-ui {};
 in {
-  inherit sources nixpkgs hsPkgs;
+  inherit sources nixpkgs hsPkgs recycle-ics-ui;
   inherit (hsPkgs) recycle-client recycle-ics;
 }

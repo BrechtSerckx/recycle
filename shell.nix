@@ -21,9 +21,11 @@ in hsPkgs.shellFor {
     nixfmt
     # haskell ci/cd generator
     haskell-ci
+    ]) ++ (with nixpkgs-node;  [
     # nodejs for frontend
     nodejs
-  ]) ++ (with nixpkgs.nodePackages; [
+    prefetch-npm-deps
+  ]) ++ (with nixpkgs-node.nodePackages; [
     # create-react-app
     create-react-app
     # package manager
