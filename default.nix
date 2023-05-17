@@ -18,7 +18,7 @@ let
       packages.recycle-ics.components.exes.recycle-ics.preBuild = ''
         # link `recycle-ics-ui` to the static directory so it can be served from `recycle-ics` server
         export RECYCLE_ICS_WWW_DIR=${recycle-ics-ui}
-      # '';
+      '';
     }] else []) ++ (if release then [{
       packages.recycle-client.components.exes.recycle-client.dontStrip = false;
       packages.recycle-ics.components.exes.recycle-ics.dontStrip = false;

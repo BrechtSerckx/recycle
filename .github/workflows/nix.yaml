@@ -1,0 +1,51 @@
+name: Nix-CI
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+
+env:
+  cache-name: brechtserckx-recycle
+
+jobs:
+
+  Nix-CI:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    - name: Install Nix
+      uses: cachix/install-nix-action@v17
+      with:
+        # used to provide bash in nix-shell
+        nix_path: nixpkgs=channel:nixos-unstable
+
+    - name: Test Nix install
+      run: nix-build --version
+
+    - uses: cachix/cachix-action@v12
+      with:
+        name: '${{ env.cache-name }}'
+        authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
+        extraPullNames: 'iohk'
+
+    - uses: falti/dotenv-action@v1.0.4
+
+    # FIXME: Build using system npm first
+    # This can be deleted once the Nix build for the ui works again
+    - run: |
+        cd recycle-ics-ui
+        npm install
+        npm run build
+
+    - run: nix-shell --run 'echo "shell ok"'
+
+    - run: nix-shell --run 'cabal build all'
+
+    # FIXME: While the NPM build is not working, I'll need to manually create
+    # The recycle-ics-ui build first
+    - run: nix-build -A recycle-client -A recycle-ics
