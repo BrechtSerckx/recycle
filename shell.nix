@@ -21,6 +21,8 @@ in hsPkgs.shellFor {
     nixfmt
     # haskell ci/cd generator
     haskell-ci
+    # run ci/cd locally
+    act
     ]) ++ (with nixpkgs-node;  [
     # nodejs for frontend
     nodejs

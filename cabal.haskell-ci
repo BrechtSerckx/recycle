@@ -97,6 +97,8 @@ postgresql: False
 google-chrome: False
 
 -- Environment variables per job (e.g. `8.0.2:HADDOCK=false`)
+-- 2023-05-11: does not work with GitHub Actions
+-- env: 9.0.2:RECYCLE_ICS_WWW_DIR=dummy-dir
 env:
 
 -- Allow failures of particular GHC version
@@ -121,11 +123,12 @@ ghcup-jobs: >8.10.4 && <9 || >9.0.1
 ghcup-version: 0.1.17.5
 
 -- Additional apt packages to install
-apt:
+apt: nodejs
 
 travis-patches:
 
 github-patches:
+  .github/workflows/haskell-ci.env.patch
 
 -- Don't insert the haskell-ci version into the generated Travis YAML file
 insert-version: True
