@@ -1,5 +1,5 @@
 let
-  inherit (import ./default.nix {}) sources nixpkgs hsPkgs;
+  inherit (import ./default.nix { build = false; }) sources nixpkgs hsPkgs;
   nixpkgs-node = import sources.nixpkgs-node {};
   nixpkgs-act = import sources.nixpkgs-act {};
 in hsPkgs.shellFor {
