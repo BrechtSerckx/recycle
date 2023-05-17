@@ -1,18 +1,21 @@
 import * as React from "react";
 import { useWatch } from "react-hook-form";
 import { FormInputs, inputsToForm, Form, formToParams } from "../types";
+import { serverUrl } from "../env";
 
 export default function DownloadSection() {
   const formInputs = useWatch() as FormInputs,
     mForm = inputsToForm(formInputs);
-  const mkUrl = (base: string, form: Form): URL => {
-      var url = new URL("/api/generate", base);
+  const mkHttpLink = (form: Form): URL => {
+      var url = new URL("/api/generate", serverUrl);
       url.search = new URLSearchParams(formToParams(form)).toString();
       return url;
     },
-    mkWebcalLink = (form: Form): URL =>
-      mkUrl(`webcal://${window.location.host}`, form),
-    mkHttpLink = (form: Form): URL => mkUrl(window.location.origin, form),
+    mkWebcalLink = (form: Form): URL => {
+      var url = mkHttpLink(form);
+      url.protocol = "webcal:";
+      return url;
+    },
     filename = "recycle.ics";
   return (
     <>

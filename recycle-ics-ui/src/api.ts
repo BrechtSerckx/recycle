@@ -1,12 +1,13 @@
-const host = "http://localhost:3332";
+import { serverUrl } from "./env";
+
 export function searchZipcodes(q: string) {
-  return fetch(`${host}/api/search-zipcode?q=${q}&lang_code=nl`).then(
+  return fetch(`${serverUrl}api/search-zipcode?q=${q}&lang_code=nl`).then(
     (response) => response.json()
   );
 }
 
 export function searchStreets(zipcode: string, q: string) {
-  return fetch(`${host}/api/search-street?zipcode=${zipcode}&q=${q}`).then(
+  return fetch(`${serverUrl}api/search-street?zipcode=${zipcode}&q=${q}`).then(
     (response) => response.json()
   );
 }
@@ -17,6 +18,6 @@ export function getFractions(
   houseNumber: number
 ) {
   return fetch(
-    `${host}/api/fractions?zipcode=${zipcode}&street=${street}&house_number=${houseNumber}`
+    `${serverUrl}api/fractions?zipcode=${zipcode}&street=${street}&house_number=${houseNumber}`
   ).then((response) => response.json());
 }
