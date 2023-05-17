@@ -40,4 +40,7 @@ in hsPkgs.shellFor {
     # js linter
     eslint
   ]);
+  shellHook = ''
+    export PATH="$PWD/recycle-ics-ui/node_modules/.bin/:$PATH"
+  '';
 }
