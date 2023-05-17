@@ -149,3 +149,6 @@ executable recycle-ics
 
       -- cli
     , optparse-applicative >= 0.14
+
+    -- system
+    , th-env

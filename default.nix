@@ -10,7 +10,13 @@ let
       name = "recycle";
       src = ./.;
     };
-    modules = [{ reinstallableLibGhc = true; }] ++ (if release then [{
+    modules = [{
+      reinstallableLibGhc = true;
+      packages.recycle-ics.components.exes.recycle-ics.preBuild = ''
+        # link `recycle-ics-ui` to the static directory so it can be served from `recycle-ics` server
+        export RECYCLE_ICS_WWW_DIR=${recycle-ics-ui}
+      '';
+    }] ++ (if release then [{
       packages.recycle-client.components.exes.recycle-client.dontStrip = false;
       packages.recycle-ics.components.exes.recycle-ics.dontStrip = false;
     }] else
@@ -18,8 +24,10 @@ let
     compiler-nix-name = "ghc902";
   };
 
-  recycle-ics-ui = nixpkgs.callPackage ./recycle-ics-ui {};
+  recycle-ics-ui = nixpkgs.callPackage ./recycle-ics-ui { };
 in {
   inherit sources nixpkgs hsPkgs recycle-ics-ui;
-  inherit (hsPkgs) recycle-client recycle-ics;
+
+  inherit (hsPkgs.recycle-client.components.exes) recycle-client;
+  inherit (hsPkgs.recycle-ics.components.exes) recycle-ics;
 }

@@ -1,4 +1,5 @@
 {-# LANGUAGE DataKinds #-}
+{-# LANGUAGE TemplateHaskell #-}
 
 module Main
   ( main,
@@ -11,6 +12,7 @@ import Control.Monad.IO.Class (liftIO)
 import qualified Data.ByteString.Lazy.Char8 as BSL
 import Data.IORef (newIORef)
 import qualified Data.Text as T
+import qualified Language.Haskell.TH.Env as Env
 import Network.HTTP.Client.TLS
   ( newTlsManagerWith,
     tlsManagerSettings,
@@ -50,4 +52,6 @@ main = do
       run port
         . logStdoutDev
         . simpleCors
-        $ recycleIcsApp wwwDir env
+        $ recycleIcsApp
+          $$(Env.envQ' "RECYCLE_ICS_WWW_DIR")
+          env

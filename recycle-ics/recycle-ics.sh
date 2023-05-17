@@ -2,7 +2,6 @@
 # shellcheck disable=SC3030,SC3024,SC3054
 
 PORT=3332
-WWW_DIR=$PWD/recycle-ics-ui/build
 
 CMD=(cabal run exe:recycle-ics --)
 # CMD=(docker run -p "$PORT:$PORT" recycle:latest)
@@ -29,8 +28,7 @@ HOUSE_NUMBER=1
 # servce ics files
 CMD+=(
     serve-ics \
-    --port "$PORT" \
-    --www-dir "$WWW_DIR"
+    --port "$PORT"
 )
 
 # run it
