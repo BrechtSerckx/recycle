@@ -52,7 +52,7 @@ const howTos: {
             On your computer, open{" "}
             <a
               href="https://calendar.google.com/"
-              rel="noopener"
+              rel="noreferrer"
               target="_blank"
             >
               Google Calendar
@@ -117,6 +117,7 @@ const howTos: {
             <a
               href="https://go.microsoft.com/fwlink/p/?linkid=843379"
               target="_blank"
+              rel="noreferrer"
             >
               Sign in to Outlook.com
             </a>
