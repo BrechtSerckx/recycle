@@ -1,13 +1,10 @@
 #! /usr/bin/env bash
 # shellcheck disable=SC3030,SC3024,SC3054
 
-PORT=3332
-
 CMD=(cabal run exe:recycle-ics --)
 # CMD=(docker run -p "$PORT:$PORT" recycle:latest)
 
-SECRET="<REDACTED>"
-CMD+=(--secret "$SECRET")
+CMD+=(--secret "$RECYCLE_ICS_SECRET")
 
 # Generate ICS file
 ZIP_CODE="1234-56789"
@@ -28,7 +25,7 @@ HOUSE_NUMBER=1
 # servce ics files
 CMD+=(
     serve-ics \
-    --port "$PORT"
+    --port "$RECYCLE_ICS_PORT"
 )
 
 # run it

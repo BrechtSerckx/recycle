@@ -3,3 +3,4 @@
 /dist/
 /.direnv
 /cabal.project.local
+/local/
