@@ -3,8 +3,7 @@ let
 in { name ? "recycle", tag ? "latest" }:
 
 let
-  recycle-ics =
-    (import ./. { release = true; }).recycle-ics.components.exes.recycle-ics;
+  inherit (import ./. { release = true; }) recycle-ics;
 in nixpkgs.dockerTools.buildImage {
   inherit name tag;
   fromImageName = "alpine:latest";
