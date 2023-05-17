@@ -23,6 +23,12 @@
         "url": "https://github.com/nmattia/niv/archive/af958e8057f345ee1aca714c1247ef3ba1c15f5e.tar.gz",
         "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
     },
+    "nixpkgs-act": {
+        "branch": "master",
+        "repo": "https://github.com/NixOS/nixpkgs.git",
+        "rev": "c5445c0fda2adaea8113b01d2fabeb2d50f40aa5",
+        "type": "git"
+    },
     "nixpkgs-node": {
         "branch": "master",
         "repo": "https://github.com/NixOS/nixpkgs.git",
