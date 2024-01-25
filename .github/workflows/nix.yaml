@@ -34,6 +34,10 @@ jobs:
         extraPullNames: 'iohk'
 
     - uses: falti/dotenv-action@v1.0.4
+      with:
+        export-variables: true
+        log-variables: true
+        keys-case: bypass
 
     - run: nix-shell --run 'echo "shell ok"'
 
