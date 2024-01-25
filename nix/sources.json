@@ -32,7 +32,7 @@
     "nixpkgs-node": {
         "branch": "master",
         "repo": "https://github.com/NixOS/nixpkgs.git",
-        "rev": "31de1264ab1f419961103c330d33e121fa549320",
+        "rev": "33898b9ad7be4463073d15d1dc27a99e936b79b6",
         "type": "git"
     }
 }

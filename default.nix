@@ -2,6 +2,7 @@
 let
   sources = import ./nix/sources.nix { };
   nixpkgs = import haskellNix.sources.nixpkgs-unstable haskellNix.nixpkgsArgs;
+  nixpkgs-node = import sources.nixpkgs-node {};
 
   # haskell projects
   haskellNix = import sources.haskellNix { };
@@ -27,7 +28,7 @@ let
     compiler-nix-name = "ghc902";
   };
 
-  recycle-ics-ui = nixpkgs.callPackage ./recycle-ics-ui { };
+  recycle-ics-ui = nixpkgs-node.callPackage ./recycle-ics-ui { };
 in {
   inherit sources nixpkgs hsPkgs recycle-ics-ui;
 
