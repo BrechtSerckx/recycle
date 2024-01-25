@@ -1,4 +1,5 @@
 {-# LANGUAGE DataKinds #-}
+{-# LANGUAGE TemplateHaskell #-}
 
 module Main
   ( main,
@@ -11,14 +12,15 @@ import Control.Monad.IO.Class (liftIO)
 import qualified Data.ByteString.Lazy.Char8 as BSL
 import Data.IORef (newIORef)
 import qualified Data.Text as T
+import qualified Language.Haskell.TH.Env as Env
 import Network.HTTP.Client.TLS
   ( newTlsManagerWith,
     tlsManagerSettings,
   )
 import Network.Wai.Handler.Warp
+import Network.Wai.Middleware.Cors (simpleCors)
 import Network.Wai.Middleware.RequestLogger
 import Opts
-import Paths_recycle_ics
 import Recycle.AppM
 import Recycle.Ics.ICalendar
 import Recycle.Ics.Server
@@ -27,7 +29,6 @@ import Servant.Client
     Scheme (..),
     mkClientEnv,
   )
-import System.FilePath
 
 main :: IO ()
 main = do
@@ -47,9 +48,10 @@ main = do
         Just f -> BSL.writeFile f bs
         Nothing -> BSL.putStr bs
     ServeIcs ServeIcsOpts {..} -> do
-      dataDir <- getDataDir
-      let wwwDir = dataDir </> "www"
       putStrLn "Starting server"
       run port
         . logStdoutDev
-        $ recycleIcsApp wwwDir env
+        . simpleCors
+        $ recycleIcsApp
+          $$(Env.envQ' "RECYCLE_ICS_WWW_DIR")
+          env

@@ -1,7 +1,8 @@
 let
-  sources = import ./nix/sources.nix { };
-  nixpkgs = import ./nix/pkgs.nix;
-in (import ./default.nix {}).shellFor {
+  inherit (import ./default.nix { build = false; }) sources nixpkgs hsPkgs;
+  nixpkgs-node = import sources.nixpkgs-node {};
+  nixpkgs-act = import sources.nixpkgs-act {};
+in hsPkgs.shellFor {
   packages = ps: with ps; [ recycle-client recycle-ics ];
 
   withHoogle = true;
@@ -21,10 +22,25 @@ in (import ./default.nix {}).shellFor {
     nixfmt
     # haskell ci/cd generator
     haskell-ci
-  ]) ++ (with nixpkgs.nodePackages; [
+    ]) ++ (with nixpkgs-act;  [
+    # run ci/cd locally
+    act
+    ]) ++ (with nixpkgs-node;  [
+    # nodejs for frontend
+    nodejs
+    prefetch-npm-deps
+    ]) ++ (with nixpkgs-node.nodePackages; [
+    # create-react-app
+    create-react-app
+    # package manager
+    npm
     # web formatter
+    prettier
     js-beautify
     # js linter
     eslint
   ]);
+  shellHook = ''
+    export PATH="$PWD/recycle-ics-ui/node_modules/.bin/:$PATH"
+  '';
 }

@@ -14,10 +14,6 @@ maintainer:          services+git@brechtserckx.be
 copyright:           (c) 2021-2022 Brecht Serckx
 category:            Service
 build-type:          Simple
-data-files:
-  www/index.html
-  www/index.js
-  www/favicon.ico
 
 Tested-With: GHC ==9.0.2
 
@@ -143,6 +139,7 @@ executable recycle-ics
     , http-client >= 0.6
     , http-client-tls >= 0.3
     , servant-client >= 0.16
+    , wai-cors >= 0.2
     , wai-extra >= 3.1
     , warp >= 3.3
 
@@ -152,3 +149,6 @@ executable recycle-ics
 
       -- cli
     , optparse-applicative >= 0.14
+
+    -- system
+    , th-env
