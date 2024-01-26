@@ -42,7 +42,46 @@ spec = describe "API responses" $ do
   it "parses a normal `Zipcodes` response" $
     eitherDecode @(SingObject "items" [FullZipcode])
       (BSL.fromStrict $(embedFile "test/responses/zipcodes.json"))
-      `shouldSatisfy` isRight
+      `shouldBe` Right
+        ( SingObject
+            [ FullZipcode
+                { city =
+                    City
+                      { id = "24062",
+                        zipcodes =
+                          [ "3000-24062",
+                            "3001-24062",
+                            "3010-24062",
+                            "3012-24062",
+                            "3018-24062"
+                          ],
+                        name = "Leuven",
+                        createdAt = read "2020-07-13 22:00:01.034 UTC",
+                        updatedAt = read "2020-09-21 22:15:05.605 UTC",
+                        names =
+                          Map.fromList
+                            [ ("de", "L\246wen"),
+                              ("en", "Leuven"),
+                              ("fr", "Louvain"),
+                              ("nl", "Leuven")
+                            ]
+                      },
+                  code = "3000",
+                  createdAt = read "2020-07-13 22:00:01.034 UTC",
+                  updatedAt = read "2020-09-21 22:15:05.604 UTC",
+                  id = "3000-24062",
+                  names =
+                    [ Map.fromList
+                        [ ("de", "L\246wen"),
+                          ("en", "Leuven"),
+                          ("fr", "Louvain"),
+                          ("nl", "Leuven")
+                        ]
+                    ],
+                  available = True
+                }
+            ]
+        )
 
   it "parses a normal `Streets` response" $
     eitherDecode @(SingObject "items" [Street])
