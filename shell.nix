@@ -12,9 +12,11 @@ in hsPkgs.shellFor {
 
   tools = {
     cabal = { version = "latest"; };
+    haskell-language-server = "latest";
     ghcid = { version = "latest"; };
     hlint = { version = "latest"; };
     ormolu = { version = "latest"; };
+    cabal-fmt = "latest";
   };
 
   buildInputs = (with nixpkgs; [
