@@ -86,7 +86,63 @@ spec = describe "API responses" $ do
   it "parses a normal `Streets` response" $
     eitherDecode @(SingObject "items" [Street])
       (BSL.fromStrict $(embedFile "test/responses/streets.json"))
-      `shouldSatisfy` isRight
+      `shouldBe` Right
+        ( SingObject
+            [ Street
+                { id = "https://data.vlaanderen.be/id/straatnaam-34637",
+                  city =
+                    [ City
+                        { id = "24062",
+                          zipcodes =
+                            [ "3000-24062",
+                              "3001-24062",
+                              "3010-24062",
+                              "3012-24062",
+                              "3018-24062"
+                            ],
+                          name = "Leuven",
+                          createdAt = read "2020-07-13 22:00:01.034 UTC",
+                          updatedAt = read "2020-09-21 22:15:05.605 UTC",
+                          names =
+                            Map.fromList
+                              [ ("de", "L\246wen"),
+                                ("en", "Leuven"),
+                                ("fr", "Louvain"),
+                                ("nl", "Leuven")
+                              ]
+                        }
+                    ],
+                  createdAt = read "2020-09-22 08:19:32.787 UTC",
+                  updatedAt = read "2021-10-11 07:06:32.64 UTC",
+                  names =
+                    Map.fromList
+                      [ ("de", "Andreas Vesaliusstraat"),
+                        ("en", "Andreas Vesaliusstraat"),
+                        ("fr", "Andreas Vesaliusstraat"),
+                        ("nl", "Andreas Vesaliusstraat")
+                      ],
+                  name = "Andreas Vesaliusstraat",
+                  deleted = False,
+                  zipcode =
+                    [ Zipcode
+                        { city = "24062",
+                          code = "3000",
+                          createdAt = read "2020-07-13 22:00:01.034 UTC",
+                          updatedAt = read "2020-09-21 22:15:05.604 UTC",
+                          id = "3000-24062",
+                          names =
+                            [ Map.fromList
+                                [ ("de", "L\246wen"),
+                                  ("en", "Leuven"),
+                                  ("fr", "Louvain"),
+                                  ("nl", "Leuven")
+                                ]
+                            ]
+                        }
+                    ]
+                }
+            ]
+        )
 
   it "parses a normal `Collections` response" $
     eitherDecode

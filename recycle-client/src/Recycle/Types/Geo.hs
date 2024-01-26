@@ -56,7 +56,7 @@ data Zipcode = Zipcode
     id :: ZipcodeId,
     names :: [Map Text Text]
   }
-  deriving stock (Show, Generic)
+  deriving stock (Show, Generic, Eq)
   deriving anyclass (FromJSON, ToJSON)
 
 data FullZipcode = FullZipcode
@@ -74,7 +74,7 @@ data FullZipcode = FullZipcode
 -- * Street
 
 newtype StreetId = StreetId {unStreetId :: Text}
-  deriving newtype (Show, IsString, FromHttpApiData, ToHttpApiData, FromJSON, ToJSON)
+  deriving newtype (Show, IsString, FromHttpApiData, ToHttpApiData, FromJSON, ToJSON, Eq)
 
 data Street = Street
   { id :: StreetId,
@@ -86,7 +86,7 @@ data Street = Street
     deleted :: Bool,
     zipcode :: [Zipcode]
   }
-  deriving stock (Show, Generic)
+  deriving stock (Show, Generic, Eq)
   deriving anyclass (FromJSON, ToJSON)
 
 -- * House number
