@@ -2,7 +2,8 @@
 # shellcheck disable=SC3030,SC3024,SC3054
 
 CMD=(cabal run exe:recycle-ics --)
-# CMD=(docker run -p "$PORT:$PORT" recycle:latest)
+# CMD=(docker run -p "$RECYCLE_ICS_PORT:$RECYCLE_ICS_PORT" recycle:latest)
+# CMD=($(nix-build -A recycle-ics)/bin/recycle-ics)
 
 CMD+=(--secret "$RECYCLE_ICS_SECRET")
 
