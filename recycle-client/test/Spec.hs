@@ -11,6 +11,8 @@ import Data.FileEmbed
 import qualified Data.List as List
 import qualified Data.Map as Map
 import Data.Text (Text)
+import Data.Time (UTCTime (..))
+import qualified Data.Time as Time
 import Recycle.API
 import Recycle.Types
 import Recycle.Utils
@@ -25,7 +27,12 @@ spec = describe "API responses" $ do
   it "parses a normal `AuthResult` response" $
     eitherDecode @AuthResult
       (BSL.fromStrict $(embedFile "test/responses/authResult.json"))
-      `shouldSatisfy` isRight
+      `shouldBe` Right
+        ( AuthResult
+            { expiresAt = read "2021-10-15 09:38:17.553 UTC",
+              accessToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE2MzQyODcxNTcsImV4cCI6MTYzNDI5MDc1NywiYXVkIjoicmVjeWNsZWFwcC5iZSJ9.M71tok8T0dOms_pISu_pLzGMpH84iNtOraJ5-PI1Ktk"
+            }
+        )
 
   it "parses translations" $
     eitherDecode @(Map.Map LangCode Text)

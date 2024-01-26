@@ -175,3 +175,4 @@ test-suite recycle-client-test
     , file-embed
     , hspec
     , text
+    , time

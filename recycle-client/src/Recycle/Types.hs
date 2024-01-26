@@ -68,7 +68,7 @@ data AuthResult = AuthResult
     -- | an expiry date
     expiresAt :: UTCTime
   }
-  deriving stock (Generic, Show)
+  deriving stock (Generic, Show, Eq)
   deriving anyclass (FromJSON, ToJSON)
 
 newtype SearchQuery a = SearchQuery {unSearchQuery :: a}
