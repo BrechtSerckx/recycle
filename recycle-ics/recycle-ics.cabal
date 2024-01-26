@@ -15,7 +15,8 @@ copyright:           (c) 2021-2022 Brecht Serckx
 category:            Service
 build-type:          Simple
 
-Tested-With: GHC ==9.0.2
+-- Not 9.4.8 as in LTS, but highest current haskell-ci supports.
+Tested-With: GHC ==9.4.5
 
 common common-default-extensions
   default-language:    Haskell2010
