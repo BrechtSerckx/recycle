@@ -207,6 +207,56 @@ spec = describe "API responses" $ do
                        }
                  )
 
+  it "parses a normal `Collections` event response" $
+    eitherDecode
+      @(SingObject "items" [CollectionEvent (Union '[FullFraction, Event])])
+      (BSL.fromStrict $(embedFile "test/responses/collection-event.json"))
+      `shouldBe` Right
+        ( SingObject
+            [ CollectionEvent
+                { id = "5fed94cf5214974871257660",
+                  timestamp = read "2021-09-18 00:00:00 UTC",
+                  content =
+                    S
+                      ( Z
+                          ( I
+                              ( Event
+                                  { title =
+                                      Map.fromList
+                                        [ (EN, "Repair Caf\233"),
+                                          (NL, "Repair Caf\233"),
+                                          (FR, "Repair Caf\233"),
+                                          (DE, "Repair Caf\233")
+                                        ],
+                                    introduction =
+                                      Map.fromList
+                                        [ (EN, "Repair Caf\233 in MAAKbar"),
+                                          (NL, "Repair Caf\233 in MAAKbar"),
+                                          (FR, "Repair Caf\233 in MAAKbar"),
+                                          (DE, "Repair Caf\233 in MAAKbar")
+                                        ],
+                                    description =
+                                      Map.fromList
+                                        [ (EN, "Elke derde zaterdag van de maand tussen 14.00 en 17.00 uur in de Diestsestraat 142 in Leuven."),
+                                          (NL, "Elke derde zaterdag van de maand tussen 14.00 en 17.00 uur in de Diestsestraat 142 in Leuven."),
+                                          (FR, "Elke derde zaterdag van de maand tussen 14.00 en 17.00 uur in de Diestsestraat 142 in Leuven."),
+                                          (DE, "Elke derde zaterdag van de maand tussen 14.00 en 17.00 uur in de Diestsestraat 142 in Leuven.")
+                                        ],
+                                    externalLink =
+                                      Map.fromList
+                                        [ (EN, "https://www.maakbaarleuven.be/"),
+                                          (NL, "https://www.maakbaarleuven.be/"),
+                                          (FR, "https://www.maakbaarleuven.be/"),
+                                          (DE, "https://www.maakbaarleuven.be/")
+                                        ]
+                                  }
+                              )
+                          )
+                      )
+                }
+            ]
+        )
+
   it "parses a normal `Fractions` response" $
     eitherDecode @(SingObject "items" [Fraction])
       (BSL.fromStrict $(embedFile "test/responses/fractions.json"))
