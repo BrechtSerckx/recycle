@@ -30,7 +30,7 @@ import Web.HttpApiData
 -- * City
 
 newtype CityId = CityId Text
-  deriving newtype (Show, IsString, ToHttpApiData, FromJSON, ToJSON)
+  deriving newtype (Show, IsString, ToHttpApiData, FromJSON, ToJSON, Eq)
 
 data City = City
   { id :: CityId,
@@ -40,13 +40,13 @@ data City = City
     updatedAt :: UTCTime,
     names :: Map Text Text
   }
-  deriving stock (Generic, Show)
+  deriving stock (Generic, Show, Eq)
   deriving anyclass (FromJSON, ToJSON)
 
 -- * Zip code
 
 newtype ZipcodeId = ZipcodeId {unZipcodeId :: Text}
-  deriving newtype (Show, IsString, FromHttpApiData, ToHttpApiData, FromJSON, ToJSON)
+  deriving newtype (Show, IsString, FromHttpApiData, ToHttpApiData, FromJSON, ToJSON, Eq)
 
 data Zipcode = Zipcode
   { city :: CityId,
@@ -56,7 +56,7 @@ data Zipcode = Zipcode
     id :: ZipcodeId,
     names :: [Map Text Text]
   }
-  deriving stock (Show, Generic)
+  deriving stock (Show, Generic, Eq)
   deriving anyclass (FromJSON, ToJSON)
 
 data FullZipcode = FullZipcode
@@ -68,13 +68,13 @@ data FullZipcode = FullZipcode
     names :: [Map Text Text],
     available :: Bool
   }
-  deriving stock (Generic, Show)
+  deriving stock (Generic, Show, Eq)
   deriving anyclass (FromJSON, ToJSON)
 
 -- * Street
 
 newtype StreetId = StreetId {unStreetId :: Text}
-  deriving newtype (Show, IsString, FromHttpApiData, ToHttpApiData, FromJSON, ToJSON)
+  deriving newtype (Show, IsString, FromHttpApiData, ToHttpApiData, FromJSON, ToJSON, Eq)
 
 data Street = Street
   { id :: StreetId,
@@ -86,7 +86,7 @@ data Street = Street
     deleted :: Bool,
     zipcode :: [Zipcode]
   }
-  deriving stock (Show, Generic)
+  deriving stock (Show, Generic, Eq)
   deriving anyclass (FromJSON, ToJSON)
 
 -- * House number

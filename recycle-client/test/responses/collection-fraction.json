@@ -1,0 +1,57 @@
+{
+  "items": [
+    {
+      "type": "collection",
+      "timestamp": "2021-09-15T00:00:00.000Z",
+      "fraction": {
+        "national": true,
+        "nationalRef": "5d610b87173c063cc0400103",
+        "datatankRef": null,
+        "name": {
+          "nl": "PMD",
+          "fr": "PMC",
+          "en": "PMD",
+          "de": "PMD"
+        },
+        "color": "#60b1df",
+        "variations": [],
+        "organisation": "5e27908010cfeaa15c9cee93",
+        "createdAt": "2020-02-20T13:08:32.883Z",
+        "updatedAt": "2021-09-30T15:16:36.595Z",
+        "logo": {
+          "regular": {
+            "1x": "5ef36735da06b266d294b3b9",
+            "2x": "5ef36735da06b298a894b3ba",
+            "3x": "5ef36735da06b23db894b3bb"
+          },
+          "reversed": {
+            "1x": "5ef36735da06b25d5e94b3bc",
+            "2x": "5ef36735da06b2a1a594b3bd",
+            "3x": "5ef36735da06b2093194b3be"
+          },
+          "_id": "5d610b86162c063cc0400125",
+          "name": {
+            "nl": "PMD",
+            "fr": "PMC",
+            "de": "PMD",
+            "en": "PMD"
+          },
+          "createdAt": "2020-02-20T13:08:25.556Z",
+          "updatedAt": "2020-06-24T14:46:14.194Z",
+          "__v": 0,
+          "id": "5d610b86162c063cc0400125"
+        },
+        "id": "5e4e84d1bab65e9819d714d2"
+      },
+      "id": "5fed8c315214976fcf25764d"
+    }
+  ],
+  "total": 46,
+  "pages": 3,
+  "page": 1,
+  "size": 20,
+  "self": "https://awe-in-wa-recycle-api.azurewebsites.net/v1/collections?zipcodeId=3000-24062&streetId=https%3A%2F%2Fdata.vlaanderen.be%2Fid%2Fstraatnaam-34637&houseNumber=73&fromDate=2021-09-15T00%3A00%3A00.000Z&untilDate=2021-12-14T23%3A59%3A59.999Z&page=1&size=20",
+  "first": "https://awe-in-wa-recycle-api.azurewebsites.net/v1/collections?zipcodeId=3000-24062&streetId=https%3A%2F%2Fdata.vlaanderen.be%2Fid%2Fstraatnaam-34637&houseNumber=73&fromDate=2021-09-15T00%3A00%3A00.000Z&untilDate=2021-12-14T23%3A59%3A59.999Z&page=1&size=20",
+  "last": "https://awe-in-wa-recycle-api.azurewebsites.net/v1/collections?zipcodeId=3000-24062&streetId=https%3A%2F%2Fdata.vlaanderen.be%2Fid%2Fstraatnaam-34637&houseNumber=73&fromDate=2021-09-15T00%3A00%3A00.000Z&untilDate=2021-12-14T23%3A59%3A59.999Z&page=3&size=20",
+  "next": "https://awe-in-wa-recycle-api.azurewebsites.net/v1/collections?zipcodeId=3000-24062&streetId=https%3A%2F%2Fdata.vlaanderen.be%2Fid%2Fstraatnaam-34637&houseNumber=73&fromDate=2021-09-15T00%3A00%3A00.000Z&untilDate=2021-12-14T23%3A59%3A59.999Z&page=2&size=20"
+}

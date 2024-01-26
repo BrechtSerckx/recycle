@@ -1,0 +1,46 @@
+{
+  "items": [
+    {
+      "event": {
+        "title": {
+          "nl": "Repair Café",
+          "fr": "Repair Café",
+          "en": "Repair Café",
+          "de": "Repair Café"
+        },
+        "introduction": {
+          "nl": "Repair Café in MAAKbar",
+          "fr": "Repair Café in MAAKbar",
+          "en": "Repair Café in MAAKbar",
+          "de": "Repair Café in MAAKbar"
+        },
+        "description": {
+          "nl": "Elke derde zaterdag van de maand tussen 14.00 en 17.00 uur in de Diestsestraat 142 in Leuven.",
+          "fr": "Elke derde zaterdag van de maand tussen 14.00 en 17.00 uur in de Diestsestraat 142 in Leuven.",
+          "en": "Elke derde zaterdag van de maand tussen 14.00 en 17.00 uur in de Diestsestraat 142 in Leuven.",
+          "de": "Elke derde zaterdag van de maand tussen 14.00 en 17.00 uur in de Diestsestraat 142 in Leuven."
+        },
+        "externalLink": {
+          "nl": "https://www.maakbaarleuven.be/",
+          "fr": "https://www.maakbaarleuven.be/",
+          "en": "https://www.maakbaarleuven.be/",
+          "de": "https://www.maakbaarleuven.be/"
+        }
+      },
+      "type": "event",
+      "timestamp": "2021-09-18T00:00:00.000Z",
+      "id": "5fed94cf5214974871257660",
+      "fraction": {
+        "variations": []
+      }
+    }
+  ],
+  "total": 46,
+  "pages": 3,
+  "page": 1,
+  "size": 20,
+  "self": "https://awe-in-wa-recycle-api.azurewebsites.net/v1/collections?zipcodeId=3000-24062&streetId=https%3A%2F%2Fdata.vlaanderen.be%2Fid%2Fstraatnaam-34637&houseNumber=73&fromDate=2021-09-15T00%3A00%3A00.000Z&untilDate=2021-12-14T23%3A59%3A59.999Z&page=1&size=20",
+  "first": "https://awe-in-wa-recycle-api.azurewebsites.net/v1/collections?zipcodeId=3000-24062&streetId=https%3A%2F%2Fdata.vlaanderen.be%2Fid%2Fstraatnaam-34637&houseNumber=73&fromDate=2021-09-15T00%3A00%3A00.000Z&untilDate=2021-12-14T23%3A59%3A59.999Z&page=1&size=20",
+  "last": "https://awe-in-wa-recycle-api.azurewebsites.net/v1/collections?zipcodeId=3000-24062&streetId=https%3A%2F%2Fdata.vlaanderen.be%2Fid%2Fstraatnaam-34637&houseNumber=73&fromDate=2021-09-15T00%3A00%3A00.000Z&untilDate=2021-12-14T23%3A59%3A59.999Z&page=3&size=20",
+  "next": "https://awe-in-wa-recycle-api.azurewebsites.net/v1/collections?zipcodeId=3000-24062&streetId=https%3A%2F%2Fdata.vlaanderen.be%2Fid%2Fstraatnaam-34637&houseNumber=73&fromDate=2021-09-15T00%3A00%3A00.000Z&untilDate=2021-12-14T23%3A59%3A59.999Z&page=2&size=20"
+}
