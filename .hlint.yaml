@@ -10,6 +10,7 @@
 - ignore: {name: "Parse error"}
 - ignore: {name: "Eta reduce"}
 - ignore: {name: "Use <$>"}
+- ignore: {name: "Redundant id"}
 
 
 # Specify additional command line arguments
@@ -33,6 +34,7 @@
     - MultiParamTypeClasses
     - MultiWayIf
     - NoImplicitPrelude
+    - OverloadedRecordDot
     - OverloadedStrings
     - RecordWildCards
     - ScopedTypeVariables

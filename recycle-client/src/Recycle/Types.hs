@@ -1,5 +1,3 @@
-{-# LANGUAGE DataKinds #-}
-
 module Recycle.Types
   ( module Recycle.Types.Geo,
     module Recycle.Types.Error,
@@ -38,11 +36,6 @@ import Data.SOP
 import Data.String (IsString)
 import Data.Text (Text)
 import Data.Time (Day, UTCTime)
-import Deriving.Aeson
-  ( CustomJSON (CustomJSON),
-    FieldLabelModifier,
-    StripPrefix,
-  )
 import GHC.Generics (Generic)
 import Recycle.Types.Error
 import Recycle.Types.Geo
@@ -52,6 +45,7 @@ import Web.HttpApiData
   ( FromHttpApiData,
     ToHttpApiData,
   )
+import Prelude hiding (id)
 
 -- | `X-Consumer` header value
 newtype Consumer = Consumer Text
@@ -70,16 +64,12 @@ newtype AccessToken = AccessToken Text
 -- | Result of authorization
 data AuthResult = AuthResult
   { -- | an access token
-    authResultAccessToken :: AccessToken,
+    accessToken :: AccessToken,
     -- | an expiry date
-    authResultExpiresAt :: UTCTime
+    expiresAt :: UTCTime
   }
   deriving stock (Generic, Show)
-  deriving
-    (FromJSON, ToJSON)
-    via CustomJSON
-          '[FieldLabelModifier (StripPrefix "authResult", PascalToCamel)]
-          AuthResult
+  deriving anyclass (FromJSON, ToJSON)
 
 newtype SearchQuery a = SearchQuery {unSearchQuery :: a}
   deriving newtype (FromHttpApiData, ToHttpApiData)
@@ -87,38 +77,30 @@ newtype SearchQuery a = SearchQuery {unSearchQuery :: a}
 deriving newtype instance IsString (SearchQuery Text)
 
 data Range a = Range
-  { rangeFrom :: a,
-    rangeTo :: a
+  { from :: a,
+    to :: a
   }
   deriving (Show)
 
 data Logo = Logo
-  { logoRegular :: Map Text Text,
-    logoReversed :: Map Text Text,
-    logoName :: Map Text Text,
-    logoId :: Text
+  { regular :: Map Text Text,
+    reversed :: Map Text Text,
+    name :: Map Text Text,
+    id :: Text
   }
   deriving stock (Generic, Show)
-  deriving
-    (FromJSON, ToJSON)
-    via CustomJSON
-          '[FieldLabelModifier (StripPrefix "logo", PascalToCamel)]
-          Logo
+  deriving anyclass (FromJSON, ToJSON)
 
 data FullLogo = FullLogo
-  { fullLogoRegular :: Map Text Text,
-    fullLogoReversed :: Map Text Text,
-    fullLogoName :: Map Text Text,
-    fullLogoId :: Text,
-    fullLogoCreatedAt :: UTCTime,
-    fullLogoUpdatedAt :: UTCTime
+  { regular :: Map Text Text,
+    reversed :: Map Text Text,
+    name :: Map Text Text,
+    id :: Text,
+    createdAt :: UTCTime,
+    updatedAt :: UTCTime
   }
   deriving stock (Generic, Show)
-  deriving
-    (FromJSON, ToJSON)
-    via CustomJSON
-          '[FieldLabelModifier (StripPrefix "fullLogo", PascalToCamel)]
-          FullLogo
+  deriving anyclass (FromJSON, ToJSON)
 
 newtype RGB = RGB Text deriving newtype (Show, FromJSON, ToJSON)
 
@@ -128,17 +110,17 @@ newtype CollectionEventId = CollectionEventId {unCollectionEventId :: Text}
   deriving newtype (Show, FromJSON, ToJSON)
 
 data CollectionEvent a = CollectionEvent
-  { collectionEventId :: CollectionEventId,
-    collectionEventTimestamp :: UTCTime,
-    collectionEventContent :: a
+  { id :: CollectionEventId,
+    timestamp :: UTCTime,
+    content :: a
   }
   deriving stock (Generic, Show)
 
 instance FromJSON (CollectionEvent (Union '[FullFraction, Event])) where
   parseJSON = Aeson.withObject "CollectionEvent" $ \o -> do
-    collectionEventId <- o .: "id"
-    collectionEventTimestamp <- o .: "timestamp"
-    collectionEventContent <-
+    id <- o .: "id"
+    timestamp <- o .: "timestamp"
+    content <-
       (o .: "type" :: Aeson.Parser Text) >>= \case
         "collection" -> Z . I <$> o .: "fraction"
         "event" -> S . Z . I <$> o .: "event"
@@ -148,8 +130,8 @@ instance FromJSON (CollectionEvent (Union '[FullFraction, Event])) where
 instance ToJSON (CollectionEvent (Union '[FullFraction, Event])) where
   toJSON CollectionEvent {..} =
     Aeson.object $
-      ["id" .= collectionEventId, "timestamp" .= collectionEventTimestamp]
-        <> case collectionEventContent of
+      ["id" .= id, "timestamp" .= timestamp]
+        <> case content of
           Z (I f) -> [("type", "collection"), "fraction" .= f]
           S (Z (I e)) -> [("type", "collection"), "event" .= e]
           S (S x) -> case x of {}
@@ -165,60 +147,49 @@ partitionCollectionEvents ces =
         ([CollectionEvent FullFraction], [CollectionEvent Event]) ->
         CollectionEvent (Union '[FullFraction, Event]) ->
         ([CollectionEvent FullFraction], [CollectionEvent Event])
-      go (fs, es) ce = case collectionEventContent ce of
-        Z (I f) -> (ce {collectionEventContent = f} : fs, es)
-        S (Z (I e)) -> (fs, ce {collectionEventContent = e} : es)
+      go (fs, es) ce = case ce.content of
+        Z (I f) -> (ce {content = f} : fs, es)
+        S (Z (I e)) -> (fs, ce {content = e} : es)
         S (S x) -> case x of {}
    in foldl' go ([], []) ces
 
 data Fraction = Fraction
-  { fractionId :: FractionId,
-    fractionName :: Map LangCode Text,
-    fractionLogo :: Logo,
-    fractionColor :: RGB,
-    fractionVariations :: [Aeson.Value]
+  { id :: FractionId,
+    name :: Map LangCode Text,
+    logo :: Logo,
+    color :: RGB,
+    variations :: [Aeson.Value]
   }
   deriving stock (Generic, Show)
-  deriving
-    (FromJSON, ToJSON)
-    via CustomJSON
-          '[FieldLabelModifier (StripPrefix "fraction", PascalToCamel)]
-          Fraction
+  deriving anyclass (FromJSON, ToJSON)
 
 data FullFraction = FullFraction
-  { fullFractionId :: FractionId,
-    fullFractionNational :: Bool,
-    fullFractionNationalRef :: Maybe Text,
-    fullFractionDatatankRef :: Maybe Text,
-    fullFractionName :: Map LangCode Text,
-    fullFractionLogo :: FullLogo,
-    fullFractionColor :: RGB,
-    fullFractionVariations :: (),
-    fullFractionOrganisation :: Text,
-    fullFractionCreatedAt :: UTCTime,
-    fullFractionUpdatedAt :: UTCTime
+  { id :: FractionId,
+    national :: Bool,
+    nationalRef :: Maybe Text,
+    datatankRef :: Maybe Text,
+    name :: Map LangCode Text,
+    logo :: FullLogo,
+    color :: RGB,
+    variations :: (),
+    organisation :: Text,
+    createdAt :: UTCTime,
+    updatedAt :: UTCTime
   }
   deriving stock (Generic, Show)
-  deriving
+  deriving anyclass
     (FromJSON, ToJSON)
-    via CustomJSON
-          '[FieldLabelModifier (StripPrefix "fullFraction", PascalToCamel)]
-          FullFraction
 
 -- * Event
 
 data Event = Event
-  { eventTitle :: Map LangCode Text,
-    eventIntroduction :: Map LangCode Text,
-    eventDescription :: Map LangCode Text,
-    eventExternalLink :: Map LangCode Text
+  { title :: Map LangCode Text,
+    introduction :: Map LangCode Text,
+    description :: Map LangCode Text,
+    externalLink :: Map LangCode Text
   }
   deriving stock (Generic, Show)
-  deriving
-    (FromJSON, ToJSON)
-    via CustomJSON
-          '[FieldLabelModifier (StripPrefix "event", PascalToCamel)]
-          Event
+  deriving anyclass (FromJSON, ToJSON)
 
 -- * DateRange
 

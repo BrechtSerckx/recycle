@@ -70,8 +70,8 @@ pGenerateIcsOpts = do
 
 pCollectionQuery :: Parser CollectionQuery
 pCollectionQuery = do
-  collectionQueryDateRange <- pDateRange
-  collectionQueryLangCode <-
+  dateRange <- pDateRange
+  langCode <-
     option (maybeReader $ readMaybe . map Char.toUpper) $
       long "language"
         <> short 'L'
@@ -79,30 +79,30 @@ pCollectionQuery = do
         <> value EN
         <> showDefault
         <> help "Preferred language for titles and descriptions"
-  collectionQueryFractionEncoding <- pFractionEncoding
-  collectionQueryZipcode <- pZipcodeId
-  collectionQueryStreet <- pStreetId
-  collectionQueryHouseNumber <- pHouseNumber
-  collectionQueryFilter <- do
-    filterEvents <-
+  fractionEncoding <- pFractionEncoding
+  zipcode <- pZipcodeId
+  street <- pStreetId
+  houseNumber <- pHouseNumber
+  filter' <- do
+    events <-
       not
         <$> switch (long "filter-events" <> help "Don't include events.")
-    filterFractions <-
+    fractions <-
       optional $
         switch (long "filter-fractions" <> help "Only include specified fractions.")
           *> many (strOption $ long "include-fraction" <> help "Include this fraction.")
     pure Filter {..}
-  pure CollectionQuery {..}
+  pure CollectionQuery {filter = filter', ..}
 
 pFractionEncoding :: Parser FractionEncoding
 pFractionEncoding =
   let pAsEvent = do
         eventRange <- do
-          rangeFrom <-
+          from <-
             option auto $
               mconcat
                 [long "event-start", help "Start time of collection event"]
-          rangeTo <-
+          to <-
             option auto $
               mconcat [long "event-end", help "End time of collection event"]
           pure Range {..}

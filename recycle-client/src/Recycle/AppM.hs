@@ -49,9 +49,7 @@ data Env = Env
 
 type InnerM = ReaderT Env IO
 
-newtype RecycleM a = RecycleM
-  { runRecycleM :: InnerM a
-  }
+newtype RecycleM a = RecycleM (InnerM a)
   deriving newtype (Functor, Applicative, Monad, MonadIO)
   deriving
     (HasReader "clientEnv" ClientEnv, HasSource "clientEnv" ClientEnv)
@@ -89,4 +87,4 @@ instance HasLog Env Message RecycleM where
   logActionL = fieldLens @"logAction" @Env
 
 runRecycle :: RecycleM a -> Env -> IO a
-runRecycle act env = runRecycleM act `runReaderT` env
+runRecycle (RecycleM act) env = act `runReaderT` env

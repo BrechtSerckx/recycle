@@ -20,14 +20,8 @@ import Data.Map.Strict (Map)
 import Data.String (IsString)
 import Data.Text (Text)
 import Data.Time (UTCTime)
-import Deriving.Aeson
-  ( CustomJSON (CustomJSON),
-    FieldLabelModifier,
-    StripPrefix,
-  )
 import GHC.Generics (Generic)
 import GHC.Natural (Natural)
-import Recycle.Utils (PascalToCamel)
 import Web.HttpApiData
   ( FromHttpApiData,
     ToHttpApiData,
@@ -39,19 +33,15 @@ newtype CityId = CityId Text
   deriving newtype (Show, IsString, ToHttpApiData, FromJSON, ToJSON)
 
 data City = City
-  { cityId :: CityId,
-    cityZipcodes :: [ZipcodeId],
-    cityName :: Text,
-    cityCreatedAt :: UTCTime,
-    cityUpdatedAt :: UTCTime,
-    cityNames :: Map Text Text
+  { id :: CityId,
+    zipcodes :: [ZipcodeId],
+    name :: Text,
+    createdAt :: UTCTime,
+    updatedAt :: UTCTime,
+    names :: Map Text Text
   }
   deriving stock (Generic, Show)
-  deriving
-    (FromJSON, ToJSON)
-    via CustomJSON
-          '[FieldLabelModifier (StripPrefix "city", PascalToCamel)]
-          City
+  deriving anyclass (FromJSON, ToJSON)
 
 -- * Zip code
 
@@ -59,35 +49,27 @@ newtype ZipcodeId = ZipcodeId {unZipcodeId :: Text}
   deriving newtype (Show, IsString, FromHttpApiData, ToHttpApiData, FromJSON, ToJSON)
 
 data Zipcode = Zipcode
-  { zipcodeCity :: CityId,
-    zipcodeCode :: Text,
-    zipcodeCreatedAt :: UTCTime,
-    zipcodeUpdatedAt :: UTCTime,
-    zipcodeId :: ZipcodeId,
-    zipcodeNames :: [Map Text Text]
+  { city :: CityId,
+    code :: Text,
+    createdAt :: UTCTime,
+    updatedAt :: UTCTime,
+    id :: ZipcodeId,
+    names :: [Map Text Text]
   }
   deriving stock (Show, Generic)
-  deriving
-    (FromJSON, ToJSON)
-    via CustomJSON
-          '[FieldLabelModifier (StripPrefix "zipcode", PascalToCamel)]
-          Zipcode
+  deriving anyclass (FromJSON, ToJSON)
 
 data FullZipcode = FullZipcode
-  { fullZipcodeCity :: City,
-    fullZipcodeCode :: Text,
-    fullZipcodeCreatedAt :: UTCTime,
-    fullZipcodeUpdatedAt :: UTCTime,
-    fullZipcodeId :: ZipcodeId,
-    fullZipcodeNames :: [Map Text Text],
-    fullZipcodeAvailable :: Bool
+  { city :: City,
+    code :: Text,
+    createdAt :: UTCTime,
+    updatedAt :: UTCTime,
+    id :: ZipcodeId,
+    names :: [Map Text Text],
+    available :: Bool
   }
   deriving stock (Generic, Show)
-  deriving
-    (FromJSON, ToJSON)
-    via CustomJSON
-          '[FieldLabelModifier (StripPrefix "fullZipcode", PascalToCamel)]
-          FullZipcode
+  deriving anyclass (FromJSON, ToJSON)
 
 -- * Street
 
@@ -95,21 +77,17 @@ newtype StreetId = StreetId {unStreetId :: Text}
   deriving newtype (Show, IsString, FromHttpApiData, ToHttpApiData, FromJSON, ToJSON)
 
 data Street = Street
-  { streetId :: StreetId,
-    streetCity :: [City],
-    streetCreatedAt :: UTCTime,
-    streetUpdatedAt :: UTCTime,
-    streetNames :: Map Text Text,
-    streetName :: Text,
-    streetDeleted :: Bool,
-    streetZipcode :: [Zipcode]
+  { id :: StreetId,
+    city :: [City],
+    createdAt :: UTCTime,
+    updatedAt :: UTCTime,
+    names :: Map Text Text,
+    name :: Text,
+    deleted :: Bool,
+    zipcode :: [Zipcode]
   }
   deriving stock (Show, Generic)
-  deriving
-    (FromJSON, ToJSON)
-    via CustomJSON
-          '[FieldLabelModifier (StripPrefix "street", PascalToCamel)]
-          Street
+  deriving anyclass (FromJSON, ToJSON)
 
 -- * House number
 

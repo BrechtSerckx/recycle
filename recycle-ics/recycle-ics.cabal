@@ -24,6 +24,7 @@ common common-default-extensions
     DeriveAnyClass
     DeriveGeneric
     DerivingVia
+    DuplicateRecordFields
     EmptyCase
     FlexibleContexts
     FlexibleInstances
@@ -34,6 +35,8 @@ common common-default-extensions
     MultiParamTypeClasses
     MultiWayIf
     NamedFieldPuns
+    NoFieldSelectors
+    OverloadedRecordDot
     OverloadedStrings
     PackageImports
     PatternSynonyms
@@ -41,6 +44,7 @@ common common-default-extensions
     ScopedTypeVariables
     StandaloneDeriving
     StrictData
+    TemplateHaskell
     TupleSections
     TypeApplications
     ViewPatterns

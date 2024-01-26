@@ -13,10 +13,10 @@ import Web.HttpApiData (FromHttpApiData (..))
 
 instance FromForm DateRange where
   fromForm f =
-    let lookupRange :: FromHttpApiData a => Either Text (Range a)
+    let lookupRange :: (FromHttpApiData a) => Either Text (Range a)
         lookupRange = do
-          rangeFrom <- parseUnique "f" f
-          rangeTo <- parseUnique "t" f
+          from <- parseUnique "f" f
+          to <- parseUnique "t" f
           pure Range {..}
      in lookupUnique "drt" f >>= \case
           "absolute" -> AbsoluteDateRange <$> lookupRange
