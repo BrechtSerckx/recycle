@@ -88,7 +88,7 @@ data Logo = Logo
     name :: Map Text Text,
     id :: Text
   }
-  deriving stock (Generic, Show)
+  deriving stock (Generic, Show, Eq)
   deriving anyclass (FromJSON, ToJSON)
 
 data FullLogo = FullLogo
@@ -160,7 +160,7 @@ data Fraction = Fraction
     color :: RGB,
     variations :: [Aeson.Value]
   }
-  deriving stock (Generic, Show)
+  deriving stock (Generic, Show, Eq)
   deriving anyclass (FromJSON, ToJSON)
 
 data FullFraction = FullFraction

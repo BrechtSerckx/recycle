@@ -5,6 +5,7 @@ module Main where
 
 import Data.Aeson
 import Data.Aeson.Extra.SingObject
+import qualified Data.Aeson.KeyMap as Aeson
 import qualified Data.ByteString.Lazy as BSL
 import Data.Either
 import Data.FileEmbed
@@ -13,6 +14,7 @@ import qualified Data.Map as Map
 import Data.Text (Text)
 import Data.Time (UTCTime (..))
 import qualified Data.Time as Time
+import qualified Data.Vector as V
 import Recycle.API
 import Recycle.Types
 import Recycle.Utils
@@ -260,4 +262,133 @@ spec = describe "API responses" $ do
   it "parses a normal `Fractions` response" $
     eitherDecode @(SingObject "items" [Fraction])
       (BSL.fromStrict $(embedFile "test/responses/fractions.json"))
-      `shouldSatisfy` isRight
+      `shouldBe` Right
+        ( SingObject
+            [ Fraction
+                { id = "5ed7a542a2124463cc8814e6",
+                  name = Map.fromList [(EN, "Gft"), (NL, "Gft"), (FR, "Gft"), (DE, "Gft")],
+                  logo =
+                    Logo
+                      { regular =
+                          Map.fromList
+                            [ ("1x", "5ef36735da06b2747894b353"),
+                              ("2x", "5ef36735da06b2a9b994b354"),
+                              ("3x", "5ef36735da06b273b894b355")
+                            ],
+                        reversed =
+                          Map.fromList
+                            [ ("1x", "5ef36735da06b276b594b356"),
+                              ("2x", "5ef36735da06b2002c94b357"),
+                              ("3x", "5ef36735da06b22deb94b358")
+                            ],
+                        name =
+                          Map.fromList
+                            [ ("de", "Bioabfall"),
+                              ("en", "Biodegradable waste"),
+                              ("fr", "D\233chets biod\233gradables"),
+                              ("nl", "Groente-, fruit-, tuinafval")
+                            ],
+                        id = "5d610b86162c063cc0400108"
+                      },
+                  color = RGB "#C7D33B",
+                  variations =
+                    [ Object
+                        ( Aeson.fromList
+                            [ ( "link",
+                                Object
+                                  ( Aeson.fromList
+                                      [ ( "external",
+                                          Object
+                                            ( Aeson.fromList
+                                                [ ("de", String "https://www.ecowerf.be/ophaling-aan-huis"),
+                                                  ("en", String "https://www.ecowerf.be/ophaling-aan-huis"),
+                                                  ("fr", String "https://www.ecowerf.be/ophaling-aan-huis"),
+                                                  ("nl", String "https://www.ecowerf.be/ophaling-aan-huis")
+                                                ]
+                                            )
+                                        ),
+                                        ("internal", Bool False)
+                                      ]
+                                  )
+                              ),
+                              ( "rules",
+                                Object
+                                  ( Aeson.fromList
+                                      [ ( "excludes",
+                                          Object
+                                            ( Aeson.fromList
+                                                [ ("de", String "\8226 Vloeistoffen (bv. soep, melk, koffie \8230)\n\8226 Sauzen, vet en oli\235n (uitgezonderd gerechten\nwaar een klein aandeel saus in zit)\n\8226 Theezakjes en koffiepads\n\8226 Behandeld hout (met verf, vernis of\nimpregneermiddel)\n\8226 Beenderen en dierlijk (slacht)afval\n\8226 Dierenkrengen\n\8226 Schelpen van mosselen, oesters \8230\n\8226 Kattenbakvulling en vogelkooizand\n\8226 Mest van grote huisdieren (katten, honden)\nof in grote hoeveelheden\n\8226 Stof uit de stofzuiger\n\8226 Wegwerpluier en ander hygi\235neafval\n\8226 Aarde en zand\n\8226 Kurk\n\8226 Asresten en houtskool\n\8226 Plastiek, glas, metalen\n\8226 Grof ongesnipperd snoeihout, dikke takken"),
+                                                  ("en", String "\8226 Vloeistoffen (bv. soep, melk, koffie \8230)\n\8226 Sauzen, vet en oli\235n (uitgezonderd gerechten\nwaar een klein aandeel saus in zit)\n\8226 Theezakjes en koffiepads\n\8226 Behandeld hout (met verf, vernis of\nimpregneermiddel)\n\8226 Beenderen en dierlijk (slacht)afval\n\8226 Dierenkrengen\n\8226 Schelpen van mosselen, oesters \8230\n\8226 Kattenbakvulling en vogelkooizand\n\8226 Mest van grote huisdieren (katten, honden)\nof in grote hoeveelheden\n\8226 Stof uit de stofzuiger\n\8226 Wegwerpluier en ander hygi\235neafval\n\8226 Aarde en zand\n\8226 Kurk\n\8226 Asresten en houtskool\n\8226 Plastiek, glas, metalen\n\8226 Grof ongesnipperd snoeihout, dikke takken"),
+                                                  ("fr", String "\8226 Vloeistoffen (bv. soep, melk, koffie \8230)\n\8226 Sauzen, vet en oli\235n (uitgezonderd gerechten\nwaar een klein aandeel saus in zit)\n\8226 Theezakjes en koffiepads\n\8226 Behandeld hout (met verf, vernis of\nimpregneermiddel)\n\8226 Beenderen en dierlijk (slacht)afval\n\8226 Dierenkrengen\n\8226 Schelpen van mosselen, oesters \8230\n\8226 Kattenbakvulling en vogelkooizand\n\8226 Mest van grote huisdieren (katten, honden)\nof in grote hoeveelheden\n\8226 Stof uit de stofzuiger\n\8226 Wegwerpluier en ander hygi\235neafval\n\8226 Aarde en zand\n\8226 Kurk\n\8226 Asresten en houtskool\n\8226 Plastiek, glas, metalen\n\8226 Grof ongesnipperd snoeihout, dikke takken"),
+                                                  ("nl", String "\8226 Vloeistoffen (bv. soep, melk, koffie \8230)\n\8226 Sauzen, vet en oli\235n (uitgezonderd gerechten\nwaar een klein aandeel saus in zit)\n\8226 Theezakjes en koffiepads\n\8226 Behandeld hout (met verf, vernis of\nimpregneermiddel)\n\8226 Beenderen en dierlijk (slacht)afval\n\8226 Dierenkrengen\n\8226 Schelpen van mosselen, oesters \8230\n\8226 Kattenbakvulling en vogelkooizand\n\8226 Mest van grote huisdieren (katten, honden)\nof in grote hoeveelheden\n\8226 Stof uit de stofzuiger\n\8226 Wegwerpluier en ander hygi\235neafval\n\8226 Aarde en zand\n\8226 Kurk\n\8226 Asresten en houtskool\n\8226 Plastiek, glas, metalen\n\8226 Grof ongesnipperd snoeihout, dikke takken")
+                                                ]
+                                            )
+                                        ),
+                                        ( "includes",
+                                          Object
+                                            ( Aeson.fromList
+                                                [ ("de", String "Organisch afval uit keuken en tuin:\n\8226 Schillen en resten van fruit, groenten en\naardappelen\n\8226 Dierlijk en plantaardig keukenafval en\netensresten\n\8226 Broodresten\n\8226 Koffiedik, papieren koffiefilter\n\8226 Papier van keukenrol\n\8226 Noten, pitten\n\8226 Vlees- en visresten, schaaldierresten\n(uitgezonderd mosselschelpen,\noesterschelpen \8230)\n\8226 Vaste zuivelproducten (kaasresten)\n\8226 Eieren, eierschalen\n\8226 Fijn tuin- en snoeiafval (bladeren, gras, onkruid,\nhaagscheersel, versnipperd snoeihout \8230)\n\8226 Kamer- en tuinplanten\n\8226 Schaafkrullen en zaagmeel van\nonbehandeld hout\n\8226 Mest van kleine huisdieren (cavia, konijn)"),
+                                                  ("en", String "Organisch afval uit keuken en tuin:\n\8226 Schillen en resten van fruit, groenten en\naardappelen\n\8226 Dierlijk en plantaardig keukenafval en\netensresten\n\8226 Broodresten\n\8226 Koffiedik, papieren koffiefilter\n\8226 Papier van keukenrol\n\8226 Noten, pitten\n\8226 Vlees- en visresten, schaaldierresten\n(uitgezonderd mosselschelpen,\noesterschelpen \8230)\n\8226 Vaste zuivelproducten (kaasresten)\n\8226 Eieren, eierschalen\n\8226 Fijn tuin- en snoeiafval (bladeren, gras, onkruid,\nhaagscheersel, versnipperd snoeihout \8230)\n\8226 Kamer- en tuinplanten\n\8226 Schaafkrullen en zaagmeel van\nonbehandeld hout\n\8226 Mest van kleine huisdieren (cavia, konijn)"),
+                                                  ("fr", String "Organisch afval uit keuken en tuin:\n\8226 Schillen en resten van fruit, groenten en\naardappelen\n\8226 Dierlijk en plantaardig keukenafval en\netensresten\n\8226 Broodresten\n\8226 Koffiedik, papieren koffiefilter\n\8226 Papier van keukenrol\n\8226 Noten, pitten\n\8226 Vlees- en visresten, schaaldierresten\n(uitgezonderd mosselschelpen,\noesterschelpen \8230)\n\8226 Vaste zuivelproducten (kaasresten)\n\8226 Eieren, eierschalen\n\8226 Fijn tuin- en snoeiafval (bladeren, gras, onkruid,\nhaagscheersel, versnipperd snoeihout \8230)\n\8226 Kamer- en tuinplanten\n\8226 Schaafkrullen en zaagmeel van\nonbehandeld hout\n\8226 Mest van kleine huisdieren (cavia, konijn)"),
+                                                  ("nl", String "Organisch afval uit keuken en tuin:\n\8226 Schillen en resten van fruit, groenten en\naardappelen\n\8226 Dierlijk en plantaardig keukenafval en\netensresten\n\8226 Broodresten\n\8226 Koffiedik, papieren koffiefilter\n\8226 Papier van keukenrol\n\8226 Noten, pitten\n\8226 Vlees- en visresten, schaaldierresten\n(uitgezonderd mosselschelpen,\noesterschelpen \8230)\n\8226 Vaste zuivelproducten (kaasresten)\n\8226 Eieren, eierschalen\n\8226 Fijn tuin- en snoeiafval (bladeren, gras, onkruid,\nhaagscheersel, versnipperd snoeihout \8230)\n\8226 Kamer- en tuinplanten\n\8226 Schaafkrullen en zaagmeel van\nonbehandeld hout\n\8226 Mest van kleine huisdieren (cavia, konijn)")
+                                                ]
+                                            )
+                                        ),
+                                        ( "information",
+                                          Object
+                                            ( Aeson.fromList
+                                                [ ("de", String "Plaats de groene container met een geldige sticker en met de handgreep naar de straatkant.\nContainers waarvan het deksel niet volledig gesloten is, worden niet geledigd."),
+                                                  ("en", String "Plaats de groene container met een geldige sticker en met de handgreep naar de straatkant.\nContainers waarvan het deksel niet volledig gesloten is, worden niet geledigd."),
+                                                  ("fr", String "Plaats de groene container met een geldige sticker en met de handgreep naar de straatkant.\nContainers waarvan het deksel niet volledig gesloten is, worden niet geledigd."),
+                                                  ("nl", String "Plaats de groene container met een geldige sticker en met de handgreep naar de straatkant.\nContainers waarvan het deksel niet volledig gesloten is, worden niet geledigd.")
+                                                ]
+                                            )
+                                        )
+                                      ]
+                                  )
+                              ),
+                              ( "subtitle",
+                                Object
+                                  ( Aeson.fromList
+                                      [ ("de", String "Gft"),
+                                        ("en", String "Gft"),
+                                        ("fr", String "Gft"),
+                                        ("nl", String "Gft")
+                                      ]
+                                  )
+                              ),
+                              ( "targets",
+                                Array $
+                                  V.fromList
+                                    [ String "5ed62945a212442a6588124c",
+                                      String "5eaac04536fe0b3bec4bf9be",
+                                      String "5ed6291aa212448465881249",
+                                      String "5ed753cb8e14e7a62cc5fe39",
+                                      String "5ed75ad48e14e76fe3c5febc",
+                                      String "5ed76d43a21244aa188814d7",
+                                      String "5ed76a518e14e7a3b7c5ff17",
+                                      String "5ed743e08e14e78c5fc5fdd9",
+                                      String "5ed771f38e14e78ab3c5ff20",
+                                      String "5ed7431ca2124470208813af",
+                                      String "5ed661ad8e14e78068c5fdcb",
+                                      String "5ed662e28e14e7143bc5fdcf",
+                                      String "5ed66976a2124426cc8813aa"
+                                    ]
+                              ),
+                              ( "title",
+                                Object
+                                  ( Aeson.fromList
+                                      [ ("de", String "Variante 1"),
+                                        ("en", String "Variant 1"),
+                                        ("fr", String "Variante 1"),
+                                        ("nl", String "Variant 1")
+                                      ]
+                                  )
+                              ),
+                              ("variations", Array V.empty)
+                            ]
+                        )
+                    ]
+                }
+            ]
+        )

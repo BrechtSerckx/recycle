@@ -176,3 +176,4 @@ test-suite recycle-client-test
     , hspec
     , text
     , time
+    , vector
