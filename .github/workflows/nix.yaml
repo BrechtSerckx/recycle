@@ -23,6 +23,10 @@ jobs:
       with:
         # used to provide bash in nix-shell
         nix_path: nixpkgs=channel:nixos-unstable
+        # add extra nix caches
+        extra_nix_config: |
+          trusted-public-keys = hydra.iohk.io:f/Ea+s+dFdN+3Y/G+FDgSq+a5NEWhJGzdjvKNGv0/EQ= cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY=
+          substituters = https://cache.iog.io https://cache.nixos.org/
 
     - name: Test Nix install
       run: nix-build --version
