@@ -99,22 +99,22 @@ data FullLogo = FullLogo
     createdAt :: UTCTime,
     updatedAt :: UTCTime
   }
-  deriving stock (Generic, Show)
+  deriving stock (Generic, Show, Eq)
   deriving anyclass (FromJSON, ToJSON)
 
-newtype RGB = RGB Text deriving newtype (Show, FromJSON, ToJSON)
+newtype RGB = RGB Text deriving newtype (Show, FromJSON, ToJSON, Eq)
 
 -- * Collection
 
 newtype CollectionEventId = CollectionEventId {unCollectionEventId :: Text}
-  deriving newtype (Show, FromJSON, ToJSON)
+  deriving newtype (Show, FromJSON, ToJSON, Eq, IsString)
 
 data CollectionEvent a = CollectionEvent
   { id :: CollectionEventId,
     timestamp :: UTCTime,
     content :: a
   }
-  deriving stock (Generic, Show)
+  deriving stock (Generic, Show, Eq)
 
 instance FromJSON (CollectionEvent (Union '[FullFraction, Event])) where
   parseJSON = Aeson.withObject "CollectionEvent" $ \o -> do
@@ -176,9 +176,8 @@ data FullFraction = FullFraction
     createdAt :: UTCTime,
     updatedAt :: UTCTime
   }
-  deriving stock (Generic, Show)
-  deriving anyclass
-    (FromJSON, ToJSON)
+  deriving stock (Generic, Show, Eq)
+  deriving anyclass (FromJSON, ToJSON)
 
 -- * Event
 
@@ -188,7 +187,7 @@ data Event = Event
     description :: Map LangCode Text,
     externalLink :: Map LangCode Text
   }
-  deriving stock (Generic, Show)
+  deriving stock (Generic, Show, Eq)
   deriving anyclass (FromJSON, ToJSON)
 
 -- * DateRange
