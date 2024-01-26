@@ -1,0 +1,10 @@
+flags: {}
+packages:
+  - './recycle-client/'
+  - './recycle-ics/'
+extra-deps:
+  - git: https://github.com/schoettl/iCalendar.git
+    commit: 49080ae04d47d2f300e4227e594368708b00adb8
+  - co-log-0.6.0.2
+  - mime-0.4.0.2
+resolver: lts-21.25

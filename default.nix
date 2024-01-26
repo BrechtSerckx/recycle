@@ -7,6 +7,7 @@ let
   # haskell projects
   haskellNix = import sources.haskellNix { };
   hsPkgs = nixpkgs.haskell-nix.project {
+    projectFileName = "stack.yaml";
     src = nixpkgs.haskell-nix.haskellLib.cleanGit {
       name = "recycle";
       src = ./.;
@@ -25,7 +26,6 @@ let
       packages.recycle-ics.components.exes.recycle-ics.dontStrip = false;
     }] else
       [ ]);
-    compiler-nix-name = "ghc902";
   };
 
   recycle-ics-ui = nixpkgs-node.callPackage ./recycle-ics-ui { };

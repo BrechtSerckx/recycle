@@ -62,50 +62,50 @@ library
   autogen-modules:
     Paths_recycle_ics
   build-depends:
-      base >= 4.12
+      base
     , recycle-client
 
       -- data
-    , bytestring >= 0.10
-    , case-insensitive >= 1.2
-    , containers >= 0.6
-    , data-default-class >= 0.1
-    , filepath >= 1.4
-    , generic-lens >= 2.2
-    , iCalendar >= 0.4
-    , sop-core >= 0.4
-    , text >= 1.2
-    , time >= 1.8
+    , bytestring
+    , case-insensitive
+    , containers
+    , data-default-class
+    , filepath
+    , generic-lens
+    , iCalendar
+    , sop-core
+    , text
+    , time
 
       -- effects
-    , capability >= 0.5
-    , mtl >= 2.2
-    , transformers >= 0.5
+    , capability
+    , mtl
+    , transformers
 
     -- serialisation
-    , aeson >= 1.4
-    , aeson-extra >= 0.5
-    , deriving-aeson >= 0.2
-    , http-api-data >= 0.4
+    , aeson
+    , aeson-extra
+    , deriving-aeson
+    , http-api-data
 
       -- network
-    , http-client >= 0.6
-    , http-client-tls >= 0.3
-    , http-media >= 0.8
-    , servant >= 0.16
-    , servant-client >= 0.16
-    , servant-server >= 0.16
-    , wai >= 3.2
-    , wai-app-static >= 3.1
-    , wai-extra >= 3.1
-    , warp >= 3.3
+    , http-client
+    , http-client-tls
+    , http-media
+    , servant
+    , servant-client
+    , servant-server
+    , wai
+    , wai-app-static
+    , wai-extra
+    , warp
 
       -- logging
-    , co-log >= 0.5
-    , co-log-core >= 0.3
+    , co-log
+    , co-log-core
 
       -- cli
-    , optparse-applicative >= 0.14
+    , optparse-applicative
 
 executable recycle-ics
   import: common-default-extensions
@@ -122,33 +122,33 @@ executable recycle-ics
     -rtsopts
     -with-rtsopts=-N
   build-depends:
-      base >=4.7 && <5
+      base
     , recycle-ics
     , recycle-client
     , recycle-client:recycle-client-optparse-applicative
 
       -- data
-    , bytestring >= 0.10
-    , filepath >= 1.4
-    , text >= 1.2
+    , bytestring
+    , filepath
+    , text
 
     -- serialisation
-    , aeson >= 1.4
+    , aeson
 
       -- network
-    , http-client >= 0.6
-    , http-client-tls >= 0.3
-    , servant-client >= 0.16
-    , wai-cors >= 0.2
-    , wai-extra >= 3.1
-    , warp >= 3.3
+    , http-client
+    , http-client-tls
+    , servant-client
+    , wai-cors
+    , wai-extra
+    , warp
 
       -- logging
-    , co-log >= 0.5
-    , co-log-core >= 0.3
+    , co-log
+    , co-log-core
 
       -- cli
-    , optparse-applicative >= 0.14
+    , optparse-applicative
 
     -- system
     , th-env
