@@ -3,20 +3,24 @@ let
   nixpkgs-node = import sources.nixpkgs-node {};
   nixpkgs-act = import sources.nixpkgs-act {};
 in hsPkgs.shellFor {
-  packages = ps: with ps; [ recycle-client recycle-ics ];
+  packages = ps: with ps; [
+    recycle-client
+    recycle-ics
+  ];
 
   withHoogle = true;
 
   tools = {
     cabal = { version = "latest"; };
+    haskell-language-server = "latest";
     ghcid = { version = "latest"; };
     hlint = { version = "latest"; };
-    # 2023-05-09: "latest" did not work
-    ormolu = { version = "0.5.1.0"; };
+    ormolu = { version = "latest"; };
+    cabal-fmt = "latest";
   };
 
   buildInputs = (with nixpkgs; [
-    # niv
+    niv
     (import sources.niv { }).niv
     # nix formatter
     nixfmt
@@ -43,4 +47,6 @@ in hsPkgs.shellFor {
   shellHook = ''
     export PATH="$PWD/recycle-ics-ui/node_modules/.bin/:$PATH"
   '';
+
+  exactDeps = true;
 }

@@ -17,15 +17,18 @@ build-type:          Simple
 extra-source-files:
   test/responses/*.json
 
-Tested-With: GHC ==9.0.2
+-- Not 9.4.8 as in LTS, but highest current haskell-ci supports.
+Tested-With: GHC ==9.4.5
 
 common common-default-extensions
   default-language:    Haskell2010
   default-extensions:
     ApplicativeDo
+    DataKinds
     DeriveAnyClass
     DeriveGeneric
     DerivingVia
+    DuplicateRecordFields
     EmptyCase
     FlexibleContexts
     FlexibleInstances
@@ -36,6 +39,8 @@ common common-default-extensions
     MultiParamTypeClasses
     MultiWayIf
     NamedFieldPuns
+    NoFieldSelectors
+    OverloadedRecordDot
     OverloadedStrings
     PackageImports
     PatternSynonyms
@@ -43,6 +48,7 @@ common common-default-extensions
     ScopedTypeVariables
     StandaloneDeriving
     StrictData
+    TemplateHaskell
     TupleSections
     TypeApplications
     ViewPatterns
@@ -66,37 +72,37 @@ library
   autogen-modules:
     Paths_recycle_client
   build-depends:
-      base >= 4.12
+      base
 
       -- data
-    , containers >= 0.6
-    , generic-lens >= 2.2
-    , sop-core >= 0.4
-    , text >= 1.2
-    , time >= 1.8
+    , containers
+    , generic-lens
+    , sop-core
+    , text
+    , time
 
       -- effects
-    , capability >= 0.5
-    , mtl >= 2.2
-    , transformers >= 0.5
+    , capability
+    , mtl
+    , transformers
 
     -- serialisation
-    , aeson >= 1.4
-    , aeson-extra >= 0.5
-    , deriving-aeson >= 0.2
-    , http-api-data >= 0.4
+    , aeson
+    , aeson-extra
+    , deriving-aeson
+    , http-api-data
 
       -- network
-    , http-client >= 0.6
-    , http-client-tls >= 0.3
-    , http-media >= 0.8
-    , servant >= 0.16
-    , servant-client >= 0.16
-    , wai >= 3.2
+    , http-client
+    , http-client-tls
+    , http-media
+    , servant
+    , servant-client
+    , wai
 
       -- logging
-    , co-log >= 0.5
-    , co-log-core >= 0.3
+    , co-log
+    , co-log-core
 
 library recycle-client-optparse-applicative
   import: common-default-extensions
@@ -107,11 +113,11 @@ library recycle-client-optparse-applicative
   exposed-modules:
     Recycle.Types.Optparse
   build-depends:
-      base >= 4.12
+      base
     , recycle-client
 
       -- cli
-    , optparse-applicative >= 0.14
+    , optparse-applicative
 
 executable recycle-client
   import: common-default-extensions
@@ -125,29 +131,29 @@ executable recycle-client
   other-modules:
     Opts
   build-depends:
-      base >=4.7 && <5
+      base
     , recycle-client
     , recycle-client:recycle-client-optparse-applicative
 
       -- data
-    , bytestring >= 0.10
-    , text >= 1.2
-    , time >= 1.8
+    , bytestring
+    , text
+    , time
 
     -- serialisation
-    , aeson >= 1.4
+    , aeson
 
       -- network
-    , http-client >= 0.6
-    , http-client-tls >= 0.3
-    , servant-client >= 0.16
+    , http-client
+    , http-client-tls
+    , servant-client
 
       -- logging
-    , co-log >= 0.5
-    , co-log-core >= 0.3
+    , co-log
+    , co-log-core
 
       -- cli
-    , optparse-applicative >= 0.14
+    , optparse-applicative
 
 test-suite recycle-client-test
   import: common-default-extensions
@@ -159,13 +165,13 @@ test-suite recycle-client-test
     -rtsopts
     -with-rtsopts=-N
   build-depends:
-      base >=4.7 && <5
+      base
     , recycle-client
-    , QuickCheck >= 2.13
-    , aeson >= 1.4
-    , aeson-extra >= 0.5
-    , bytestring >= 0.10
-    , containers >= 0.6
-    , file-embed >= 0.0
-    , hspec >= 2.7
-    , text >= 1.2
+    , QuickCheck
+    , aeson
+    , aeson-extra
+    , bytestring
+    , containers
+    , file-embed
+    , hspec
+    , text

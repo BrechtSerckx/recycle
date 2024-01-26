@@ -58,13 +58,13 @@ main = do
       fractions <- getFractions zipcode street houseNumber
       liftIO . BSL8.putStrLn $ Aeson.encode fractions
 
-calculateDateRange :: HasTime m => DateRange -> m (Range Day)
+calculateDateRange :: (HasTime m) => DateRange -> m (Range Day)
 calculateDateRange = \case
   AbsoluteDateRange r -> pure r
   RelativeDateRange relRange -> do
     today <- localDay . zonedTimeToLocalTime <$> getZonedTime
     pure
       Range
-        { rangeFrom = addDays (rangeFrom relRange) today,
-          rangeTo = addDays (rangeTo relRange) today
+        { from = addDays relRange.from today,
+          to = addDays relRange.to today
         }

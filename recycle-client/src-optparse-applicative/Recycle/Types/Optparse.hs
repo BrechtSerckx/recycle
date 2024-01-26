@@ -1,11 +1,11 @@
 module Recycle.Types.Optparse
-  ( 
-    ApiClientOpts (..),
-    pApiClientOpts
-  , pZipcodeId
-  , pHouseNumber, pStreetId
-  , pDateRange
-  , defaultConsumer
+  ( ApiClientOpts (..),
+    pApiClientOpts,
+    pZipcodeId,
+    pHouseNumber,
+    pStreetId,
+    pDateRange,
+    defaultConsumer,
   )
 where
 
@@ -16,27 +16,27 @@ pDateRange :: Parser DateRange
 pDateRange =
   AbsoluteDateRange
     <$> do
-      rangeFrom <-
+      from <-
         option auto $
           mconcat
             [long "absolute-from", help "Start date to fetch collections"]
-      rangeTo <-
+      to <-
         option auto $
           mconcat [long "absolute-to", help "End date to fetch collections"]
       pure Range {..}
-    <|> RelativeDateRange
-      <$> do
-        rangeFrom <-
-          option auto $
-            mconcat
-              [ long "relative-from",
-                help "Days before today to fetch collections"
-              ]
-        rangeTo <-
-          option auto $
-            mconcat
-              [long "relative-to", help "Days before today to fetch collections"]
-        pure Range {..}
+      <|> RelativeDateRange
+    <$> do
+      from <-
+        option auto $
+          mconcat
+            [ long "relative-from",
+              help "Days before today to fetch collections"
+            ]
+      to <-
+        option auto $
+          mconcat
+            [long "relative-to", help "Days before today to fetch collections"]
+      pure Range {..}
 
 data ApiClientOpts = ApiClientOpts
   { consumer :: Consumer,

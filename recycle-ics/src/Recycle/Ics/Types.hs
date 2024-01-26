@@ -7,9 +7,9 @@ module Recycle.Ics.Types
   )
 where
 
+import Data.Text (Text)
 import Data.Time
 import Recycle.Types
-import Data.Text (Text)
 import Recycle.Types.Orphans ()
 import Web.FormUrlEncoded
   ( FromForm (..),
@@ -27,21 +27,21 @@ instance FromForm FractionEncoding where
   fromForm f =
     lookupUnique "fe" f >>= \case
       "event" -> do
-        eventRange <- do
-          rangeFrom <- parseUnique "es" f
-          rangeTo <- parseUnique "ee" f
+        range <- do
+          from <- parseUnique "es" f
+          to <- parseUnique "ee" f
           pure Range {..}
         reminders <- do
-          remindersDaysBefore <- parseAll "rdb" f
-          remindersHoursBefore <- parseAll "rhb" f
-          remindersMinutesBefore <- parseAll "rmb" f
+          daysBefore <- parseAll "rdb" f
+          hoursBefore <- parseAll "rhb" f
+          minutesBefore <- parseAll "rmb" f
           pure $
             zipWith3
               Reminder
-              remindersDaysBefore
-              remindersHoursBefore
-              remindersMinutesBefore
-        pure $ EncodeFractionAsVEvent eventRange reminders
+              daysBefore
+              hoursBefore
+              minutesBefore
+        pure $ EncodeFractionAsVEvent range reminders
       "todo" -> EncodeFractionAsVTodo <$> fromForm f
       t -> Left $ "Must be one of [event,todo]: " <> t
 
@@ -70,21 +70,22 @@ instance FromForm TodoDue where
       t -> Left $ "Must be one of [date,datetime]: " <> t
 
 data CollectionQuery = CollectionQuery
-  { collectionQueryDateRange :: DateRange,
-    collectionQueryLangCode :: LangCode,
-    collectionQueryFractionEncoding :: FractionEncoding,
-    collectionQueryZipcode :: ZipcodeId,
-    collectionQueryStreet :: StreetId,
-    collectionQueryHouseNumber :: HouseNumber,
-    collectionQueryFilter :: Filter
+  { dateRange :: DateRange,
+    langCode :: LangCode,
+    fractionEncoding :: FractionEncoding,
+    zipcode :: ZipcodeId,
+    street :: StreetId,
+    houseNumber :: HouseNumber,
+    filter :: Filter
   }
 
 data Filter = Filter
   { -- | Include events
-    filterEvents :: Bool,
+    events :: Bool,
     -- | Include these fractions (or all of them)
-    filterFractions :: Maybe [FractionId]
+    fractions :: Maybe [FractionId]
   }
+  deriving stock (Show)
 
 instance FromForm Filter where
   fromForm f = do
@@ -92,7 +93,7 @@ instance FromForm Filter where
     fractions <- parseAll "fif" f
     pure
       Filter
-        { filterEvents = "e" `elem` fi,
-          filterFractions =
+        { events = "e" `elem` fi,
+          fractions =
             if "f" `elem` fi then Nothing else Just fractions
         }

@@ -1,8 +1,7 @@
 {-# LANGUAGE DataKinds #-}
 
 module Recycle.Utils
-  ( PascalToCamel,
-    LowerCase,
+  ( LowerCase,
     Union,
     headMay,
     module Data.SOP,
@@ -13,13 +12,6 @@ import qualified Data.Char as Char
 import Data.SOP
 import qualified Deriving.Aeson as Aeson
 import Servant.API (Union)
-
-data PascalToCamel
-
-instance Aeson.StringModifier PascalToCamel where
-  getStringModifier = \case
-    [] -> []
-    (x : xs) -> Char.toLower x : xs
 
 data LowerCase
 

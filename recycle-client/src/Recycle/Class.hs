@@ -30,7 +30,7 @@ import qualified Recycle.API as API
 import Recycle.Types
 import Servant.API
 
-class Monad m => HasRecycleAuth m where
+class (Monad m) => HasRecycleAuth m where
   getAuthResult :: m AuthResult
   setAuthResult :: AuthResult -> m ()
 
@@ -56,19 +56,19 @@ instance
   getAuthResult = do
     lift $ logDebug "Checking access token ..."
     mAuthResult <- lift $ get @"authResult"
-    now <- lift $ getCurrentTime
+    now <- lift getCurrentTime
     case mAuthResult of
-      Just authResult@AuthResult {..} | now <= authResultExpiresAt -> do
+      Just authResult@AuthResult {..} | now <= expiresAt -> do
         lift
           . logDebug @env
           $ "Existing access token is still valid, expires at: "
-            <> T.pack (show authResultExpiresAt)
+            <> T.pack (show expiresAt)
         pure authResult
       Just AuthResult {..} | otherwise -> do
         lift . logDebug @env $
           "Existing access token expired at: "
             <> T.pack
-              (show authResultExpiresAt)
+              (show expiresAt)
         refreshAccessToken
       Nothing -> do
         lift . logDebug @env $ "No access token present"
@@ -97,20 +97,20 @@ refreshAccessToken = do
   lift . logDebug @env $
     "Got new access token, valid till: "
       <> T.pack
-        (show authResultExpiresAt)
+        (show expiresAt)
   setAuthResult authResult
   pure authResult
 
-getAccessToken :: HasRecycleAuth m => m AccessToken
-getAccessToken = authResultAccessToken <$> getAuthResult
+getAccessToken :: (HasRecycleAuth m) => m AccessToken
+getAccessToken = (.accessToken) <$> getAuthResult
 
 setAccessToken :: (HasRecycleAuth m, HasTime m) => AccessToken -> m ()
-setAccessToken authResultAccessToken = do
+setAccessToken accessToken = do
   currentTime <- getCurrentTime
-  let authResultExpiresAt = nominalDay `addUTCTime` currentTime
+  let expiresAt = nominalDay `addUTCTime` currentTime
   setAuthResult AuthResult {..}
 
-class Monad m => HasRecycleClient m where
+class (Monad m) => HasRecycleClient m where
   searchZipcodes :: Maybe (SearchQuery Natural) -> m [FullZipcode]
   searchStreets :: Maybe ZipcodeId -> Maybe (SearchQuery T.Text) -> m [Street]
   getCollections ::
@@ -146,7 +146,7 @@ instance
     lift
       . logInfo
       $ "Searching zipcodes: "
-        <> maybe "<all>" (T.pack . show . unSearchQuery) mQ
+        <> maybe "<all>" (T.pack . show . (.unSearchQuery)) mQ
     SingObject zipcodes <- runRecycleOp $
       \consumer accessToken -> API.searchZipcodes consumer accessToken mQ
     pure zipcodes
@@ -154,9 +154,9 @@ instance
     lift
       . logInfo
       $ "Searching streets in zipcode "
-        <> maybe "<all>" unZipcodeId mZipcode
+        <> maybe "<all>" (.unZipcodeId) mZipcode
         <> ": "
-        <> maybe "<all>" unSearchQuery mQ
+        <> maybe "<all>" (.unSearchQuery) mQ
     SingObject streets <- runRecycleOp $ \consumer accessToken ->
       API.searchStreets consumer accessToken mZipcode mQ
     pure streets
@@ -164,15 +164,15 @@ instance
     lift
       . logInfo
       $ "Fetching collections for "
-        <> unZipcodeId zipcode
+        <> zipcode.unZipcodeId
         <> ", "
-        <> unStreetId street
+        <> street.unStreetId
         <> ", "
-        <> T.pack (show $ unHouseNumber houseNumber)
+        <> T.pack (show houseNumber.unHouseNumber)
         <> " from "
-        <> T.pack (show rangeFrom)
+        <> T.pack (show from)
         <> " to "
-        <> T.pack (show rangeTo)
+        <> T.pack (show to)
     SingObject collections <- runRecycleOp $ \consumer accessToken ->
       API.getCollections
         consumer
@@ -180,18 +180,18 @@ instance
         zipcode
         street
         houseNumber
-        rangeFrom
-        rangeTo
+        from
+        to
     pure collections
   getFractions zipcode street houseNumber = do
     lift
       . logInfo
       $ "Fetching fractions for "
-        <> unZipcodeId zipcode
+        <> zipcode.unZipcodeId
         <> ", "
-        <> unStreetId street
+        <> street.unStreetId
         <> ", "
-        <> T.pack (show $ unHouseNumber houseNumber)
+        <> T.pack (show houseNumber.unHouseNumber)
     SingObject fractions <- runRecycleOp $ \consumer accessToken ->
       API.getFractions consumer accessToken zipcode street houseNumber
     pure fractions
@@ -210,10 +210,10 @@ runRecycleOp ::
   RecycleClientT m a
 runRecycleOp op = do
   consumer <- lift $ ask @"consumer"
-  accessToken <- lift $ getAccessToken
+  accessToken <- lift getAccessToken
   lift $ API.liftApiError =<< op consumer accessToken
 
-class Monad m => HasTime m where
+class (Monad m) => HasTime m where
   getCurrentTime :: m UTCTime
   getZonedTime :: m ZonedTime
 

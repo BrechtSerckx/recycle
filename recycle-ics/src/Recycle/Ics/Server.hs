@@ -70,9 +70,9 @@ recycleIcsServer dataDir =
       HouseNumber ->
       Filter ->
       m (Union '[WithStatus 200 BSL8.ByteString])
-    generateCollection collectionQueryDateRange collectionQueryLangCode collectionQueryFractionEncoding collectionQueryZipcode collectionQueryStreet collectionQueryHouseNumber collectionQueryFilter =
+    generateCollection dateRange langCode fractionEncoding zipcode street houseNumber filter' =
       do
-        let collectionQuery = CollectionQuery {..}
+        let collectionQuery = CollectionQuery {filter = filter', ..}
         collections <- runCollectionQuery collectionQuery
         pure . Z . I . WithStatus @200 $ printVCalendar collections
     serveWww =
@@ -93,30 +93,18 @@ recycleIcsApp wwwDir env =
 
 runCollectionQuery ::
   (HasRecycleClient m, HasTime m) => CollectionQuery -> m VCalendar
-runCollectionQuery CollectionQuery {..} = do
-  range <- calculateDateRange collectionQueryDateRange
-  collections <-
-    Recycle.getCollections
-      collectionQueryZipcode
-      collectionQueryStreet
-      collectionQueryHouseNumber
-      range
-  -- for_ collections $ liftIO . print
+runCollectionQuery CollectionQuery {filter = filter', ..} = do
+  range <- calculateDateRange dateRange
+  collections <- Recycle.getCollections zipcode street houseNumber range
+  pure $ mkVCalendar langCode fractionEncoding filter' collections
 
-  pure $
-    mkVCalendar
-      collectionQueryLangCode
-      collectionQueryFractionEncoding
-      collectionQueryFilter
-      collections
-
-calculateDateRange :: HasTime m => DateRange -> m (Range Day)
+calculateDateRange :: (HasTime m) => DateRange -> m (Range Day)
 calculateDateRange = \case
   AbsoluteDateRange r -> pure r
   RelativeDateRange relRange -> do
     today <- localDay . zonedTimeToLocalTime <$> getZonedTime
     pure
       Range
-        { rangeFrom = addDays (rangeFrom relRange) today,
-          rangeTo = addDays (rangeTo relRange) today
+        { from = addDays relRange.from today,
+          to = addDays relRange.to today
         }
