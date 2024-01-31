@@ -16,12 +16,12 @@ import Data.Aeson
   ( FromJSON,
     ToJSON,
   )
-import Data.Map.Strict (Map)
 import Data.String (IsString)
 import Data.Text (Text)
 import Data.Time (UTCTime)
 import GHC.Generics (Generic)
 import GHC.Natural (Natural)
+import Recycle.Utils (Translated)
 import Web.HttpApiData
   ( FromHttpApiData,
     ToHttpApiData,
@@ -38,7 +38,7 @@ data City = City
     name :: Text,
     createdAt :: UTCTime,
     updatedAt :: UTCTime,
-    names :: Map Text Text
+    names :: Translated Text
   }
   deriving stock (Generic, Show, Eq)
   deriving anyclass (FromJSON, ToJSON)
@@ -54,7 +54,7 @@ data Zipcode = Zipcode
     createdAt :: UTCTime,
     updatedAt :: UTCTime,
     id :: ZipcodeId,
-    names :: [Map Text Text]
+    names :: [Translated Text]
   }
   deriving stock (Show, Generic, Eq)
   deriving anyclass (FromJSON, ToJSON)
@@ -65,7 +65,7 @@ data FullZipcode = FullZipcode
     createdAt :: UTCTime,
     updatedAt :: UTCTime,
     id :: ZipcodeId,
-    names :: [Map Text Text],
+    names :: [Translated Text],
     available :: Bool
   }
   deriving stock (Generic, Show, Eq)
@@ -81,7 +81,7 @@ data Street = Street
     city :: [City],
     createdAt :: UTCTime,
     updatedAt :: UTCTime,
-    names :: Map Text Text,
+    names :: Translated Text,
     name :: Text,
     deleted :: Bool,
     zipcode :: [Zipcode]

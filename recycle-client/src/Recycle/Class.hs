@@ -118,7 +118,7 @@ class (Monad m) => HasRecycleClient m where
     StreetId ->
     HouseNumber ->
     Range Day ->
-    m [CollectionEvent (Union '[FullFraction, Event])]
+    m [CollectionEvent]
   getFractions ::
     ZipcodeId ->
     StreetId ->

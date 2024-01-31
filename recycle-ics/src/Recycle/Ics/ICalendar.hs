@@ -11,14 +11,12 @@ module Recycle.Ics.ICalendar
   )
 where
 
-import Control.Applicative
 import Data.Bifunctor
 import qualified Data.ByteString.Lazy as BSL
 import qualified Data.CaseInsensitive as CI
 import Data.Default.Class (def)
 import Data.Function
 import qualified Data.Map as Map
-import Data.Maybe (fromMaybe)
 import qualified Data.Set as Set
 import Data.Text (Text)
 import qualified Data.Text.Lazy as TL
@@ -30,18 +28,18 @@ import Recycle.Types.Orphans ()
 import Text.ICalendar.Printer
 import Text.ICalendar.Types hiding (Range)
 
-getByLangCode :: LangCode -> Map.Map LangCode a -> (LangCode, a)
-getByLangCode lc m =
-  fromMaybe (error "no translations") $
-    ((lc,) <$> Map.lookup lc m)
-      <|> ((EN,) <$> Map.lookup EN m)
-      <|> headMay (Map.toList m)
+getByLangCode :: LangCode -> Translated a -> a
+getByLangCode lc m = case lc of
+  NL -> m.nl
+  FR -> m.fr
+  DE -> m.de
+  EN -> m.en
 
 mkVCalendar ::
   LangCode ->
   FractionEncoding ->
   Filter ->
-  [CollectionEvent (Union '[FullFraction, Event])] ->
+  [CollectionEvent] ->
   VCalendar
 mkVCalendar langCode fractionEncoding filter' ces =
   let (collections, events) = partitionCollectionEvents ces
@@ -54,7 +52,7 @@ mkVCalendar langCode fractionEncoding filter' ces =
                     collections
                     ( \fractions ->
                         filter
-                          ((`elem` fractions) . (.content.id))
+                          ((`elem` fractions) . (.fraction.id))
                           collections
                     )
                     filter'.fractions
@@ -70,48 +68,52 @@ mkVCalendar langCode fractionEncoding filter' ces =
                 collections
         }
   where
-    mkAssoc ::
-      CollectionEvent a ->
-      ((TL.Text, Maybe (Either Date DateTime)), CollectionEvent a)
-    mkAssoc ce =
-      ((TL.fromStrict ce.id.unCollectionEventId, Nothing), ce)
+    mkAssoc a =
+      ((TL.fromStrict a.id.unCollectionEventId, Nothing), a)
     mkMapWith f = Map.fromList . map (second f . mkAssoc)
 
 printVCalendar :: VCalendar -> BSL.ByteString
 printVCalendar = printICalendar def
 
+mkFractionCollectionSummary :: LangCode -> FractionCollection -> Summary
+mkFractionCollectionSummary langCode fractionCollection =
+  getByLangCode langCode fractionCollection.fraction.name & \d ->
+    Summary
+      { summaryValue = TL.fromStrict d,
+        summaryAltRep = Nothing,
+        summaryLanguage = Just . Language . CI.mk . TL.pack $ show langCode,
+        summaryOther = def
+      }
+
+mkFractionCollectionDescription :: LangCode -> FractionCollection -> Description
+mkFractionCollectionDescription langCode fractionCollection =
+  getByLangCode langCode fractionCollection.fraction.name & \d ->
+    Description
+      { descriptionValue = TL.fromStrict d,
+        descriptionAltRep = Nothing,
+        descriptionLanguage = Just . Language . CI.mk . TL.pack $ show langCode,
+        descriptionOther = def
+      }
+
 collectionToVEvent ::
   LangCode ->
   Range TimeOfDay ->
   [Reminder] ->
-  CollectionEvent FullFraction ->
+  FractionCollection ->
   VEvent
-collectionToVEvent langCode range reminders collectionEvent =
-  let description =
-        getByLangCode langCode collectionEvent.content.name & \(lc, d) ->
-          Description
-            { descriptionValue = TL.fromStrict d,
-              descriptionAltRep = Nothing,
-              descriptionLanguage = Just . Language . CI.mk . TL.pack $ show lc,
-              descriptionOther = def
-            }
-   in (emptyVEvent collectionEvent.id.unCollectionEventId collectionEvent.timestamp)
+collectionToVEvent langCode range reminders fractionCollection =
+  let description = mkFractionCollectionDescription langCode fractionCollection
+   in (emptyVEvent fractionCollection.id.unCollectionEventId fractionCollection.timestamp)
         { veDescription = Just description,
           veSummary =
             Just $
-              getByLangCode langCode collectionEvent.content.name & \(lc, d) ->
-                Summary
-                  { summaryValue = TL.fromStrict d,
-                    summaryAltRep = Nothing,
-                    summaryLanguage = Just . Language . CI.mk . TL.pack $ show lc,
-                    summaryOther = def
-                  },
+              mkFractionCollectionSummary langCode fractionCollection,
           veDTStart =
             Just
               DTStartDateTime
                 { dtStartDateTimeValue =
                     UTCDateTime
-                      collectionEvent.timestamp
+                      fractionCollection.timestamp
                         { utctDayTime = timeOfDayToTime range.from
                         },
                   dtStartOther = def
@@ -122,41 +124,27 @@ collectionToVEvent langCode range reminders collectionEvent =
                 DTEndDateTime
                   { dtEndDateTimeValue =
                       UTCDateTime
-                        collectionEvent.timestamp
+                        fractionCollection.timestamp
                           { utctDayTime = timeOfDayToTime range.to
                           },
                     dtEndOther = def
                   },
           veAlarms =
             Set.fromList $
-              reminderToVAlarm description collectionEvent.timestamp
+              reminderToVAlarm description fractionCollection.timestamp
                 <$> reminders
         }
 
 collectionToVTodo ::
-  LangCode -> TodoDue -> CollectionEvent FullFraction -> VTodo
-collectionToVTodo langCode due collectionEvent =
-  ( emptyVTodo collectionEvent.id.unCollectionEventId collectionEvent.timestamp
+  LangCode -> TodoDue -> FractionCollection -> VTodo
+collectionToVTodo langCode due fractionCollection =
+  ( emptyVTodo fractionCollection.id.unCollectionEventId fractionCollection.timestamp
   )
     { vtDescription =
-        Just $
-          getByLangCode langCode collectionEvent.content.name & \(lc, d) ->
-            Description
-              { descriptionValue = TL.fromStrict d,
-                descriptionAltRep = Nothing,
-                descriptionLanguage = Just . Language . CI.mk . TL.pack $ show lc,
-                descriptionOther = def
-              },
+        Just $ mkFractionCollectionDescription langCode fractionCollection,
       vtSummary =
-        Just $
-          getByLangCode langCode collectionEvent.content.name & \(lc, d) ->
-            Summary
-              { summaryValue = TL.fromStrict d,
-                summaryAltRep = Nothing,
-                summaryLanguage = Just . Language . CI.mk . TL.pack $ show lc,
-                summaryOther = def
-              },
-      vtDueDuration = Just . Left $ makeDue collectionEvent.timestamp due
+        Just $ mkFractionCollectionSummary langCode fractionCollection,
+      vtDueDuration = Just . Left $ makeDue fractionCollection.timestamp due
     }
 
 makeDue :: UTCTime -> TodoDue -> Due
@@ -207,26 +195,26 @@ reminderToVAlarm vaDescription _ts Reminder {..} =
       vaActionOther = def
     }
 
-eventToVEvent :: LangCode -> CollectionEvent Event -> VEvent
-eventToVEvent langCode collectionEvent =
-  ( emptyVEvent collectionEvent.id.unCollectionEventId collectionEvent.timestamp
+eventToVEvent :: LangCode -> Event -> VEvent
+eventToVEvent langCode event =
+  ( emptyVEvent event.id.unCollectionEventId event.timestamp
   )
     { veDescription =
         Just $
-          getByLangCode langCode collectionEvent.content.description & \(lc, d) ->
+          getByLangCode langCode event.event.description & \d ->
             Description
               { descriptionValue = TL.fromStrict d,
                 descriptionAltRep = Nothing,
-                descriptionLanguage = Just . Language . CI.mk . TL.pack $ show lc,
+                descriptionLanguage = Just . Language . CI.mk . TL.pack $ show langCode,
                 descriptionOther = def
               },
       veSummary =
         Just $
-          getByLangCode langCode collectionEvent.content.title & \(lc, d) ->
+          getByLangCode langCode event.event.title & \d ->
             Summary
               { summaryValue = TL.fromStrict d,
                 summaryAltRep = Nothing,
-                summaryLanguage = Just . Language . CI.mk . TL.pack $ show lc,
+                summaryLanguage = Just . Language . CI.mk . TL.pack $ show langCode,
                 summaryOther = def
               },
       veDTStart =
@@ -234,7 +222,7 @@ eventToVEvent langCode collectionEvent =
           DTStartDateTime
             { dtStartDateTimeValue =
                 UTCDateTime
-                  collectionEvent.timestamp,
+                  event.timestamp,
               dtStartOther = def
             }
     }

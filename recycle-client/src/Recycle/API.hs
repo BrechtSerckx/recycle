@@ -63,7 +63,7 @@ type RecycleAPI =
              :> QueryParam' '[Required] "houseNumber" HouseNumber
              :> QueryParam' '[Required] "fromDate" Day
              :> QueryParam' '[Required] "untilDate" Day
-             :> UVerb 'GET '[JSON] '[WithStatus 200 (SingObject "items" [CollectionEvent (Union '[FullFraction, Event])]), WithStatus 401 ApiError]
+             :> UVerb 'GET '[JSON] '[WithStatus 200 (SingObject "items" [CollectionEvent]), WithStatus 401 ApiError]
            :<|> "fractions"
              :> Header' '[Required] "X-Consumer" Consumer
              :> Header' '[Required] "Authorization" AccessToken
@@ -74,12 +74,12 @@ type RecycleAPI =
        )
 
 getAccessToken ::
-  HasServantClient m =>
+  (HasServantClient m) =>
   Consumer ->
   AuthSecret ->
   m (NS I '[WithStatus 200 AuthResult, WithStatus 401 ApiError])
 searchZipcodes ::
-  HasServantClient m =>
+  (HasServantClient m) =>
   Consumer ->
   AccessToken ->
   Maybe (SearchQuery Natural) ->
@@ -93,7 +93,7 @@ searchZipcodes ::
          ]
     )
 searchStreets ::
-  HasServantClient m =>
+  (HasServantClient m) =>
   Consumer ->
   AccessToken ->
   Maybe ZipcodeId ->
@@ -108,7 +108,7 @@ searchStreets ::
          ]
     )
 getCollections ::
-  HasServantClient m =>
+  (HasServantClient m) =>
   Consumer ->
   AccessToken ->
   ZipcodeId ->
@@ -123,15 +123,13 @@ getCollections ::
              200
              ( SingObject
                  "items"
-                 [ CollectionEvent
-                     (Union '[FullFraction, Event])
-                 ]
+                 [CollectionEvent]
              ),
            WithStatus 401 ApiError
          ]
     )
 getFractions ::
-  HasServantClient m =>
+  (HasServantClient m) =>
   Consumer ->
   AccessToken ->
   ZipcodeId ->
@@ -148,7 +146,7 @@ getFractions ::
 getAccessToken :<|> searchZipcodes :<|> searchStreets :<|> getCollections :<|> getFractions =
   hoistClient (Proxy @RecycleAPI) runClient (client $ Proxy @RecycleAPI)
 
-class Monad m => HasServantClient m where
+class (Monad m) => HasServantClient m where
   runClient :: ClientM a -> m a
 
 newtype ServantClientT m a = ServantClientT {runServantClientT :: m a}
@@ -173,7 +171,7 @@ instance
       Right a -> pure a
 
 liftApiError ::
-  HasThrow "ApiError" ApiError m =>
+  (HasThrow "ApiError" ApiError m) =>
   NS I '[WithStatus 200 a, WithStatus err ApiError] ->
   m a
 liftApiError = \case

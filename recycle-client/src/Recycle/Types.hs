@@ -17,22 +17,22 @@ module Recycle.Types
     FractionId (..),
     Fraction (..),
     FullFraction (..),
+    FractionCollection (..),
     Event (..),
+    InnerEvent (..),
     partitionCollectionEvents,
     DateRange (..),
   )
 where
 
+import Control.Applicative ((<|>))
 import Data.Aeson
   ( FromJSON (..),
     ToJSON (..),
-    (.:),
-    (.=),
   )
 import qualified Data.Aeson.Types as Aeson
 import Data.Foldable
 import Data.Map.Strict (Map)
-import Data.SOP
 import Data.String (IsString)
 import Data.Text (Text)
 import Data.Time (Day, UTCTime)
@@ -85,7 +85,7 @@ data Range a = Range
 data Logo = Logo
   { regular :: Map Text Text,
     reversed :: Map Text Text,
-    name :: Map Text Text,
+    name :: Translated Text,
     id :: Text
   }
   deriving stock (Generic, Show, Eq)
@@ -94,7 +94,7 @@ data Logo = Logo
 data FullLogo = FullLogo
   { regular :: Map Text Text,
     reversed :: Map Text Text,
-    name :: Map Text Text,
+    name :: Translated Text,
     id :: Text,
     createdAt :: UTCTime,
     updatedAt :: UTCTime
@@ -109,53 +109,35 @@ newtype RGB = RGB Text deriving newtype (Show, FromJSON, ToJSON, Eq)
 newtype CollectionEventId = CollectionEventId {unCollectionEventId :: Text}
   deriving newtype (Show, FromJSON, ToJSON, Eq, IsString)
 
-data CollectionEvent a = CollectionEvent
-  { id :: CollectionEventId,
-    timestamp :: UTCTime,
-    content :: a
-  }
-  deriving stock (Generic, Show, Eq)
+data CollectionEvent
+  = CEFractionCollection FractionCollection
+  | CEEvent Event
+  deriving stock (Show, Eq)
 
-instance FromJSON (CollectionEvent (Union '[FullFraction, Event])) where
-  parseJSON = Aeson.withObject "CollectionEvent" $ \o -> do
-    id <- o .: "id"
-    timestamp <- o .: "timestamp"
-    content <-
-      (o .: "type" :: Aeson.Parser Text) >>= \case
-        "collection" -> Z . I <$> o .: "fraction"
-        "event" -> S . Z . I <$> o .: "event"
-        _ -> fail "unknown type"
-    pure CollectionEvent {..}
+instance FromJSON CollectionEvent where
+  parseJSON v =
+    (CEFractionCollection <$> parseJSON v)
+      <|> (CEEvent <$> parseJSON v)
 
-instance ToJSON (CollectionEvent (Union '[FullFraction, Event])) where
-  toJSON CollectionEvent {..} =
-    Aeson.object $
-      ["id" .= id, "timestamp" .= timestamp]
-        <> case content of
-          Z (I f) -> [("type", "collection"), "fraction" .= f]
-          S (Z (I e)) -> [("type", "collection"), "event" .= e]
-          S (S x) -> case x of {}
+instance ToJSON CollectionEvent where
+  toJSON = \case
+    CEFractionCollection fc -> Aeson.toJSON fc
+    CEEvent e -> Aeson.toJSON e
 
 newtype FractionId = FractionId Text
   deriving newtype (Show, Eq, IsString, FromJSON, ToJSON, FromHttpApiData)
 
 partitionCollectionEvents ::
-  [CollectionEvent (Union '[FullFraction, Event])] ->
-  ([CollectionEvent FullFraction], [CollectionEvent Event])
-partitionCollectionEvents ces =
-  let go ::
-        ([CollectionEvent FullFraction], [CollectionEvent Event]) ->
-        CollectionEvent (Union '[FullFraction, Event]) ->
-        ([CollectionEvent FullFraction], [CollectionEvent Event])
-      go (fs, es) ce = case ce.content of
-        Z (I f) -> (ce {content = f} : fs, es)
-        S (Z (I e)) -> (fs, ce {content = e} : es)
-        S (S x) -> case x of {}
-   in foldl' go ([], []) ces
+  [CollectionEvent] ->
+  ([FractionCollection], [Event])
+partitionCollectionEvents =
+  flip foldl' ([], []) $ \(fcs, es) -> \case
+    CEFractionCollection fc -> (fc : fcs, es)
+    CEEvent e -> (fcs, e : es)
 
 data Fraction = Fraction
   { id :: FractionId,
-    name :: Map LangCode Text,
+    name :: Translated Text,
     logo :: Logo,
     color :: RGB,
     variations :: [Aeson.Value]
@@ -168,7 +150,7 @@ data FullFraction = FullFraction
     national :: Bool,
     nationalRef :: Maybe Text,
     datatankRef :: Maybe Text,
-    name :: Map LangCode Text,
+    name :: Translated Text,
     logo :: FullLogo,
     color :: RGB,
     variations :: (),
@@ -179,13 +161,29 @@ data FullFraction = FullFraction
   deriving stock (Generic, Show, Eq)
   deriving anyclass (FromJSON, ToJSON)
 
+data FractionCollection = FractionCollection
+  { id :: CollectionEventId,
+    timestamp :: UTCTime,
+    fraction :: FullFraction
+  }
+  deriving stock (Generic, Show, Eq)
+  deriving anyclass (FromJSON, ToJSON)
+
 -- * Event
 
 data Event = Event
-  { title :: Map LangCode Text,
-    introduction :: Map LangCode Text,
-    description :: Map LangCode Text,
-    externalLink :: Map LangCode Text
+  { id :: CollectionEventId,
+    timestamp :: UTCTime,
+    event :: InnerEvent
+  }
+  deriving stock (Generic, Show, Eq)
+  deriving anyclass (FromJSON, ToJSON)
+
+data InnerEvent = InnerEvent
+  { title :: Translated Text,
+    introduction :: Translated Text,
+    description :: Translated Text,
+    externalLink :: Translated Text
   }
   deriving stock (Generic, Show, Eq)
   deriving anyclass (FromJSON, ToJSON)
