@@ -86,7 +86,7 @@ data Range a = Range
 data Logo = Logo
   { regular :: Map Text Text,
     reversed :: Map Text Text,
-    name :: Map Text Text,
+    name :: Translated Text,
     id :: Text
   }
   deriving stock (Generic, Show, Eq)
@@ -95,7 +95,7 @@ data Logo = Logo
 data FullLogo = FullLogo
   { regular :: Map Text Text,
     reversed :: Map Text Text,
-    name :: Map Text Text,
+    name :: Translated Text,
     id :: Text,
     createdAt :: UTCTime,
     updatedAt :: UTCTime
@@ -146,7 +146,7 @@ partitionCollectionEvents ces =
 
 data Fraction = Fraction
   { id :: FractionId,
-    name :: Map LangCode Text,
+    name :: Translated Text,
     logo :: Logo,
     color :: RGB,
     variations :: [Aeson.Value]
@@ -159,7 +159,7 @@ data FullFraction = FullFraction
     national :: Bool,
     nationalRef :: Maybe Text,
     datatankRef :: Maybe Text,
-    name :: Map LangCode Text,
+    name :: Translated Text,
     logo :: FullLogo,
     color :: RGB,
     variations :: (),
@@ -189,10 +189,10 @@ data Event = Event
   deriving anyclass (FromJSON, ToJSON)
 
 data InnerEvent = InnerEvent
-  { title :: Map LangCode Text,
-    introduction :: Map LangCode Text,
-    description :: Map LangCode Text,
-    externalLink :: Map LangCode Text
+  { title :: Translated Text,
+    introduction :: Translated Text,
+    description :: Translated Text,
+    externalLink :: Translated Text
   }
   deriving stock (Generic, Show, Eq)
   deriving anyclass (FromJSON, ToJSON)

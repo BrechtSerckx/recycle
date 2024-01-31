@@ -37,9 +37,16 @@ spec = describe "API responses" $ do
         )
 
   it "parses translations" $
-    eitherDecode @(Map.Map LangCode Text)
-      "{ \"en\": \"english\", \"nl\": \"nederlands\"}"
-      `shouldBe` Right (Map.fromList [(EN, "english"), (NL, "nederlands")])
+    eitherDecode @(Translated Text)
+      "{ \"en\": \"english\", \"nl\": \"nederlands\", \"fr\": \"francais\", \"de\": \"deutsch\"}"
+      `shouldBe` Right
+        ( Translated
+            { en = "english",
+              nl = "nederlands",
+              fr = "francais",
+              de = "deutsch"
+            }
+        )
 
   it "parses a normal `Zipcodes` response" $
     eitherDecode @(SingObject "items" [FullZipcode])
@@ -61,24 +68,24 @@ spec = describe "API responses" $ do
                         createdAt = read "2020-07-13 22:00:01.034 UTC",
                         updatedAt = read "2020-09-21 22:15:05.605 UTC",
                         names =
-                          Map.fromList
-                            [ ("de", "L\246wen"),
-                              ("en", "Leuven"),
-                              ("fr", "Louvain"),
-                              ("nl", "Leuven")
-                            ]
+                          Translated
+                            { de = "L\246wen",
+                              en = "Leuven",
+                              fr = "Louvain",
+                              nl = "Leuven"
+                            }
                       },
                   code = "3000",
                   createdAt = read "2020-07-13 22:00:01.034 UTC",
                   updatedAt = read "2020-09-21 22:15:05.604 UTC",
                   id = "3000-24062",
                   names =
-                    [ Map.fromList
-                        [ ("de", "L\246wen"),
-                          ("en", "Leuven"),
-                          ("fr", "Louvain"),
-                          ("nl", "Leuven")
-                        ]
+                    [ Translated
+                        { de = "L\246wen",
+                          en = "Leuven",
+                          fr = "Louvain",
+                          nl = "Leuven"
+                        }
                     ],
                   available = True
                 }
@@ -106,23 +113,23 @@ spec = describe "API responses" $ do
                           createdAt = read "2020-07-13 22:00:01.034 UTC",
                           updatedAt = read "2020-09-21 22:15:05.605 UTC",
                           names =
-                            Map.fromList
-                              [ ("de", "L\246wen"),
-                                ("en", "Leuven"),
-                                ("fr", "Louvain"),
-                                ("nl", "Leuven")
-                              ]
+                            Translated
+                              { de = "L\246wen",
+                                en = "Leuven",
+                                fr = "Louvain",
+                                nl = "Leuven"
+                              }
                         }
                     ],
                   createdAt = read "2020-09-22 08:19:32.787 UTC",
                   updatedAt = read "2021-10-11 07:06:32.64 UTC",
                   names =
-                    Map.fromList
-                      [ ("de", "Andreas Vesaliusstraat"),
-                        ("en", "Andreas Vesaliusstraat"),
-                        ("fr", "Andreas Vesaliusstraat"),
-                        ("nl", "Andreas Vesaliusstraat")
-                      ],
+                    Translated
+                      { de = "Andreas Vesaliusstraat",
+                        en = "Andreas Vesaliusstraat",
+                        fr = "Andreas Vesaliusstraat",
+                        nl = "Andreas Vesaliusstraat"
+                      },
                   name = "Andreas Vesaliusstraat",
                   deleted = False,
                   zipcode =
@@ -133,12 +140,12 @@ spec = describe "API responses" $ do
                           updatedAt = read "2020-09-21 22:15:05.604 UTC",
                           id = "3000-24062",
                           names =
-                            [ Map.fromList
-                                [ ("de", "L\246wen"),
-                                  ("en", "Leuven"),
-                                  ("fr", "Louvain"),
-                                  ("nl", "Leuven")
-                                ]
+                            [ Translated
+                                { de = "L\246wen",
+                                  en = "Leuven",
+                                  fr = "Louvain",
+                                  nl = "Leuven"
+                                }
                             ]
                         }
                     ]
@@ -167,12 +174,12 @@ spec = describe "API responses" $ do
                         national = True,
                         nationalRef = Just "5d610b87173c063cc0400103",
                         datatankRef = Nothing,
-                        name = Map.fromList [(EN, "PMD"), (NL, "PMD"), (FR, "PMC"), (DE, "PMD")],
+                        name = Translated {en = "PMD", nl = "PMD", fr = "PMC", de = "PMD"},
                         logo =
                           FullLogo
                             { regular = Map.fromList [("1x", "5ef36735da06b266d294b3b9"), ("2x", "5ef36735da06b298a894b3ba"), ("3x", "5ef36735da06b23db894b3bb")],
                               reversed = Map.fromList [("1x", "5ef36735da06b25d5e94b3bc"), ("2x", "5ef36735da06b2a1a594b3bd"), ("3x", "5ef36735da06b2093194b3be")],
-                              name = Map.fromList [("de", "PMD"), ("en", "PMD"), ("fr", "PMC"), ("nl", "PMD")],
+                              name = Translated {de = "PMD", en = "PMD", fr = "PMC", nl = "PMD"},
                               id = "5d610b86162c063cc0400125",
                               createdAt = read "2020-02-20 13:08:25.556 UTC",
                               updatedAt = read "2020-06-24 14:46:14.194 UTC"
@@ -198,10 +205,10 @@ spec = describe "API responses" $ do
                   timestamp = read "2021-09-18 00:00:00 UTC",
                   event =
                     InnerEvent
-                      { title = Map.fromList [(EN, "Repair Caf\233"), (NL, "Repair Caf\233"), (FR, "Repair Caf\233"), (DE, "Repair Caf\233")],
-                        introduction = Map.fromList [(EN, "Repair Caf\233 in MAAKbar"), (NL, "Repair Caf\233 in MAAKbar"), (FR, "Repair Caf\233 in MAAKbar"), (DE, "Repair Caf\233 in MAAKbar")],
-                        description = Map.fromList [(EN, "Elke derde zaterdag van de maand tussen 14.00 en 17.00 uur in de Diestsestraat 142 in Leuven."), (NL, "Elke derde zaterdag van de maand tussen 14.00 en 17.00 uur in de Diestsestraat 142 in Leuven."), (FR, "Elke derde zaterdag van de maand tussen 14.00 en 17.00 uur in de Diestsestraat 142 in Leuven."), (DE, "Elke derde zaterdag van de maand tussen 14.00 en 17.00 uur in de Diestsestraat 142 in Leuven.")],
-                        externalLink = Map.fromList [(EN, "https://www.maakbaarleuven.be/"), (NL, "https://www.maakbaarleuven.be/"), (FR, "https://www.maakbaarleuven.be/"), (DE, "https://www.maakbaarleuven.be/")]
+                      { title = Translated {en = "Repair Caf\233", nl = "Repair Caf\233", fr = "Repair Caf\233", de = "Repair Caf\233"},
+                        introduction = Translated {en = "Repair Caf\233 in MAAKbar", nl = "Repair Caf\233 in MAAKbar", fr = "Repair Caf\233 in MAAKbar", de = "Repair Caf\233 in MAAKbar"},
+                        description = Translated {en = "Elke derde zaterdag van de maand tussen 14.00 en 17.00 uur in de Diestsestraat 142 in Leuven.", nl = "Elke derde zaterdag van de maand tussen 14.00 en 17.00 uur in de Diestsestraat 142 in Leuven.", fr = "Elke derde zaterdag van de maand tussen 14.00 en 17.00 uur in de Diestsestraat 142 in Leuven.", de = "Elke derde zaterdag van de maand tussen 14.00 en 17.00 uur in de Diestsestraat 142 in Leuven."},
+                        externalLink = Translated {en = "https://www.maakbaarleuven.be/", nl = "https://www.maakbaarleuven.be/", fr = "https://www.maakbaarleuven.be/", de = "https://www.maakbaarleuven.be/"}
                       }
                 }
             ]
@@ -214,7 +221,7 @@ spec = describe "API responses" $ do
         ( SingObject
             [ Fraction
                 { id = "5ed7a542a2124463cc8814e6",
-                  name = Map.fromList [(EN, "Gft"), (NL, "Gft"), (FR, "Gft"), (DE, "Gft")],
+                  name = Translated {en = "Gft", nl = "Gft", fr = "Gft", de = "Gft"},
                   logo =
                     Logo
                       { regular =
@@ -230,12 +237,12 @@ spec = describe "API responses" $ do
                               ("3x", "5ef36735da06b22deb94b358")
                             ],
                         name =
-                          Map.fromList
-                            [ ("de", "Bioabfall"),
-                              ("en", "Biodegradable waste"),
-                              ("fr", "D\233chets biod\233gradables"),
-                              ("nl", "Groente-, fruit-, tuinafval")
-                            ],
+                          Translated
+                            { de = "Bioabfall",
+                              en = "Biodegradable waste",
+                              fr = "D\233chets biod\233gradables",
+                              nl = "Groente-, fruit-, tuinafval"
+                            },
                         id = "5d610b86162c063cc0400108"
                       },
                   color = RGB "#C7D33B",
