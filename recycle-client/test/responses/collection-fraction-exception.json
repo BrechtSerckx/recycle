@@ -1,0 +1,157 @@
+{
+  "items": [
+    {
+      "exception": {
+        "replacedBy": {
+          "exception": {
+            "reason": {
+              "name": {
+                "nl": "Feestdag",
+                "fr": "Jour férié",
+                "de": "Feiertag",
+                "en": "Public holiday"
+              },
+              "createdAt": "2020-02-03T11:06:44.291Z",
+              "updatedAt": "2020-03-03T16:17:29.678Z",
+              "id": "5d610b87162c063cc0400102"
+            },
+            "replaces": "658eb5838f94c6007edfa96e"
+          },
+          "type": "collection",
+          "isDeleted": false,
+          "timestamp": "2024-01-04T00:00:00.000Z",
+          "fraction": "5e4e84d1bab65e9819d714d2",
+          "group": "5ed75ad48e14e76fe3c5febc",
+          "organisation": "5e27908010cfeaa15c9cee93",
+          "createdAt": "2023-12-29T12:03:32.838Z",
+          "updatedAt": "2023-12-29T12:03:32.838Z",
+          "id": "658eb594262b65007e5accec"
+        }
+      },
+      "type": "collection",
+      "timestamp": "2024-01-01T00:00:00.000Z",
+      "fraction": {
+        "national": true,
+        "nationalRef": "5d610b87173c063cc0400103",
+        "isDeleted": false,
+        "name": {
+          "nl": "PMD",
+          "fr": "PMC",
+          "en": "PMD",
+          "de": "PMK"
+        },
+        "color": "#60b1df",
+        "variations": [],
+        "organisation": "5e27908010cfeaa15c9cee93",
+        "createdAt": "2020-02-20T13:08:32.883Z",
+        "updatedAt": "2024-01-24T13:24:35.213Z",
+        "logo": {
+          "regular": {
+            "1x": "public/f0500f5a-5a3e-4424-9482-77cff934f693-pmd@1x.png",
+            "2x": "public/7ed4065c-cb24-477c-9494-1b7cf1e7d1ec-pmd@2x.png",
+            "3x": "public/d591257a-3206-41ba-93ca-cff9d1e7df54-pmd@3x.png"
+          },
+          "reversed": {
+            "1x": "public/2dcf6883-ac47-4de7-912f-20e3ee3b0b01-pmd-reversed@1x.png",
+            "2x": "public/007dc7b4-d05b-481e-99d4-47614abe69ce-pmd-reversed@2x.png",
+            "3x": "public/c28fda62-2d92-4cc5-81c4-3a4979ec2500-pmd-reversed@3x.png"
+          },
+          "isDeleted": false,
+          "_id": "5d610b86162c063cc0400125",
+          "name": {
+            "nl": "PMD",
+            "fr": "PMC",
+            "de": "PMD",
+            "en": "PMD"
+          },
+          "createdAt": "2020-02-20T13:08:25.556Z",
+          "updatedAt": "2020-06-24T14:46:14.194Z",
+          "__v": 0,
+          "id": "5d610b86162c063cc0400125"
+        },
+        "id": "5e4e84d1bab65e9819d714d2"
+      },
+      "id": "658eb5838f94c6007edfa96e"
+    },
+    {
+      "exception": {
+        "reason": {
+          "name": {
+            "nl": "Feestdag",
+            "fr": "Jour férié",
+            "de": "Feiertag",
+            "en": "Public holiday"
+          },
+          "createdAt": "2020-02-03T11:06:44.291Z",
+          "updatedAt": "2020-03-03T16:17:29.678Z",
+          "id": "5d610b87162c063cc0400102"
+        },
+        "replaces": {
+          "exception": {
+            "replacedBy": "658eb594262b65007e5accec"
+          },
+          "type": "collection",
+          "isDeleted": false,
+          "timestamp": "2024-01-01T00:00:00.000Z",
+          "fraction": "5e4e84d1bab65e9819d714d2",
+          "group": "5ed75ad48e14e76fe3c5febc",
+          "organisation": "5e27908010cfeaa15c9cee93",
+          "createdAt": "2023-12-29T12:03:15.126Z",
+          "updatedAt": "2023-12-29T12:03:32.849Z",
+          "id": "658eb5838f94c6007edfa96e"
+        }
+      },
+      "type": "collection",
+      "timestamp": "2024-01-04T00:00:00.000Z",
+      "fraction": {
+        "national": true,
+        "nationalRef": "5d610b87173c063cc0400103",
+        "isDeleted": false,
+        "name": {
+          "nl": "PMD",
+          "fr": "PMC",
+          "en": "PMD",
+          "de": "PMK"
+        },
+        "color": "#60b1df",
+        "variations": [],
+        "organisation": "5e27908010cfeaa15c9cee93",
+        "createdAt": "2020-02-20T13:08:32.883Z",
+        "updatedAt": "2024-01-24T13:24:35.213Z",
+        "logo": {
+          "regular": {
+            "1x": "public/f0500f5a-5a3e-4424-9482-77cff934f693-pmd@1x.png",
+            "2x": "public/7ed4065c-cb24-477c-9494-1b7cf1e7d1ec-pmd@2x.png",
+            "3x": "public/d591257a-3206-41ba-93ca-cff9d1e7df54-pmd@3x.png"
+          },
+          "reversed": {
+            "1x": "public/2dcf6883-ac47-4de7-912f-20e3ee3b0b01-pmd-reversed@1x.png",
+            "2x": "public/007dc7b4-d05b-481e-99d4-47614abe69ce-pmd-reversed@2x.png",
+            "3x": "public/c28fda62-2d92-4cc5-81c4-3a4979ec2500-pmd-reversed@3x.png"
+          },
+          "isDeleted": false,
+          "_id": "5d610b86162c063cc0400125",
+          "name": {
+            "nl": "PMD",
+            "fr": "PMC",
+            "de": "PMD",
+            "en": "PMD"
+          },
+          "createdAt": "2020-02-20T13:08:25.556Z",
+          "updatedAt": "2020-06-24T14:46:14.194Z",
+          "__v": 0,
+          "id": "5d610b86162c063cc0400125"
+        },
+        "id": "5e4e84d1bab65e9819d714d2"
+      },
+      "id": "658eb594262b65007e5accec"
+    }
+  ],
+  "total": 3,
+  "pages": 1,
+  "page": 1,
+  "size": 20,
+  "self": "https://awe-in-wa-recycle-api.azurewebsites.net/v1/collections?zipcodeId=3010-24062&streetId=https%3A%2F%2Fdata.vlaanderen.be%2Fid%2Fstraatnaam-34785&houseNumber=4&fromDate=2023-12-31T00%3A00%3A00.000Z&untilDate=2024-01-04T23%3A59%3A59.999Z&includeDeleted=false&page=1&size=20",
+  "first": "https://awe-in-wa-recycle-api.azurewebsites.net/v1/collections?zipcodeId=3010-24062&streetId=https%3A%2F%2Fdata.vlaanderen.be%2Fid%2Fstraatnaam-34785&houseNumber=4&fromDate=2023-12-31T00%3A00%3A00.000Z&untilDate=2024-01-04T23%3A59%3A59.999Z&includeDeleted=false&page=1&size=20",
+  "last": "https://awe-in-wa-recycle-api.azurewebsites.net/v1/collections?zipcodeId=3010-24062&streetId=https%3A%2F%2Fdata.vlaanderen.be%2Fid%2Fstraatnaam-34785&houseNumber=4&fromDate=2023-12-31T00%3A00%3A00.000Z&untilDate=2024-01-04T23%3A59%3A59.999Z&includeDeleted=false&page=1&size=20"
+}

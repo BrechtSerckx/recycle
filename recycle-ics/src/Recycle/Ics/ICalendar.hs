@@ -19,6 +19,7 @@ import Data.Function
 import qualified Data.Map as Map
 import qualified Data.Set as Set
 import Data.Text (Text)
+import qualified Data.Text as T
 import qualified Data.Text.Lazy as TL
 import Data.Time
 import Data.Version (Version (..))
@@ -79,21 +80,79 @@ mkFractionCollectionSummary :: LangCode -> FractionCollection -> Summary
 mkFractionCollectionSummary langCode fractionCollection =
   getByLangCode langCode fractionCollection.fraction.name & \d ->
     Summary
-      { summaryValue = TL.fromStrict d,
+      { summaryValue = TL.fromStrict $ case fractionCollection.exception of
+          Nothing -> d
+          Just (ReplacedBy _) -> noCollectionText <> ": " <> d
+          Just (Replaces _ _) -> extraCollectionText <> ": " <> d,
         summaryAltRep = Nothing,
         summaryLanguage = Just . Language . CI.mk . TL.pack $ show langCode,
         summaryOther = def
       }
+  where
+    noCollectionText =
+      getByLangCode langCode $
+        Translated
+          { en = "No collection",
+            nl = "Geen collectie",
+            fr = "Pas de collecte",
+            de = "Keine Sammlung"
+          }
+    extraCollectionText =
+      getByLangCode langCode $
+        Translated
+          { en = "Extra collection",
+            nl = "Extra collectie",
+            fr = "Collecte supplémentaire",
+            de = "Extra-Kollektion"
+          }
 
 mkFractionCollectionDescription :: LangCode -> FractionCollection -> Description
 mkFractionCollectionDescription langCode fractionCollection =
   getByLangCode langCode fractionCollection.fraction.name & \d ->
     Description
-      { descriptionValue = TL.fromStrict d,
+      { descriptionValue = TL.fromStrict $ case fractionCollection.exception of
+          Nothing -> d
+          Just (ReplacedBy replacer) ->
+            T.unlines
+              [ replacedText <> ": " <> T.pack (show replacer.timestamp.utctDay),
+                reasonText <> ": " <> getByLangCode langCode replacer.exception.reason.name,
+                d
+              ]
+          Just (Replaces replaced reason) ->
+            T.unlines
+              [ replacesText <> ": " <> T.pack (show replaced.timestamp.utctDay),
+                reasonText <> ": " <> getByLangCode langCode reason.name,
+                d
+              ],
         descriptionAltRep = Nothing,
         descriptionLanguage = Just . Language . CI.mk . TL.pack $ show langCode,
         descriptionOther = def
       }
+  where
+    replacedText =
+      getByLangCode langCode $
+        Translated
+          { en = "Replaced by collection on",
+            nl = "Vervangen door inzameling op",
+            fr = "Remplacé par la collecte le",
+            de = "Ersetzt durch Sammlung am"
+          }
+    replacesText =
+      getByLangCode langCode $
+        Translated
+          { en = "Replaces collection on",
+            nl = "Vervangt collectie op",
+            fr = "Remplace la collecte sur",
+            de = "Ersetzt die Sammlung auf"
+          }
+    reasonText =
+      getByLangCode langCode $
+        Translated
+          { en = "Reason",
+            nl = "Reden",
+            fr = "Raison",
+            de = "Grund"
+          }
 
 collectionToVEvent ::
   LangCode ->
@@ -132,7 +191,10 @@ collectionToVEvent langCode range reminders fractionCollection =
           veAlarms =
             Set.fromList $
               reminderToVAlarm description fractionCollection.timestamp
-                <$> reminders
+                <$> reminders,
+          veStatus = case fractionCollection.exception of
+            Just (ReplacedBy _) -> Just (CancelledEvent def)
+            _ -> Nothing
         }
 
 collectionToVTodo ::
@@ -144,7 +206,10 @@ collectionToVTodo langCode due fractionCollection =
         Just $ mkFractionCollectionDescription langCode fractionCollection,
       vtSummary =
         Just $ mkFractionCollectionSummary langCode fractionCollection,
-      vtDueDuration = Just . Left $ makeDue fractionCollection.timestamp due
+      vtDueDuration = Just . Left $ makeDue fractionCollection.timestamp due,
+      vtStatus = case fractionCollection.exception of
+        Just (ReplacedBy _) -> Just (CancelledTodo def)
+        _ -> Nothing
     }
 
 makeDue :: UTCTime -> TodoDue -> Due

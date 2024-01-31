@@ -20,8 +20,13 @@ module Recycle.Types
     FractionCollection (..),
     Event (..),
     InnerEvent (..),
+    InnerExceptionReplacedBy (..),
+    InnerExceptionReplaces (..),
     partitionCollectionEvents,
     DateRange (..),
+    CollectionReplacementReason (..),
+    ExceptionalFractionCollection (..),
+    CollectionException (..),
   )
 where
 
@@ -29,6 +34,8 @@ import Control.Applicative ((<|>))
 import Data.Aeson
   ( FromJSON (..),
     ToJSON (..),
+    (.:),
+    (.=),
   )
 import qualified Data.Aeson.Types as Aeson
 import Data.Foldable
@@ -115,9 +122,12 @@ data CollectionEvent
   deriving stock (Show, Eq)
 
 instance FromJSON CollectionEvent where
-  parseJSON v =
-    (CEFractionCollection <$> parseJSON v)
-      <|> (CEEvent <$> parseJSON v)
+  parseJSON v = flip (Aeson.withObject "CollectionEvent") v $
+    \o ->
+      o .: "type" >>= \case
+        ("collection" :: Text) -> CEFractionCollection <$> parseJSON v
+        "event" -> CEEvent <$> parseJSON v
+        _ -> fail "Unknown CollectionEvent type"
 
 instance ToJSON CollectionEvent where
   toJSON = \case
@@ -164,7 +174,62 @@ data FullFraction = FullFraction
 data FractionCollection = FractionCollection
   { id :: CollectionEventId,
     timestamp :: UTCTime,
-    fraction :: FullFraction
+    fraction :: FullFraction,
+    exception :: Maybe CollectionException
+  }
+  deriving stock (Generic, Show, Eq)
+  deriving anyclass (FromJSON, ToJSON)
+
+data CollectionException
+  = ReplacedBy (ExceptionalFractionCollection InnerExceptionReplaces)
+  | Replaces (ExceptionalFractionCollection InnerExceptionReplacedBy) CollectionReplacementReason
+  deriving stock (Generic, Show, Eq)
+
+instance FromJSON CollectionException where
+  parseJSON = Aeson.withObject "CollectionException" $
+    \o ->
+      (ReplacedBy <$> o .: "replacedBy")
+        <|> (Replaces <$> o .: "replaces" <*> o .: "reason")
+
+instance ToJSON CollectionException where
+  toJSON = \case
+    ReplacedBy replacedBy ->
+      Aeson.object ["replacedBy" .= replacedBy]
+    Replaces replaces reason ->
+      Aeson.object ["replaces" .= replaces, "reason" .= reason]
+
+data ExceptionalFractionCollection innerException = ExceptionalFractionCollection
+  { isDeleted :: Maybe Bool,
+    timestamp :: UTCTime,
+    group :: Text,
+    organisation :: Text,
+    createdAt :: UTCTime,
+    updatedAt :: UTCTime,
+    fraction :: Text,
+    id :: CollectionEventId,
+    exception :: innerException
+  }
+  deriving stock (Generic, Show, Eq)
+  deriving anyclass (FromJSON, ToJSON)
+
+data InnerExceptionReplaces = InnerExceptionReplaces
+  { replaces :: CollectionEventId,
+    reason :: CollectionReplacementReason
+  }
+  deriving stock (Generic, Show, Eq)
+  deriving anyclass (FromJSON, ToJSON)
+
+newtype InnerExceptionReplacedBy = InnerExceptionReplacedBy
+  { replacedBy :: CollectionEventId
+  }
+  deriving stock (Generic, Show, Eq)
+  deriving anyclass (FromJSON, ToJSON)
+
+data CollectionReplacementReason = CollectionReplacementReason
+  { id :: CollectionEventId,
+    createdAt :: UTCTime,
+    updatedAt :: UTCTime,
+    name :: Translated Text
   }
   deriving stock (Generic, Show, Eq)
   deriving anyclass (FromJSON, ToJSON)
