@@ -189,7 +189,8 @@ spec = describe "API responses" $ do
                         organisation = "5e27908010cfeaa15c9cee93",
                         createdAt = read "2020-02-20 13:08:32.883 UTC",
                         updatedAt = read "2021-09-30 15:16:36.595 UTC"
-                      }
+                      },
+                  exception = Nothing
                 }
             ]
         )
@@ -214,7 +215,6 @@ spec = describe "API responses" $ do
             ]
         )
 
-  -- FIXME: exceptions
   it "parses a normal `Collections` fraction response with exceptions" $
     eitherDecode
       @(SingObject "items" [FractionCollection])
@@ -230,12 +230,12 @@ spec = describe "API responses" $ do
                         national = True,
                         nationalRef = Just "5d610b87173c063cc0400103",
                         datatankRef = Nothing,
-                        name = Map.fromList [(EN, "PMD"), (NL, "PMD"), (FR, "PMC"), (DE, "PMK")],
+                        name = Translated {en = "PMD", nl = "PMD", fr = "PMC", de = "PMK"},
                         logo =
                           FullLogo
                             { regular = Map.fromList [("1x", "public/f0500f5a-5a3e-4424-9482-77cff934f693-pmd@1x.png"), ("2x", "public/7ed4065c-cb24-477c-9494-1b7cf1e7d1ec-pmd@2x.png"), ("3x", "public/d591257a-3206-41ba-93ca-cff9d1e7df54-pmd@3x.png")],
                               reversed = Map.fromList [("1x", "public/2dcf6883-ac47-4de7-912f-20e3ee3b0b01-pmd-reversed@1x.png"), ("2x", "public/007dc7b4-d05b-481e-99d4-47614abe69ce-pmd-reversed@2x.png"), ("3x", "public/c28fda62-2d92-4cc5-81c4-3a4979ec2500-pmd-reversed@3x.png")],
-                              name = Map.fromList [("de", "PMD"), ("en", "PMD"), ("fr", "PMC"), ("nl", "PMD")],
+                              name = Translated {de = "PMD", en = "PMD", fr = "PMC", nl = "PMD"},
                               id = "5d610b86162c063cc0400125",
                               createdAt = read "2020-02-20 13:08:25.556 UTC",
                               updatedAt = read "2020-06-24 14:46:14.194 UTC"
@@ -245,7 +245,33 @@ spec = describe "API responses" $ do
                         organisation = "5e27908010cfeaa15c9cee93",
                         createdAt = read "2020-02-20 13:08:32.883 UTC",
                         updatedAt = read "2024-01-24 13:24:35.213 UTC"
-                      }
+                      },
+                  exception =
+                    Just
+                      ( ReplacedBy
+                          ( ExceptionalFractionCollection
+                              { isDeleted = Just False,
+                                group = "5ed75ad48e14e76fe3c5febc",
+                                organisation = "5e27908010cfeaa15c9cee93",
+                                createdAt = read "2023-12-29 12:03:32.838 UTC",
+                                updatedAt = read "2023-12-29 12:03:32.838 UTC",
+                                fraction = "5e4e84d1bab65e9819d714d2",
+                                timestamp = read "2024-01-04 00:00:00 UTC",
+                                id = "658eb594262b65007e5accec",
+                                exception =
+                                  InnerExceptionReplaces
+                                    { replaces = "658eb5838f94c6007edfa96e",
+                                      reason =
+                                        CollectionReplacementReason
+                                          { id = "5d610b87162c063cc0400102",
+                                            createdAt = read "2020-02-03 11:06:44.291 UTC",
+                                            updatedAt = read "2020-03-03 16:17:29.678 UTC",
+                                            name = Translated {en = "Public holiday", nl = "Feestdag", fr = "Jour f\233ri\233", de = "Feiertag"}
+                                          }
+                                    }
+                              }
+                          )
+                      )
                 },
               FractionCollection
                 { id = "658eb594262b65007e5accec",
@@ -256,12 +282,12 @@ spec = describe "API responses" $ do
                         national = True,
                         nationalRef = Just "5d610b87173c063cc0400103",
                         datatankRef = Nothing,
-                        name = Map.fromList [(EN, "PMD"), (NL, "PMD"), (FR, "PMC"), (DE, "PMK")],
+                        name = Translated {en = "PMD", nl = "PMD", fr = "PMC", de = "PMK"},
                         logo =
                           FullLogo
                             { regular = Map.fromList [("1x", "public/f0500f5a-5a3e-4424-9482-77cff934f693-pmd@1x.png"), ("2x", "public/7ed4065c-cb24-477c-9494-1b7cf1e7d1ec-pmd@2x.png"), ("3x", "public/d591257a-3206-41ba-93ca-cff9d1e7df54-pmd@3x.png")],
                               reversed = Map.fromList [("1x", "public/2dcf6883-ac47-4de7-912f-20e3ee3b0b01-pmd-reversed@1x.png"), ("2x", "public/007dc7b4-d05b-481e-99d4-47614abe69ce-pmd-reversed@2x.png"), ("3x", "public/c28fda62-2d92-4cc5-81c4-3a4979ec2500-pmd-reversed@3x.png")],
-                              name = Map.fromList [("de", "PMD"), ("en", "PMD"), ("fr", "PMC"), ("nl", "PMD")],
+                              name = Translated {de = "PMD", en = "PMD", fr = "PMC", nl = "PMD"},
                               id = "5d610b86162c063cc0400125",
                               createdAt = read "2020-02-20 13:08:25.556 UTC",
                               updatedAt = read "2020-06-24 14:46:14.194 UTC"
@@ -271,7 +297,33 @@ spec = describe "API responses" $ do
                         organisation = "5e27908010cfeaa15c9cee93",
                         createdAt = read "2020-02-20 13:08:32.883 UTC",
                         updatedAt = read "2024-01-24 13:24:35.213 UTC"
-                      }
+                      },
+                  exception =
+                    Just
+                      ( Replaces
+                          ( ExceptionalFractionCollection
+                              { isDeleted = Just False,
+                                group = "5ed75ad48e14e76fe3c5febc",
+                                organisation = "5e27908010cfeaa15c9cee93",
+                                createdAt = read "2023-12-29 12:03:15.126 UTC",
+                                updatedAt = read "2023-12-29 12:03:32.849 UTC",
+                                timestamp = read "2024-01-01 00:00:00 UTC",
+                                id = "658eb5838f94c6007edfa96e",
+                                fraction = "5e4e84d1bab65e9819d714d2",
+                                exception =
+                                  InnerExceptionReplacedBy
+                                    { replacedBy = "658eb594262b65007e5accec"
+                                    }
+                              }
+                          )
+                          ( CollectionReplacementReason
+                              { id = "5d610b87162c063cc0400102",
+                                createdAt = read "2020-02-03 11:06:44.291 UTC",
+                                updatedAt = read "2020-03-03 16:17:29.678 UTC",
+                                name = Translated {en = "Public holiday", nl = "Feestdag", fr = "Jour f\233ri\233", de = "Feiertag"}
+                              }
+                          )
+                      )
                 }
             ]
         )
