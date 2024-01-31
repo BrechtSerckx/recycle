@@ -33,7 +33,6 @@ import Data.Aeson
 import qualified Data.Aeson.Types as Aeson
 import Data.Foldable
 import Data.Map.Strict (Map)
-import Data.SOP
 import Data.String (IsString)
 import Data.Text (Text)
 import Data.Time (Day, UTCTime)
@@ -110,22 +109,20 @@ newtype RGB = RGB Text deriving newtype (Show, FromJSON, ToJSON, Eq)
 newtype CollectionEventId = CollectionEventId {unCollectionEventId :: Text}
   deriving newtype (Show, FromJSON, ToJSON, Eq, IsString)
 
-newtype CollectionEvent = CollectionEvent
-  { unCollectionEvent :: Union '[FractionCollection, Event]
-  }
-  deriving stock (Generic, Show, Eq)
+data CollectionEvent
+  = CEFractionCollection FractionCollection
+  | CEEvent Event
+  deriving stock (Show, Eq)
 
 instance FromJSON CollectionEvent where
   parseJSON v =
-    fmap CollectionEvent $
-      (Z . I <$> parseJSON v)
-        <|> (S . Z . I <$> parseJSON v)
+    (CEFractionCollection <$> parseJSON v)
+      <|> (CEEvent <$> parseJSON v)
 
 instance ToJSON CollectionEvent where
-  toJSON (CollectionEvent ce) = case ce of
-    Z (I f) -> Aeson.toJSON f
-    S (Z (I e)) -> Aeson.toJSON e
-    S (S x) -> case x of {}
+  toJSON = \case
+    CEFractionCollection fc -> Aeson.toJSON fc
+    CEEvent e -> Aeson.toJSON e
 
 newtype FractionId = FractionId Text
   deriving newtype (Show, Eq, IsString, FromJSON, ToJSON, FromHttpApiData)
@@ -133,16 +130,10 @@ newtype FractionId = FractionId Text
 partitionCollectionEvents ::
   [CollectionEvent] ->
   ([FractionCollection], [Event])
-partitionCollectionEvents ces =
-  let go ::
-        ([FractionCollection], [Event]) ->
-        CollectionEvent ->
-        ([FractionCollection], [Event])
-      go (fs, es) (CollectionEvent ce) = case ce of
-        Z (I f) -> (f : fs, es)
-        S (Z (I e)) -> (fs, e : es)
-        S (S x) -> case x of {}
-   in foldl' go ([], []) ces
+partitionCollectionEvents =
+  flip foldl' ([], []) $ \(fcs, es) -> \case
+    CEFractionCollection fc -> (fc : fcs, es)
+    CEEvent e -> (fcs, e : es)
 
 data Fraction = Fraction
   { id :: FractionId,
