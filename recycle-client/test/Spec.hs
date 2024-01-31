@@ -214,6 +214,68 @@ spec = describe "API responses" $ do
             ]
         )
 
+  -- FIXME: exceptions
+  it "parses a normal `Collections` fraction response with exceptions" $
+    eitherDecode
+      @(SingObject "items" [FractionCollection])
+      (BSL.fromStrict $(embedFile "test/responses/collection-fraction-exception.json"))
+      `shouldBe` Right
+        ( SingObject
+            [ FractionCollection
+                { id = "658eb5838f94c6007edfa96e",
+                  timestamp = read "2024-01-01 00:00:00 UTC",
+                  fraction =
+                    FullFraction
+                      { id = "5e4e84d1bab65e9819d714d2",
+                        national = True,
+                        nationalRef = Just "5d610b87173c063cc0400103",
+                        datatankRef = Nothing,
+                        name = Map.fromList [(EN, "PMD"), (NL, "PMD"), (FR, "PMC"), (DE, "PMK")],
+                        logo =
+                          FullLogo
+                            { regular = Map.fromList [("1x", "public/f0500f5a-5a3e-4424-9482-77cff934f693-pmd@1x.png"), ("2x", "public/7ed4065c-cb24-477c-9494-1b7cf1e7d1ec-pmd@2x.png"), ("3x", "public/d591257a-3206-41ba-93ca-cff9d1e7df54-pmd@3x.png")],
+                              reversed = Map.fromList [("1x", "public/2dcf6883-ac47-4de7-912f-20e3ee3b0b01-pmd-reversed@1x.png"), ("2x", "public/007dc7b4-d05b-481e-99d4-47614abe69ce-pmd-reversed@2x.png"), ("3x", "public/c28fda62-2d92-4cc5-81c4-3a4979ec2500-pmd-reversed@3x.png")],
+                              name = Map.fromList [("de", "PMD"), ("en", "PMD"), ("fr", "PMC"), ("nl", "PMD")],
+                              id = "5d610b86162c063cc0400125",
+                              createdAt = read "2020-02-20 13:08:25.556 UTC",
+                              updatedAt = read "2020-06-24 14:46:14.194 UTC"
+                            },
+                        color = RGB "#60b1df",
+                        variations = (),
+                        organisation = "5e27908010cfeaa15c9cee93",
+                        createdAt = read "2020-02-20 13:08:32.883 UTC",
+                        updatedAt = read "2024-01-24 13:24:35.213 UTC"
+                      }
+                },
+              FractionCollection
+                { id = "658eb594262b65007e5accec",
+                  timestamp = read "2024-01-04 00:00:00 UTC",
+                  fraction =
+                    FullFraction
+                      { id = "5e4e84d1bab65e9819d714d2",
+                        national = True,
+                        nationalRef = Just "5d610b87173c063cc0400103",
+                        datatankRef = Nothing,
+                        name = Map.fromList [(EN, "PMD"), (NL, "PMD"), (FR, "PMC"), (DE, "PMK")],
+                        logo =
+                          FullLogo
+                            { regular = Map.fromList [("1x", "public/f0500f5a-5a3e-4424-9482-77cff934f693-pmd@1x.png"), ("2x", "public/7ed4065c-cb24-477c-9494-1b7cf1e7d1ec-pmd@2x.png"), ("3x", "public/d591257a-3206-41ba-93ca-cff9d1e7df54-pmd@3x.png")],
+                              reversed = Map.fromList [("1x", "public/2dcf6883-ac47-4de7-912f-20e3ee3b0b01-pmd-reversed@1x.png"), ("2x", "public/007dc7b4-d05b-481e-99d4-47614abe69ce-pmd-reversed@2x.png"), ("3x", "public/c28fda62-2d92-4cc5-81c4-3a4979ec2500-pmd-reversed@3x.png")],
+                              name = Map.fromList [("de", "PMD"), ("en", "PMD"), ("fr", "PMC"), ("nl", "PMD")],
+                              id = "5d610b86162c063cc0400125",
+                              createdAt = read "2020-02-20 13:08:25.556 UTC",
+                              updatedAt = read "2020-06-24 14:46:14.194 UTC"
+                            },
+                        color = RGB "#60b1df",
+                        variations = (),
+                        organisation = "5e27908010cfeaa15c9cee93",
+                        createdAt = read "2020-02-20 13:08:32.883 UTC",
+                        updatedAt = read "2024-01-24 13:24:35.213 UTC"
+                      }
+                }
+            ]
+        )
+
   it "parses a normal `Fractions` response" $
     eitherDecode @(SingObject "items" [Fraction])
       (BSL.fromStrict $(embedFile "test/responses/fractions.json"))
