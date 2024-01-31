@@ -17,17 +17,18 @@ module Recycle.Types
     FractionId (..),
     Fraction (..),
     FullFraction (..),
+    FractionCollection (..),
     Event (..),
+    InnerEvent (..),
     partitionCollectionEvents,
     DateRange (..),
   )
 where
 
+import Control.Applicative ((<|>))
 import Data.Aeson
   ( FromJSON (..),
     ToJSON (..),
-    (.:),
-    (.=),
   )
 import qualified Data.Aeson.Types as Aeson
 import Data.Foldable
@@ -109,47 +110,37 @@ newtype RGB = RGB Text deriving newtype (Show, FromJSON, ToJSON, Eq)
 newtype CollectionEventId = CollectionEventId {unCollectionEventId :: Text}
   deriving newtype (Show, FromJSON, ToJSON, Eq, IsString)
 
-data CollectionEvent a = CollectionEvent
-  { id :: CollectionEventId,
-    timestamp :: UTCTime,
-    content :: a
+newtype CollectionEvent = CollectionEvent
+  { unCollectionEvent :: Union '[FractionCollection, Event]
   }
   deriving stock (Generic, Show, Eq)
 
-instance FromJSON (CollectionEvent (Union '[FullFraction, Event])) where
-  parseJSON = Aeson.withObject "CollectionEvent" $ \o -> do
-    id <- o .: "id"
-    timestamp <- o .: "timestamp"
-    content <-
-      (o .: "type" :: Aeson.Parser Text) >>= \case
-        "collection" -> Z . I <$> o .: "fraction"
-        "event" -> S . Z . I <$> o .: "event"
-        _ -> fail "unknown type"
-    pure CollectionEvent {..}
+instance FromJSON CollectionEvent where
+  parseJSON v =
+    fmap CollectionEvent $
+      (Z . I <$> parseJSON v)
+        <|> (S . Z . I <$> parseJSON v)
 
-instance ToJSON (CollectionEvent (Union '[FullFraction, Event])) where
-  toJSON CollectionEvent {..} =
-    Aeson.object $
-      ["id" .= id, "timestamp" .= timestamp]
-        <> case content of
-          Z (I f) -> [("type", "collection"), "fraction" .= f]
-          S (Z (I e)) -> [("type", "collection"), "event" .= e]
-          S (S x) -> case x of {}
+instance ToJSON CollectionEvent where
+  toJSON (CollectionEvent ce) = case ce of
+    Z (I f) -> Aeson.toJSON f
+    S (Z (I e)) -> Aeson.toJSON e
+    S (S x) -> case x of {}
 
 newtype FractionId = FractionId Text
   deriving newtype (Show, Eq, IsString, FromJSON, ToJSON, FromHttpApiData)
 
 partitionCollectionEvents ::
-  [CollectionEvent (Union '[FullFraction, Event])] ->
-  ([CollectionEvent FullFraction], [CollectionEvent Event])
+  [CollectionEvent] ->
+  ([FractionCollection], [Event])
 partitionCollectionEvents ces =
   let go ::
-        ([CollectionEvent FullFraction], [CollectionEvent Event]) ->
-        CollectionEvent (Union '[FullFraction, Event]) ->
-        ([CollectionEvent FullFraction], [CollectionEvent Event])
-      go (fs, es) ce = case ce.content of
-        Z (I f) -> (ce {content = f} : fs, es)
-        S (Z (I e)) -> (fs, ce {content = e} : es)
+        ([FractionCollection], [Event]) ->
+        CollectionEvent ->
+        ([FractionCollection], [Event])
+      go (fs, es) (CollectionEvent ce) = case ce of
+        Z (I f) -> (f : fs, es)
+        S (Z (I e)) -> (fs, e : es)
         S (S x) -> case x of {}
    in foldl' go ([], []) ces
 
@@ -179,9 +170,25 @@ data FullFraction = FullFraction
   deriving stock (Generic, Show, Eq)
   deriving anyclass (FromJSON, ToJSON)
 
+data FractionCollection = FractionCollection
+  { id :: CollectionEventId,
+    timestamp :: UTCTime,
+    fraction :: FullFraction
+  }
+  deriving stock (Generic, Show, Eq)
+  deriving anyclass (FromJSON, ToJSON)
+
 -- * Event
 
 data Event = Event
+  { id :: CollectionEventId,
+    timestamp :: UTCTime,
+    event :: InnerEvent
+  }
+  deriving stock (Generic, Show, Eq)
+  deriving anyclass (FromJSON, ToJSON)
+
+data InnerEvent = InnerEvent
   { title :: Map LangCode Text,
     introduction :: Map LangCode Text,
     description :: Map LangCode Text,

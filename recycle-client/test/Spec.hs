@@ -148,113 +148,61 @@ spec = describe "API responses" $ do
 
   it "parses a normal `Collections` response" $
     eitherDecode
-      @(SingObject "items" [CollectionEvent (Union '[FullFraction, Event])])
+      @(SingObject "items" [CollectionEvent])
       (BSL.fromStrict $(embedFile "test/responses/collections.json"))
       `shouldSatisfy` isRight
 
   it "parses a normal `Collections` fraction response" $
     eitherDecode
-      @(SingObject "items" [CollectionEvent (Union '[FullFraction, Event])])
+      @(SingObject "items" [FractionCollection])
       (BSL.fromStrict $(embedFile "test/responses/collection-fraction.json"))
-      `shouldBe` ( Right . SingObject . List.singleton $
-                     CollectionEvent
-                       { id = "5fed8c315214976fcf25764d",
-                         timestamp = read "2021-09-15 00:00:00 UTC",
-                         content =
-                           Z $
-                             I
-                               FullFraction
-                                 { id = "5e4e84d1bab65e9819d714d2",
-                                   national = True,
-                                   nationalRef = Just "5d610b87173c063cc0400103",
-                                   datatankRef = Nothing,
-                                   name =
-                                     Map.fromList
-                                       [ (EN, "PMD"),
-                                         (NL, "PMD"),
-                                         (FR, "PMC"),
-                                         (DE, "PMD")
-                                       ],
-                                   logo =
-                                     FullLogo
-                                       { regular =
-                                           Map.fromList
-                                             [ ("1x", "5ef36735da06b266d294b3b9"),
-                                               ("2x", "5ef36735da06b298a894b3ba"),
-                                               ("3x", "5ef36735da06b23db894b3bb")
-                                             ],
-                                         reversed =
-                                           Map.fromList
-                                             [ ("1x", "5ef36735da06b25d5e94b3bc"),
-                                               ("2x", "5ef36735da06b2a1a594b3bd"),
-                                               ("3x", "5ef36735da06b2093194b3be")
-                                             ],
-                                         name =
-                                           Map.fromList
-                                             [ ("de", "PMD"),
-                                               ("en", "PMD"),
-                                               ("fr", "PMC"),
-                                               ("nl", "PMD")
-                                             ],
-                                         id = "5d610b86162c063cc0400125",
-                                         createdAt = read "2020-02-20 13:08:25.556 UTC",
-                                         updatedAt = read "2020-06-24 14:46:14.194 UTC"
-                                       },
-                                   color = RGB "#60b1df",
-                                   variations = (),
-                                   organisation = "5e27908010cfeaa15c9cee93",
-                                   createdAt = read "2020-02-20 13:08:32.883 UTC",
-                                   updatedAt = read "2021-09-30 15:16:36.595 UTC"
-                                 }
-                       }
-                 )
+      `shouldBe` Right
+        ( SingObject
+            [ FractionCollection
+                { id = "5fed8c315214976fcf25764d",
+                  timestamp = read "2021-09-15 00:00:00 UTC",
+                  fraction =
+                    FullFraction
+                      { id = "5e4e84d1bab65e9819d714d2",
+                        national = True,
+                        nationalRef = Just "5d610b87173c063cc0400103",
+                        datatankRef = Nothing,
+                        name = Map.fromList [(EN, "PMD"), (NL, "PMD"), (FR, "PMC"), (DE, "PMD")],
+                        logo =
+                          FullLogo
+                            { regular = Map.fromList [("1x", "5ef36735da06b266d294b3b9"), ("2x", "5ef36735da06b298a894b3ba"), ("3x", "5ef36735da06b23db894b3bb")],
+                              reversed = Map.fromList [("1x", "5ef36735da06b25d5e94b3bc"), ("2x", "5ef36735da06b2a1a594b3bd"), ("3x", "5ef36735da06b2093194b3be")],
+                              name = Map.fromList [("de", "PMD"), ("en", "PMD"), ("fr", "PMC"), ("nl", "PMD")],
+                              id = "5d610b86162c063cc0400125",
+                              createdAt = read "2020-02-20 13:08:25.556 UTC",
+                              updatedAt = read "2020-06-24 14:46:14.194 UTC"
+                            },
+                        color = RGB "#60b1df",
+                        variations = (),
+                        organisation = "5e27908010cfeaa15c9cee93",
+                        createdAt = read "2020-02-20 13:08:32.883 UTC",
+                        updatedAt = read "2021-09-30 15:16:36.595 UTC"
+                      }
+                }
+            ]
+        )
 
   it "parses a normal `Collections` event response" $
     eitherDecode
-      @(SingObject "items" [CollectionEvent (Union '[FullFraction, Event])])
+      @(SingObject "items" [Event])
       (BSL.fromStrict $(embedFile "test/responses/collection-event.json"))
       `shouldBe` Right
         ( SingObject
-            [ CollectionEvent
+            [ Event
                 { id = "5fed94cf5214974871257660",
                   timestamp = read "2021-09-18 00:00:00 UTC",
-                  content =
-                    S
-                      ( Z
-                          ( I
-                              ( Event
-                                  { title =
-                                      Map.fromList
-                                        [ (EN, "Repair Caf\233"),
-                                          (NL, "Repair Caf\233"),
-                                          (FR, "Repair Caf\233"),
-                                          (DE, "Repair Caf\233")
-                                        ],
-                                    introduction =
-                                      Map.fromList
-                                        [ (EN, "Repair Caf\233 in MAAKbar"),
-                                          (NL, "Repair Caf\233 in MAAKbar"),
-                                          (FR, "Repair Caf\233 in MAAKbar"),
-                                          (DE, "Repair Caf\233 in MAAKbar")
-                                        ],
-                                    description =
-                                      Map.fromList
-                                        [ (EN, "Elke derde zaterdag van de maand tussen 14.00 en 17.00 uur in de Diestsestraat 142 in Leuven."),
-                                          (NL, "Elke derde zaterdag van de maand tussen 14.00 en 17.00 uur in de Diestsestraat 142 in Leuven."),
-                                          (FR, "Elke derde zaterdag van de maand tussen 14.00 en 17.00 uur in de Diestsestraat 142 in Leuven."),
-                                          (DE, "Elke derde zaterdag van de maand tussen 14.00 en 17.00 uur in de Diestsestraat 142 in Leuven.")
-                                        ],
-                                    externalLink =
-                                      Map.fromList
-                                        [ (EN, "https://www.maakbaarleuven.be/"),
-                                          (NL, "https://www.maakbaarleuven.be/"),
-                                          (FR, "https://www.maakbaarleuven.be/"),
-                                          (DE, "https://www.maakbaarleuven.be/")
-                                        ]
-                                  }
-                              )
-                          )
-                      )
+                  event =
+                    InnerEvent
+                      { title = Map.fromList [(EN, "Repair Caf\233"), (NL, "Repair Caf\233"), (FR, "Repair Caf\233"), (DE, "Repair Caf\233")],
+                        introduction = Map.fromList [(EN, "Repair Caf\233 in MAAKbar"), (NL, "Repair Caf\233 in MAAKbar"), (FR, "Repair Caf\233 in MAAKbar"), (DE, "Repair Caf\233 in MAAKbar")],
+                        description = Map.fromList [(EN, "Elke derde zaterdag van de maand tussen 14.00 en 17.00 uur in de Diestsestraat 142 in Leuven."), (NL, "Elke derde zaterdag van de maand tussen 14.00 en 17.00 uur in de Diestsestraat 142 in Leuven."), (FR, "Elke derde zaterdag van de maand tussen 14.00 en 17.00 uur in de Diestsestraat 142 in Leuven."), (DE, "Elke derde zaterdag van de maand tussen 14.00 en 17.00 uur in de Diestsestraat 142 in Leuven.")],
+                        externalLink = Map.fromList [(EN, "https://www.maakbaarleuven.be/"), (NL, "https://www.maakbaarleuven.be/"), (FR, "https://www.maakbaarleuven.be/"), (DE, "https://www.maakbaarleuven.be/")]
+                      }
                 }
             ]
         )
