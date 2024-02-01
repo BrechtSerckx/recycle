@@ -8,8 +8,10 @@ import Colog.Message
 import Control.Monad.IO.Class (liftIO)
 import qualified Data.ByteString.Lazy.Char8 as BSL
 import Data.IORef (newIORef)
+import Data.String (IsString (fromString))
+import Data.Text (Text)
 import qualified Data.Text as T
-import qualified Language.Haskell.TH.Env as Env
+import qualified Language.Haskell.TH.Env as TH.Env
 import Network.HTTP.Client.TLS
   ( newTlsManagerWith,
     tlsManagerSettings,
@@ -26,29 +28,60 @@ import Servant.Client
     Scheme (..),
     mkClientEnv,
   )
+import qualified System.Environment as Env
+import Text.Read (readMaybe)
 
 main :: IO ()
 main = do
-  Opts {apiClientOpts = ApiClientOpts {..}, ..} <- parseOpts
+  Opts {..} <- parseOpts
   httpManager <- newTlsManagerWith tlsManagerSettings
   let clientEnv =
         mkClientEnv httpManager $ BaseUrl Https "api.fostplus.be" 443 ""
       logAction = LogAction $ liftIO . putStrLn . T.unpack . fmtMessage
 
   authResult <- newIORef Nothing
-  let env = Env {..}
   case cmd of
-    GenerateIcs GenerateIcsOpts {..} -> do
+    GenerateIcs GenerateIcsOpts {apiClientOpts = ApiClientOpts {..}, ..} -> do
+      let env = Env {..}
       vCalendar <- flip runRecycle env $ runCollectionQuery collectionQuery
       let bs = printVCalendar vCalendar
       case outputFile of
         Just f -> BSL.writeFile f bs
         Nothing -> BSL.putStr bs
-    ServeIcs ServeIcsOpts {..} -> do
+    ServeIcs ServeIcsOpts -> do
+      port <-
+        lookupEnvRead
+          "RECYCLE_ICS_PORT"
+          "Port where recycle-ics runs on."
+      consumer <-
+        lookupEnvString
+          "RECYCLE_ICS_CONSUMER"
+          "X-Consumer header, get it by inspecting requests to recycleapp.be"
+      authSecret <-
+        lookupEnvString
+          "RECYCLE_ICS_SECRET"
+          "X-Authorization header, get it by inspecting requests to recycleapp.be"
+      let env = Env {..}
       putStrLn "Starting server"
       run port
         . logStdoutDev
         . simpleCors
         $ recycleIcsApp
-          $$(Env.envQ' "RECYCLE_ICS_WWW_DIR")
+          $$(TH.Env.envQ' "RECYCLE_ICS_WWW_DIR")
           env
+
+lookupEnvRead :: (Read a) => Text -> Text -> IO a
+lookupEnvRead var descr = do
+  mStr <- Env.lookupEnv (T.unpack var)
+  case mStr of
+    Nothing -> error . T.unpack $ "Environment variable " <> var <> " expected: " <> descr
+    Just str -> case readMaybe str of
+      Nothing -> error . T.unpack $ "Could not read environment variable " <> var <> ": " <> descr
+      Just a -> pure a
+
+lookupEnvString :: (IsString a) => Text -> Text -> IO a
+lookupEnvString var descr = do
+  mStr <- Env.lookupEnv (T.unpack var)
+  case mStr of
+    Nothing -> error . T.unpack $ "Environment variable " <> var <> " expected: " <> descr
+    Just str -> pure $ fromString str

@@ -5,14 +5,13 @@ CMD=(cabal run exe:recycle-ics --)
 # CMD=(docker run -p "$RECYCLE_ICS_PORT:$RECYCLE_ICS_PORT" recycle:latest)
 # CMD=($(nix-build -A recycle-ics)/bin/recycle-ics)
 
-CMD+=(--secret "$RECYCLE_ICS_SECRET")
-
 # Generate ICS file
 ZIP_CODE="1234-56789"
 STREET="https://data.vlaanderen.be/id/straatnaam-12345"
 HOUSE_NUMBER=1
 # CMD+=(
 #     generate-ics \
+#     --secret "$RECYCLE_ICS_SECRET" \
 #     --zipcode "$ZIP_CODE" \
 #     --street "$STREET" \
 #     --house-number "$HOUSE_NUMBER" \
@@ -24,10 +23,7 @@ HOUSE_NUMBER=1
 
 
 # servce ics files
-CMD+=(
-    serve-ics \
-    --port "$RECYCLE_ICS_PORT"
-)
+CMD+=(serve-ics)
 
 # run it
 "${CMD[@]}" "$@"
