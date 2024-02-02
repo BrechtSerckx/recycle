@@ -9,7 +9,6 @@ module Opts
 where
 
 import qualified Data.Char as Char
-import qualified Network.Wai.Handler.Warp as Warp
 import Options.Applicative
 import Recycle.Ics.ICalendar
 import Recycle.Ics.Types
@@ -18,8 +17,7 @@ import Recycle.Types.Optparse
 import Text.Read (readMaybe)
 
 data Opts = Opts
-  { cmd :: Cmd,
-    apiClientOpts :: ApiClientOpts
+  { cmd :: Cmd
   }
 
 parseOpts :: IO Opts
@@ -33,7 +31,6 @@ parseOpts =
 pOpts :: Parser Opts
 pOpts = do
   cmd <- pCmd
-  apiClientOpts <- pApiClientOpts
   pure Opts {..}
 
 data Cmd
@@ -55,7 +52,8 @@ pCmd =
 
 data GenerateIcsOpts = GenerateIcsOpts
   { outputFile :: Maybe FilePath,
-    collectionQuery :: CollectionQuery
+    collectionQuery :: CollectionQuery,
+    apiClientOpts :: ApiClientOpts
   }
 
 pGenerateIcsOpts :: Parser GenerateIcsOpts
@@ -66,6 +64,7 @@ pGenerateIcsOpts = do
         <> help
           "output file"
   collectionQuery <- pCollectionQuery
+  apiClientOpts <- pApiClientOpts
   pure GenerateIcsOpts {..}
 
 pCollectionQuery :: Parser CollectionQuery
@@ -139,17 +138,7 @@ pFractionEncoding =
         pure $ EncodeFractionAsVTodo due
    in pAsEvent <|> pAsTodo
 
-newtype ServeIcsOpts = ServeIcsOpts
-  { port :: Warp.Port
-  }
+data ServeIcsOpts = ServeIcsOpts
 
 pServeIcsOpts :: Parser ServeIcsOpts
-pServeIcsOpts = do
-  port <-
-    option auto $
-      long "port"
-        <> short 'p'
-        <> metavar "PORT"
-        <> help
-          "port"
-  pure ServeIcsOpts {..}
+pServeIcsOpts = pure ServeIcsOpts
