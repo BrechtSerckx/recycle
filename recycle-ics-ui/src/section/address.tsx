@@ -57,7 +57,8 @@ const ZipcodeAutocompleter = (props: Partial<UseFormRegisterReturn>) => {
               {...register("zipcodeId")}
             />
             <span>
-              {v.city.names[lc]} ({v.code}){v.available || " (Unavailable)"}
+              {(v.names[0] || v.city.names)[lc]} ({v.code})
+              {v.available || " (Unavailable)"}
             </span>
           </label>
         </div>
