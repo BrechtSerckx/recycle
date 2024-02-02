@@ -5,14 +5,12 @@ module Main
   )
 where
 
-import Colog.Core (LogAction (..))
-import Colog.Message
+import qualified Colog
 import Control.Monad.IO.Class (liftIO)
 import qualified Data.Aeson as Aeson
 import qualified Data.ByteString.Lazy.Char8 as BSL8
 import Data.Foldable (for_)
 import Data.IORef (newIORef)
-import qualified Data.Text as T
 import Data.Time hiding (getZonedTime)
 import Network.HTTP.Client.TLS
   ( newTlsManagerWith,
@@ -34,7 +32,10 @@ main = do
   httpManager <- newTlsManagerWith tlsManagerSettings
   let clientEnv =
         mkClientEnv httpManager $ BaseUrl Https "api.fostplus.be" 443 ""
-      logAction = LogAction $ liftIO . putStrLn . T.unpack . fmtMessage
+      logAction =
+        Colog.cfilter
+          ((>= verbosity) . Colog.msgSeverity)
+          Colog.simpleMessageAction
 
   authResult <- newIORef Nothing
   let env = Env {..}
