@@ -8,7 +8,11 @@ export default function DownloadSection() {
     mForm = inputsToForm(formInputs);
   const mkHttpLink = (form: Form): URL => {
       var url = new URL("/api/generate", serverUrl);
-      url.search = new URLSearchParams(formToParams(form)).toString();
+      try {
+        url.search = new URLSearchParams(formToParams(form)).toString();
+      } catch (error) {
+        console.error(error);
+      }
       return url;
     },
     mkWebcalLink = (form: Form): URL => {
