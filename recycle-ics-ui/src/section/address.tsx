@@ -50,9 +50,14 @@ const ZipcodeAutocompleter = (props: Partial<UseFormRegisterReturn>) => {
       {values.map((v) => (
         <div>
           <label key={v.id}>
-            <input type="radio" value={v.id} {...register("zipcodeId")} />
+            <input
+              type="radio"
+              value={v.id}
+              disabled={!v.available}
+              {...register("zipcodeId")}
+            />
             <span>
-              {v.city.names[lc]} ({v.code})
+              {v.city.names[lc]} ({v.code}){v.available || " (Unavailable)"}
             </span>
           </label>
         </div>
