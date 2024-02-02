@@ -1,7 +1,7 @@
 import * as React from "react";
 import { useWatch } from "react-hook-form";
 import { FormInputs, inputsToForm, Form, formToParams } from "../types";
-import { serverUrl } from "../env";
+import { serverUrl, nodeEnv } from "../env";
 
 export default function DownloadSection() {
   const formInputs = useWatch() as FormInputs,
@@ -39,6 +39,14 @@ export default function DownloadSection() {
               Download
             </a>
           </p>
+        )}
+        {nodeEnv === "development" && (
+          <>
+            <h3>Raw form:</h3>
+            <pre>{JSON.stringify(formInputs, null, 2)}</pre>
+            <h3>Structured form:</h3>
+            <pre>{JSON.stringify(mForm, null, 2)}</pre>
+          </>
         )}
       </section>
     </>
