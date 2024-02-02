@@ -48,8 +48,8 @@ const ZipcodeAutocompleter = (props: Partial<UseFormRegisterReturn>) => {
     <fieldset>
       <legend>Zip code</legend>
       {values.map((v) => (
-        <div>
-          <label key={v.id}>
+        <div key={v.id}>
+          <label>
             <input
               type="radio"
               value={v.id}
@@ -106,8 +106,8 @@ const StreetAutocompleter = ({
     <fieldset>
       <legend>Street</legend>
       {values.map((v) => (
-        <div>
-          <label key={v.id}>
+        <div key={v.id}>
+          <label>
             <input type="radio" value={v.id} {...register("streetId")} />
             {v.names[lc]}
           </label>
