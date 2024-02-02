@@ -46,22 +46,23 @@ mkVCalendar langCode fractionEncoding filter' ces =
   let (collections, events) =
         bimap filterFractions filterEvents $
           partitionCollectionEvents ces
-   in (emptyVCalendar "recycle")
-        { vcEvents = case fractionEncoding of
-            EncodeFractionAsVEvent timeslot reminders ->
-              let encodeCollection = collectionToVEvent langCode timeslot reminders
-                  encodeEvent = eventToVEvent langCode
-               in mkMapWith encodeCollection collections
-                    <> mkMapWith encodeEvent events
-            EncodeFractionAsVTodo {} ->
-              let encodeEvent = eventToVEvent langCode
-               in mkMapWith encodeEvent events,
-          vcTodos = case fractionEncoding of
-            EncodeFractionAsVEvent {} -> Map.empty
-            EncodeFractionAsVTodo reminder ->
-              let encodeCollection = collectionToVTodo langCode reminder
-               in mkMapWith encodeCollection collections
-        }
+   in case fractionEncoding of
+        EncodeFractionAsVEvent timeslot reminders ->
+          let encodeCollection = collectionToVEvent langCode timeslot reminders
+              encodeEvent = eventToVEvent langCode
+           in (emptyVCalendar "recycle")
+                { vcEvents =
+                    mkMapWith encodeCollection collections
+                      <> mkMapWith encodeEvent events,
+                  vcTodos = Map.empty
+                }
+        EncodeFractionAsVTodo reminder ->
+          let encodeCollection = collectionToVTodo langCode reminder
+              encodeEvent = eventToVEvent langCode
+           in (emptyVCalendar "recycle")
+                { vcEvents = mkMapWith encodeEvent events,
+                  vcTodos = mkMapWith encodeCollection collections
+                }
   where
     mkAssoc a =
       ((TL.fromStrict a.id.unCollectionEventId, Nothing), a)
