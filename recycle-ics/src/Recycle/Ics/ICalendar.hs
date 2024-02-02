@@ -43,35 +43,35 @@ mkVCalendar ::
   [CollectionEvent] ->
   VCalendar
 mkVCalendar langCode fractionEncoding filter' ces =
-  let (collections, events) = partitionCollectionEvents ces
+  let (collections, events) =
+        bimap filterFractions filterEvents $
+          partitionCollectionEvents ces
    in (emptyVCalendar "recycle")
         { vcEvents = case fractionEncoding of
             EncodeFractionAsVEvent timeslot reminders ->
-              mkMapWith
-                (collectionToVEvent langCode timeslot reminders)
-                ( maybe
-                    collections
-                    ( \fractions ->
-                        filter
-                          ((`elem` fractions) . (.fraction.id))
-                          collections
-                    )
-                    filter'.fractions
-                )
-                <> if filter'.events then mkMapWith (eventToVEvent langCode) events else mempty
+              let encodeCollection = collectionToVEvent langCode timeslot reminders
+                  encodeEvent = eventToVEvent langCode
+               in mkMapWith encodeCollection collections
+                    <> mkMapWith encodeEvent events
             EncodeFractionAsVTodo {} ->
-              mkMapWith (eventToVEvent langCode) events,
+              let encodeEvent = eventToVEvent langCode
+               in mkMapWith encodeEvent events,
           vcTodos = case fractionEncoding of
             EncodeFractionAsVEvent {} -> Map.empty
             EncodeFractionAsVTodo reminder ->
-              mkMapWith
-                (collectionToVTodo langCode reminder)
-                collections
+              let encodeCollection = collectionToVTodo langCode reminder
+               in mkMapWith encodeCollection collections
         }
   where
     mkAssoc a =
       ((TL.fromStrict a.id.unCollectionEventId, Nothing), a)
     mkMapWith f = Map.fromList . map (second f . mkAssoc)
+    filterFractions =
+      maybe
+        id
+        (\fractions -> filter ((`elem` fractions) . (.fraction.id)))
+        filter'.fractions
+    filterEvents = if filter'.events then id else const []
 
 printVCalendar :: VCalendar -> BSL.ByteString
 printVCalendar = printICalendar def
