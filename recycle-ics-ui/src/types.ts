@@ -20,8 +20,9 @@ export type FormInputs = {
   feEventEnd: string;
   reminders: { rdb: number; rhb: number; rmb: number }[];
   feTodoDueType: "date" | "datetime";
-  feTodoDueDaysBefore: number;
-  feTodoDueTimeOfDay: string;
+  feTodoDueDateDaysBefore: number;
+  feTodoDueDatetimeDaysBefore: number;
+  feTodoDueDatetimeTimeOfDay: string;
 };
 
 export type Form = {
@@ -67,8 +68,9 @@ export const inputsToForm = ({
   feEventEnd,
   reminders,
   feTodoDueType,
-  feTodoDueDaysBefore,
-  feTodoDueTimeOfDay,
+  feTodoDueDateDaysBefore,
+  feTodoDueDatetimeDaysBefore,
+  feTodoDueDatetimeTimeOfDay,
 }: FormInputs): Form | null => {
   if (!langCode || !zipcodeId || !streetId || !houseNumber) {
     return null;
@@ -108,14 +110,14 @@ export const inputsToForm = ({
         case "date":
           todoDue = {
             type: feTodoDueType as "date",
-            date: feTodoDueDaysBefore,
+            date: feTodoDueDateDaysBefore,
           };
           break;
         case "datetime":
           todoDue = {
             type: feTodoDueType as "datetime",
-            date: feTodoDueDaysBefore,
-            time: feTodoDueTimeOfDay,
+            date: feTodoDueDatetimeDaysBefore,
+            time: feTodoDueDatetimeTimeOfDay,
           };
           break;
         default:
@@ -147,8 +149,9 @@ export const defaultFormInputs: Partial<FormInputs> = {
   feEventEnd: "10:00",
   reminders: [],
   feTodoDueType: "datetime",
-  feTodoDueDaysBefore: 1,
-  feTodoDueTimeOfDay: "20:00",
+  feTodoDueDateDaysBefore: 1,
+  feTodoDueDatetimeDaysBefore: 1,
+  feTodoDueDatetimeTimeOfDay: "20:00",
   filterAllEvents: true,
   filterAllFractions: true,
 };

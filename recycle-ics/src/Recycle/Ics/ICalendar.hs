@@ -43,35 +43,36 @@ mkVCalendar ::
   [CollectionEvent] ->
   VCalendar
 mkVCalendar langCode fractionEncoding filter' ces =
-  let (collections, events) = partitionCollectionEvents ces
-   in (emptyVCalendar "recycle")
-        { vcEvents = case fractionEncoding of
-            EncodeFractionAsVEvent timeslot reminders ->
-              mkMapWith
-                (collectionToVEvent langCode timeslot reminders)
-                ( maybe
-                    collections
-                    ( \fractions ->
-                        filter
-                          ((`elem` fractions) . (.fraction.id))
-                          collections
-                    )
-                    filter'.fractions
-                )
-                <> if filter'.events then mkMapWith (eventToVEvent langCode) events else mempty
-            EncodeFractionAsVTodo {} ->
-              mkMapWith (eventToVEvent langCode) events,
-          vcTodos = case fractionEncoding of
-            EncodeFractionAsVEvent {} -> Map.empty
-            EncodeFractionAsVTodo reminder ->
-              mkMapWith
-                (collectionToVTodo langCode reminder)
-                collections
-        }
+  let (collections, events) =
+        bimap filterFractions filterEvents $
+          partitionCollectionEvents ces
+   in case fractionEncoding of
+        EncodeFractionAsVEvent timeslot reminders ->
+          let encodeCollection = collectionToVEvent langCode timeslot reminders
+              encodeEvent = eventToVEvent langCode
+           in (emptyVCalendar "recycle")
+                { vcEvents =
+                    mkMapWith encodeCollection collections
+                      <> mkMapWith encodeEvent events,
+                  vcTodos = Map.empty
+                }
+        EncodeFractionAsVTodo reminder ->
+          let encodeCollection = collectionToVTodo langCode reminder
+              encodeEvent = eventToVEvent langCode
+           in (emptyVCalendar "recycle")
+                { vcEvents = mkMapWith encodeEvent events,
+                  vcTodos = mkMapWith encodeCollection collections
+                }
   where
     mkAssoc a =
       ((TL.fromStrict a.id.unCollectionEventId, Nothing), a)
     mkMapWith f = Map.fromList . map (second f . mkAssoc)
+    filterFractions =
+      maybe
+        id
+        (\fractions -> filter ((`elem` fractions) . (.fraction.id)))
+        filter'.fractions
+    filterEvents = if filter'.events then id else const []
 
 printVCalendar :: VCalendar -> BSL.ByteString
 printVCalendar = printICalendar def

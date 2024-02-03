@@ -48,11 +48,17 @@ const ZipcodeAutocompleter = (props: Partial<UseFormRegisterReturn>) => {
     <fieldset>
       <legend>Zip code</legend>
       {values.map((v) => (
-        <div>
-          <label key={v.id}>
-            <input type="radio" value={v.id} {...register("zipcodeId")} />
+        <div key={v.id}>
+          <label>
+            <input
+              type="radio"
+              value={v.id}
+              disabled={!v.available}
+              {...register("zipcodeId")}
+            />
             <span>
-              {v.city.names[lc]} ({v.code})
+              {v.code} {(v.names[0] || v.city.names)[lc]}, {v.city.names[lc]}
+              {v.available || " (Unavailable)"}
             </span>
           </label>
         </div>
@@ -100,8 +106,8 @@ const StreetAutocompleter = ({
     <fieldset>
       <legend>Street</legend>
       {values.map((v) => (
-        <div>
-          <label key={v.id}>
+        <div key={v.id}>
+          <label>
             <input type="radio" value={v.id} {...register("streetId")} />
             {v.names[lc]}
           </label>

@@ -173,8 +173,8 @@ export default function DescriptionSection() {
           support all features.
         </p>
         <h2>How-to</h2>
-        {howTos.map(({ title, summary, howTo }) => (
-          <>
+        {howTos.map(({ title, summary, howTo }, i) => (
+          <div key={i}>
             <h3>{title}</h3>
             <details>
               <>
@@ -182,7 +182,7 @@ export default function DescriptionSection() {
                 {howTo}
               </>
             </details>
-          </>
+          </div>
         ))}
       </section>
     </>

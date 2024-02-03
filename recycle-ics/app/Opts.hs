@@ -8,6 +8,7 @@ module Opts
   )
 where
 
+import Colog (Severity (..))
 import qualified Data.Char as Char
 import Options.Applicative
 import Recycle.Ics.ICalendar
@@ -53,7 +54,8 @@ pCmd =
 data GenerateIcsOpts = GenerateIcsOpts
   { outputFile :: Maybe FilePath,
     collectionQuery :: CollectionQuery,
-    apiClientOpts :: ApiClientOpts
+    apiClientOpts :: ApiClientOpts,
+    verbosity :: Severity
   }
 
 pGenerateIcsOpts :: Parser GenerateIcsOpts
@@ -65,6 +67,15 @@ pGenerateIcsOpts = do
           "output file"
   collectionQuery <- pCollectionQuery
   apiClientOpts <- pApiClientOpts
+  verbosity <-
+    option
+      auto
+      ( short 'v'
+          <> long "verbosity"
+          <> help "Log error messages of this severity and higher."
+          <> metavar "SEVERITY"
+          <> value Warning
+      )
   pure GenerateIcsOpts {..}
 
 pCollectionQuery :: Parser CollectionQuery

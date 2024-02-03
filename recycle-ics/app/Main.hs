@@ -3,14 +3,14 @@ module Main
   )
 where
 
-import Colog.Core (LogAction (..))
-import Colog.Message
-import Control.Monad.IO.Class (liftIO)
+import qualified Colog
 import qualified Data.ByteString.Lazy.Char8 as BSL
 import Data.IORef (newIORef)
+import Data.Maybe (fromMaybe)
 import Data.String (IsString (fromString))
 import Data.Text (Text)
 import qualified Data.Text as T
+import Data.Traversable (for)
 import qualified Language.Haskell.TH.Env as TH.Env
 import Network.HTTP.Client.TLS
   ( newTlsManagerWith,
@@ -37,12 +37,15 @@ main = do
   httpManager <- newTlsManagerWith tlsManagerSettings
   let clientEnv =
         mkClientEnv httpManager $ BaseUrl Https "api.fostplus.be" 443 ""
-      logAction = LogAction $ liftIO . putStrLn . T.unpack . fmtMessage
 
   authResult <- newIORef Nothing
   case cmd of
     GenerateIcs GenerateIcsOpts {apiClientOpts = ApiClientOpts {..}, ..} -> do
-      let env = Env {..}
+      let logAction =
+            Colog.cfilter
+              ((>= verbosity) . Colog.msgSeverity)
+              Colog.simpleMessageAction
+          env = Env {..}
       vCalendar <- flip runRecycle env $ runCollectionQuery collectionQuery
       let bs = printVCalendar vCalendar
       case outputFile of
@@ -61,7 +64,13 @@ main = do
         lookupEnvString
           "RECYCLE_ICS_SECRET"
           "X-Authorization header, get it by inspecting requests to recycleapp.be"
-      let env = Env {..}
+      verbosity <-
+        fromMaybe Colog.Warning <$> lookupEnvMRead "RECYCLE_ICS_VERBOSITY"
+      let logAction =
+            Colog.cfilter
+              ((>= verbosity) . Colog.msgSeverity)
+              Colog.simpleMessageAction
+          env = Env {..}
       putStrLn "Starting server"
       run port
         . logStdoutDev
@@ -76,8 +85,15 @@ lookupEnvRead var descr = do
   case mStr of
     Nothing -> error . T.unpack $ "Environment variable " <> var <> " expected: " <> descr
     Just str -> case readMaybe str of
-      Nothing -> error . T.unpack $ "Could not read environment variable " <> var <> ": " <> descr
+      Nothing -> error . T.unpack $ "Could not read environment variable " <> var
       Just a -> pure a
+
+lookupEnvMRead :: (Read a) => Text -> IO (Maybe a)
+lookupEnvMRead var = do
+  mStr <- Env.lookupEnv (T.unpack var)
+  for mStr $ \str -> case readMaybe str of
+    Nothing -> error . T.unpack $ "Could not read environment variable " <> var
+    Just a -> pure a
 
 lookupEnvString :: (IsString a) => Text -> Text -> IO a
 lookupEnvString var descr = do
@@ -85,3 +101,7 @@ lookupEnvString var descr = do
   case mStr of
     Nothing -> error . T.unpack $ "Environment variable " <> var <> " expected: " <> descr
     Just str -> pure $ fromString str
+
+lookupEnvMString :: (IsString a) => Text -> IO (Maybe a)
+lookupEnvMString var = do
+  fmap fromString <$> Env.lookupEnv (T.unpack var)

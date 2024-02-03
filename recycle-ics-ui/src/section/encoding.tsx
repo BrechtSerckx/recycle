@@ -187,7 +187,7 @@ const TodoFullDayInputs = ({
         <TodoDaysBeforeInput
           label="Days before"
           disabled={!(isParentChecked && isChecked)}
-          {...register("feTodoDueDaysBefore", {
+          {...register("feTodoDueDateDaysBefore", {
             required: isParentChecked && isChecked,
           })}
         />
@@ -215,14 +215,14 @@ const TodoSpecificTimeInputs = ({
         <TodoDaysBeforeInput
           label="Days before"
           disabled={!(isParentChecked && isChecked)}
-          {...register("feTodoDueDaysBefore", {
+          {...register("feTodoDueDatetimeDaysBefore", {
             required: isParentChecked && isChecked,
           })}
         />
         <TodoTimeInput
           label="Time"
           disabled={!(isParentChecked && isChecked)}
-          {...register("feTodoDueTimeOfDay", {
+          {...register("feTodoDueDatetimeTimeOfDay", {
             required: isParentChecked && isChecked,
           })}
         />

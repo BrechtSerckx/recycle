@@ -3,10 +3,11 @@ module Opts
     parseOpts,
     ApiClientOpts (..),
     ApiClientCmd (..),
-    module Recycle.Types.Optparse
+    module Recycle.Types.Optparse,
   )
 where
 
+import Colog (Severity (..))
 import Data.Text (Text)
 import Numeric.Natural (Natural)
 import Options.Applicative
@@ -15,7 +16,8 @@ import Recycle.Types.Optparse
 
 data Opts = Opts
   { cmd :: ApiClientCmd,
-    apiClientOpts :: ApiClientOpts
+    apiClientOpts :: ApiClientOpts,
+    verbosity :: Severity
   }
 
 parseOpts :: IO Opts
@@ -27,6 +29,15 @@ pOpts :: Parser Opts
 pOpts = do
   cmd <- pApiClientCmd
   apiClientOpts <- pApiClientOpts
+  verbosity <-
+    option
+      auto
+      ( short 'v'
+          <> long "verbosity"
+          <> help "Log error messages of this severity and higher."
+          <> metavar "SEVERITY"
+          <> value Warning
+      )
   pure Opts {..}
 
 data ApiClientCmd
