@@ -4,6 +4,7 @@ module Main
 where
 
 import qualified Colog
+import Control.Monad.IO.Class (MonadIO)
 import qualified Data.ByteString.Lazy.Char8 as BSL
 import Data.Functor.Compose (Compose (..))
 import Data.IORef (newIORef)
@@ -30,6 +31,7 @@ import Servant.Client
     mkClientEnv,
   )
 import qualified System.Environment as Env
+import qualified System.Process.Typed as Proc
 import Text.Read (readMaybe)
 
 data LogHook = LogHook
@@ -37,8 +39,16 @@ data LogHook = LogHook
     verbosity :: Colog.Severity
   }
 
-mkLogHookAction :: LogHook -> Colog.LogAction
-mkLogHookAction LogHook {..} = undefined
+mkLogHookAction :: (MonadIO m) => LogHook -> Colog.LogAction m Colog.Message
+mkLogHookAction LogHook {..} =
+  Colog.cfilter
+    ((>= verbosity) . Colog.msgSeverity)
+    . Colog.LogAction
+    $ \Colog.Msg {..} ->
+      Proc.runProcess_ $
+        Proc.proc
+          hook
+          [show msgSeverity, show msgStack, T.unpack msgText]
 
 main :: IO ()
 main = do
