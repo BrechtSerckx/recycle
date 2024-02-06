@@ -24,11 +24,20 @@ import Capability.State
     ReaderIORef (..),
   )
 import Colog
+import Control.Exception.Safe
+  ( MonadCatch,
+    MonadThrow,
+    SomeException,
+    catch,
+    displayException,
+    throw,
+  )
 import Control.Monad.IO.Class (MonadIO (..))
 import qualified Control.Monad.Reader as Mtl
 import Control.Monad.Trans.Reader (ReaderT (..))
 import Data.Generics.Labels (fieldLens)
 import Data.IORef
+import qualified Data.Text as T
 import GHC.Generics
 import Recycle.API
 import Recycle.Class
@@ -82,9 +91,17 @@ newtype RecycleM a = RecycleM (InnerM a)
   deriving
     (HasRecycleClient)
     via RecycleClientT RecycleM
+  deriving (MonadThrow, MonadCatch) via InnerM
 
 instance HasLog Env Message RecycleM where
   logActionL = fieldLens @"logAction" @Env
 
 runRecycle :: RecycleM a -> Env -> IO a
-runRecycle (RecycleM act) env = act `runReaderT` env
+runRecycle act env =
+  let RecycleM act' =
+        act
+          `catch` ( \(e :: SomeException) -> do
+                      logError . T.pack $ displayException e
+                      liftIO $ throw e
+                  )
+   in act' `runReaderT` env
