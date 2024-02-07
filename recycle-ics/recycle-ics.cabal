@@ -157,3 +157,4 @@ executable recycle-ics
 
     -- system
     , th-env
+    , typed-process

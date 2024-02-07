@@ -4,7 +4,9 @@ module Main
 where
 
 import qualified Colog
+import Control.Monad.IO.Class (MonadIO)
 import qualified Data.ByteString.Lazy.Char8 as BSL
+import Data.Functor.Compose (Compose (..))
 import Data.IORef (newIORef)
 import Data.Maybe (fromMaybe)
 import Data.String (IsString (fromString))
@@ -29,7 +31,24 @@ import Servant.Client
     mkClientEnv,
   )
 import qualified System.Environment as Env
+import qualified System.Process.Typed as Proc
 import Text.Read (readMaybe)
+
+data LogHook = LogHook
+  { hook :: FilePath,
+    verbosity :: Colog.Severity
+  }
+
+mkLogHookAction :: (MonadIO m) => LogHook -> Colog.LogAction m Colog.Message
+mkLogHookAction LogHook {..} =
+  Colog.cfilter
+    ((>= verbosity) . Colog.msgSeverity)
+    . Colog.LogAction
+    $ \Colog.Msg {..} ->
+      Proc.runProcess_ $
+        Proc.proc
+          hook
+          [show msgSeverity, show msgStack, T.unpack msgText]
 
 main :: IO ()
 main = do
@@ -66,10 +85,15 @@ main = do
           "X-Authorization header, get it by inspecting requests to recycleapp.be"
       verbosity <-
         fromMaybe Colog.Warning <$> lookupEnvMRead "RECYCLE_ICS_VERBOSITY"
+      mLogHook <- getCompose $ do
+        hook <- Compose $ lookupEnvMString "RECYCLE_ICS_LOG_HOOK"
+        verbosity' <- Compose $ lookupEnvMRead "RECYCLE_ICS_LOG_HOOK_VERBOSITY"
+        pure LogHook {verbosity = verbosity', ..}
       let logAction =
             Colog.cfilter
               ((>= verbosity) . Colog.msgSeverity)
               Colog.simpleMessageAction
+              <> maybe mempty mkLogHookAction mLogHook
           env = Env {..}
       putStrLn "Starting server"
       run port

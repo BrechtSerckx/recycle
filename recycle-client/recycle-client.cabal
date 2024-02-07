@@ -85,6 +85,7 @@ library
     , capability
     , mtl
     , transformers
+    , safe-exceptions
 
     -- serialisation
     , aeson
