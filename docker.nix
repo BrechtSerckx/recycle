@@ -14,6 +14,7 @@ in nixpkgs.dockerTools.buildImage {
         # general utils
         bash 
         coreutils
+        curl
         # to fix 'certificate has unknown CA', see manual
         dockerTools.caCertificates
         # to fix 'no such protocol name: <protocol>', see manual
