@@ -86,6 +86,8 @@ library
     , mtl
     , transformers
     , safe-exceptions
+    , retry
+    , exceptions
 
     -- serialisation
     , aeson

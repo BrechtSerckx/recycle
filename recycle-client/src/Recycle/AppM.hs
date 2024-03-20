@@ -32,6 +32,7 @@ import Control.Exception.Safe
     displayException,
     throw,
   )
+import Control.Monad.Catch (MonadMask)
 import Control.Monad.IO.Class (MonadIO (..))
 import qualified Control.Monad.Reader as Mtl
 import Control.Monad.Trans.Reader (ReaderT (..))
@@ -91,7 +92,7 @@ newtype RecycleM a = RecycleM (InnerM a)
   deriving
     (HasRecycleClient)
     via RecycleClientT RecycleM
-  deriving (MonadThrow, MonadCatch) via InnerM
+  deriving (MonadThrow, MonadCatch, MonadMask) via InnerM
 
 instance HasLog Env Message RecycleM where
   logActionL = fieldLens @"logAction" @Env

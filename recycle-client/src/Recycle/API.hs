@@ -19,10 +19,16 @@ where
 
 import Capability.Error
 import Capability.Reader
+import Colog (HasLog, Message, logError, logWarning)
+import Control.Monad.Catch (MonadMask)
+import qualified Control.Monad.Reader as Mtl
 import Control.Monad.Trans
+import qualified Control.Retry as Retry
 import Data.Aeson.Extra.SingObject (SingObject)
 import Data.Text (Text)
+import qualified Data.Text as Text
 import Data.Time (Day)
+import Network.HTTP.Client (HttpException (..), HttpExceptionContent (..))
 import Numeric.Natural (Natural)
 import Recycle.Types
 import Servant.API
@@ -159,16 +165,38 @@ instance
   ( Monad m,
     HasReader "clientEnv" ClientEnv m,
     MonadIO m,
-    HasThrow "ClientError" ClientError m
+    HasThrow "ClientError" ClientError m,
+    MonadMask m,
+    Mtl.MonadReader env m,
+    HasLog env Message m
   ) =>
   HasServantClient (ServantClientT m)
   where
   runClient act = do
     clientEnv <- lift $ ask @"clientEnv"
-    eRes <- lift . liftIO $ runClientM act clientEnv
+    eRes <- lift . retry . liftIO $ runClientM act clientEnv
     case eRes of
       Left err -> lift $ throw @"ClientError" err
       Right a -> pure a
+    where
+      retry =
+        Retry.recovering
+          Retry.retryPolicyDefault
+          [ Retry.logRetries
+              ( \case
+                  HttpExceptionRequest _ e -> return $ case e of
+                    ResponseTimeout -> True
+                    ConnectionTimeout -> True
+                    ConnectionFailure _ -> True
+                    _ -> False
+                  _ -> return False
+              )
+              ( \shouldRetry err status ->
+                  let msg = Text.pack $ Retry.defaultLogMsg shouldRetry err status
+                   in if shouldRetry then logWarning msg else logError msg
+              )
+          ]
+          . const
 
 liftApiError ::
   (HasThrow "ApiError" ApiError m) =>
