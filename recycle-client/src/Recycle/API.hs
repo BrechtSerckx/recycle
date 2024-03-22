@@ -28,13 +28,12 @@ import Data.Aeson.Extra.SingObject (SingObject)
 import Data.Text (Text)
 import qualified Data.Text as Text
 import Data.Time (Day)
-import Network.HTTP.Client (HttpException (..), HttpExceptionContent (..))
 import Numeric.Natural (Natural)
 import Recycle.Types
 import Servant.API
 import Servant.Client
   ( ClientEnv,
-    ClientError,
+    ClientError (..),
     ClientM,
     client,
     hoistClient,
@@ -183,13 +182,9 @@ instance
         Retry.recovering
           Retry.retryPolicyDefault
           [ Retry.logRetries
-              ( \case
-                  HttpExceptionRequest _ e -> return $ case e of
-                    ResponseTimeout -> True
-                    ConnectionTimeout -> True
-                    ConnectionFailure _ -> True
-                    _ -> False
-                  _ -> return False
+              ( return . \case
+                  ConnectionError _ -> True
+                  _ -> False
               )
               ( \shouldRetry err status ->
                   let msg = Text.pack $ Retry.defaultLogMsg shouldRetry err status
