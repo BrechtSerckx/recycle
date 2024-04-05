@@ -19,7 +19,7 @@ where
 
 import Capability.Error
 import Capability.Reader
-import Colog (HasLog, Message, logError, logWarning)
+import Colog (HasLog, Message, logInfo)
 import Control.Monad.Catch (MonadMask)
 import qualified Control.Monad.Reader as Mtl
 import Control.Monad.Trans
@@ -28,13 +28,12 @@ import Data.Aeson.Extra.SingObject (SingObject)
 import Data.Text (Text)
 import qualified Data.Text as Text
 import Data.Time (Day)
-import Network.HTTP.Client (HttpException (..), HttpExceptionContent (..))
 import Numeric.Natural (Natural)
 import Recycle.Types
 import Servant.API
 import Servant.Client
   ( ClientEnv,
-    ClientError,
+    ClientError (..),
     ClientM,
     client,
     hoistClient,
@@ -180,22 +179,15 @@ instance
       Right a -> pure a
     where
       retry =
-        Retry.recovering
+        Retry.retrying
           Retry.retryPolicyDefault
-          [ Retry.logRetries
-              ( \case
-                  HttpExceptionRequest _ e -> return $ case e of
-                    ResponseTimeout -> True
-                    ConnectionTimeout -> True
-                    ConnectionFailure _ -> True
-                    _ -> False
-                  _ -> return False
-              )
-              ( \shouldRetry err status ->
-                  let msg = Text.pack $ Retry.defaultLogMsg shouldRetry err status
-                   in if shouldRetry then logWarning msg else logError msg
-              )
-          ]
+          ( \status -> \case
+              Left e@(ConnectionError _) -> do
+                let msg = Text.pack $ Retry.defaultLogMsg True e status
+                logInfo msg
+                pure True
+              _ -> pure False
+          )
           . const
 
 liftApiError ::
