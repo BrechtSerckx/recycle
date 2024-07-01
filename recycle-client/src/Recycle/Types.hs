@@ -103,8 +103,8 @@ data FullLogo = FullLogo
     reversed :: Map Text Text,
     name :: Translated Text,
     id :: Text,
-    createdAt :: UTCTime,
-    updatedAt :: UTCTime
+    createdAt :: Maybe UTCTime,
+    updatedAt :: Maybe UTCTime
   }
   deriving stock (Generic, Show, Eq)
   deriving anyclass (FromJSON, ToJSON)
@@ -157,7 +157,7 @@ data Fraction = Fraction
 
 data FullFraction = FullFraction
   { id :: FractionId,
-    national :: Bool,
+    national :: Maybe Bool,
     nationalRef :: Maybe Text,
     datatankRef :: Maybe Text,
     name :: Translated Text,
@@ -165,8 +165,8 @@ data FullFraction = FullFraction
     color :: RGB,
     variations :: (),
     organisation :: Text,
-    createdAt :: UTCTime,
-    updatedAt :: UTCTime
+    createdAt :: Maybe UTCTime,
+    updatedAt :: Maybe UTCTime
   }
   deriving stock (Generic, Show, Eq)
   deriving anyclass (FromJSON, ToJSON)
