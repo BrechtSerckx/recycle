@@ -31,7 +31,7 @@ spec = describe "API responses" $ do
       (BSL.fromStrict $(embedFile "test/responses/authResult.json"))
       `shouldBe` Right
         ( AuthResult
-            { expiresAt = read "2021-10-15 09:38:17.553 UTC",
+            { expiresAt = read @UTCTime "2021-10-15 09:38:17.553 UTC",
               accessToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE2MzQyODcxNTcsImV4cCI6MTYzNDI5MDc1NywiYXVkIjoicmVjeWNsZWFwcC5iZSJ9.M71tok8T0dOms_pISu_pLzGMpH84iNtOraJ5-PI1Ktk"
             }
         )
@@ -65,8 +65,8 @@ spec = describe "API responses" $ do
                             "3018-24062"
                           ],
                         name = "Leuven",
-                        createdAt = read "2020-07-13 22:00:01.034 UTC",
-                        updatedAt = read "2020-09-21 22:15:05.605 UTC",
+                        createdAt = read @UTCTime "2020-07-13 22:00:01.034 UTC",
+                        updatedAt = read @UTCTime "2020-09-21 22:15:05.605 UTC",
                         names =
                           Translated
                             { de = "L\246wen",
@@ -76,8 +76,8 @@ spec = describe "API responses" $ do
                             }
                       },
                   code = "3000",
-                  createdAt = read "2020-07-13 22:00:01.034 UTC",
-                  updatedAt = read "2020-09-21 22:15:05.604 UTC",
+                  createdAt = read @UTCTime "2020-07-13 22:00:01.034 UTC",
+                  updatedAt = read @UTCTime "2020-09-21 22:15:05.604 UTC",
                   id = "3000-24062",
                   names =
                     [ Translated
@@ -110,8 +110,8 @@ spec = describe "API responses" $ do
                               "3018-24062"
                             ],
                           name = "Leuven",
-                          createdAt = read "2020-07-13 22:00:01.034 UTC",
-                          updatedAt = read "2020-09-21 22:15:05.605 UTC",
+                          createdAt = read @UTCTime "2020-07-13 22:00:01.034 UTC",
+                          updatedAt = read @UTCTime "2020-09-21 22:15:05.605 UTC",
                           names =
                             Translated
                               { de = "L\246wen",
@@ -121,8 +121,8 @@ spec = describe "API responses" $ do
                               }
                         }
                     ],
-                  createdAt = read "2020-09-22 08:19:32.787 UTC",
-                  updatedAt = read "2021-10-11 07:06:32.64 UTC",
+                  createdAt = read @UTCTime "2020-09-22 08:19:32.787 UTC",
+                  updatedAt = read @UTCTime "2021-10-11 07:06:32.64 UTC",
                   names =
                     Translated
                       { de = "Andreas Vesaliusstraat",
@@ -136,8 +136,8 @@ spec = describe "API responses" $ do
                     [ Zipcode
                         { city = "24062",
                           code = "3000",
-                          createdAt = read "2020-07-13 22:00:01.034 UTC",
-                          updatedAt = read "2020-09-21 22:15:05.604 UTC",
+                          createdAt = read @UTCTime "2020-07-13 22:00:01.034 UTC",
+                          updatedAt = read @UTCTime "2020-09-21 22:15:05.604 UTC",
                           id = "3000-24062",
                           names =
                             [ Translated
@@ -167,11 +167,11 @@ spec = describe "API responses" $ do
         ( SingObject
             [ FractionCollection
                 { id = "5fed8c315214976fcf25764d",
-                  timestamp = read "2021-09-15 00:00:00 UTC",
+                  timestamp = read @UTCTime "2021-09-15 00:00:00 UTC",
                   fraction =
                     FullFraction
                       { id = "5e4e84d1bab65e9819d714d2",
-                        national = True,
+                        national = Just True,
                         nationalRef = Just "5d610b87173c063cc0400103",
                         datatankRef = Nothing,
                         name = Translated {en = "PMD", nl = "PMD", fr = "PMC", de = "PMD"},
@@ -181,14 +181,14 @@ spec = describe "API responses" $ do
                               reversed = Map.fromList [("1x", "5ef36735da06b25d5e94b3bc"), ("2x", "5ef36735da06b2a1a594b3bd"), ("3x", "5ef36735da06b2093194b3be")],
                               name = Translated {de = "PMD", en = "PMD", fr = "PMC", nl = "PMD"},
                               id = "5d610b86162c063cc0400125",
-                              createdAt = read "2020-02-20 13:08:25.556 UTC",
-                              updatedAt = read "2020-06-24 14:46:14.194 UTC"
+                              createdAt = Just $ read @UTCTime "2020-02-20 13:08:25.556 UTC",
+                              updatedAt = Just $ read @UTCTime "2020-06-24 14:46:14.194 UTC"
                             },
                         color = RGB "#60b1df",
                         variations = (),
                         organisation = "5e27908010cfeaa15c9cee93",
-                        createdAt = read "2020-02-20 13:08:32.883 UTC",
-                        updatedAt = read "2021-09-30 15:16:36.595 UTC"
+                        createdAt = Just $ read @UTCTime "2020-02-20 13:08:32.883 UTC",
+                        updatedAt = Just $ read @UTCTime "2021-09-30 15:16:36.595 UTC"
                       },
                   exception = Nothing
                 }
@@ -203,7 +203,7 @@ spec = describe "API responses" $ do
         ( SingObject
             [ Event
                 { id = "5fed94cf5214974871257660",
-                  timestamp = read "2021-09-18 00:00:00 UTC",
+                  timestamp = read @UTCTime "2021-09-18 00:00:00 UTC",
                   event =
                     InnerEvent
                       { title = Translated {en = "Repair Caf\233", nl = "Repair Caf\233", fr = "Repair Caf\233", de = "Repair Caf\233"},
@@ -223,11 +223,11 @@ spec = describe "API responses" $ do
         ( SingObject
             [ FractionCollection
                 { id = "658eb5838f94c6007edfa96e",
-                  timestamp = read "2024-01-01 00:00:00 UTC",
+                  timestamp = read @UTCTime "2024-01-01 00:00:00 UTC",
                   fraction =
                     FullFraction
                       { id = "5e4e84d1bab65e9819d714d2",
-                        national = True,
+                        national = Just True,
                         nationalRef = Just "5d610b87173c063cc0400103",
                         datatankRef = Nothing,
                         name = Translated {en = "PMD", nl = "PMD", fr = "PMC", de = "PMK"},
@@ -237,14 +237,14 @@ spec = describe "API responses" $ do
                               reversed = Map.fromList [("1x", "public/2dcf6883-ac47-4de7-912f-20e3ee3b0b01-pmd-reversed@1x.png"), ("2x", "public/007dc7b4-d05b-481e-99d4-47614abe69ce-pmd-reversed@2x.png"), ("3x", "public/c28fda62-2d92-4cc5-81c4-3a4979ec2500-pmd-reversed@3x.png")],
                               name = Translated {de = "PMD", en = "PMD", fr = "PMC", nl = "PMD"},
                               id = "5d610b86162c063cc0400125",
-                              createdAt = read "2020-02-20 13:08:25.556 UTC",
-                              updatedAt = read "2020-06-24 14:46:14.194 UTC"
+                              createdAt = Just $ read @UTCTime "2020-02-20 13:08:25.556 UTC",
+                              updatedAt = Just $ read @UTCTime "2020-06-24 14:46:14.194 UTC"
                             },
                         color = RGB "#60b1df",
                         variations = (),
                         organisation = "5e27908010cfeaa15c9cee93",
-                        createdAt = read "2020-02-20 13:08:32.883 UTC",
-                        updatedAt = read "2024-01-24 13:24:35.213 UTC"
+                        createdAt = Just $ read @UTCTime "2020-02-20 13:08:32.883 UTC",
+                        updatedAt = Just $ read @UTCTime "2024-01-24 13:24:35.213 UTC"
                       },
                   exception =
                     Just
@@ -253,10 +253,10 @@ spec = describe "API responses" $ do
                               { isDeleted = Just False,
                                 group = "5ed75ad48e14e76fe3c5febc",
                                 organisation = "5e27908010cfeaa15c9cee93",
-                                createdAt = read "2023-12-29 12:03:32.838 UTC",
-                                updatedAt = read "2023-12-29 12:03:32.838 UTC",
+                                createdAt = read @UTCTime "2023-12-29 12:03:32.838 UTC",
+                                updatedAt = read @UTCTime "2023-12-29 12:03:32.838 UTC",
                                 fraction = "5e4e84d1bab65e9819d714d2",
-                                timestamp = read "2024-01-04 00:00:00 UTC",
+                                timestamp = read @UTCTime "2024-01-04 00:00:00 UTC",
                                 id = "658eb594262b65007e5accec",
                                 exception =
                                   InnerExceptionReplaces
@@ -264,8 +264,8 @@ spec = describe "API responses" $ do
                                       reason =
                                         CollectionReplacementReason
                                           { id = "5d610b87162c063cc0400102",
-                                            createdAt = read "2020-02-03 11:06:44.291 UTC",
-                                            updatedAt = read "2020-03-03 16:17:29.678 UTC",
+                                            createdAt = read @UTCTime "2020-02-03 11:06:44.291 UTC",
+                                            updatedAt = read @UTCTime "2020-03-03 16:17:29.678 UTC",
                                             name = Translated {en = "Public holiday", nl = "Feestdag", fr = "Jour f\233ri\233", de = "Feiertag"}
                                           }
                                     }
@@ -275,11 +275,11 @@ spec = describe "API responses" $ do
                 },
               FractionCollection
                 { id = "658eb594262b65007e5accec",
-                  timestamp = read "2024-01-04 00:00:00 UTC",
+                  timestamp = read @UTCTime "2024-01-04 00:00:00 UTC",
                   fraction =
                     FullFraction
                       { id = "5e4e84d1bab65e9819d714d2",
-                        national = True,
+                        national = Just True,
                         nationalRef = Just "5d610b87173c063cc0400103",
                         datatankRef = Nothing,
                         name = Translated {en = "PMD", nl = "PMD", fr = "PMC", de = "PMK"},
@@ -289,14 +289,14 @@ spec = describe "API responses" $ do
                               reversed = Map.fromList [("1x", "public/2dcf6883-ac47-4de7-912f-20e3ee3b0b01-pmd-reversed@1x.png"), ("2x", "public/007dc7b4-d05b-481e-99d4-47614abe69ce-pmd-reversed@2x.png"), ("3x", "public/c28fda62-2d92-4cc5-81c4-3a4979ec2500-pmd-reversed@3x.png")],
                               name = Translated {de = "PMD", en = "PMD", fr = "PMC", nl = "PMD"},
                               id = "5d610b86162c063cc0400125",
-                              createdAt = read "2020-02-20 13:08:25.556 UTC",
-                              updatedAt = read "2020-06-24 14:46:14.194 UTC"
+                              createdAt = Just $ read @UTCTime "2020-02-20 13:08:25.556 UTC",
+                              updatedAt = Just $ read @UTCTime "2020-06-24 14:46:14.194 UTC"
                             },
                         color = RGB "#60b1df",
                         variations = (),
                         organisation = "5e27908010cfeaa15c9cee93",
-                        createdAt = read "2020-02-20 13:08:32.883 UTC",
-                        updatedAt = read "2024-01-24 13:24:35.213 UTC"
+                        createdAt = Just $ read @UTCTime "2020-02-20 13:08:32.883 UTC",
+                        updatedAt = Just $ read @UTCTime "2024-01-24 13:24:35.213 UTC"
                       },
                   exception =
                     Just
@@ -305,9 +305,9 @@ spec = describe "API responses" $ do
                               { isDeleted = Just False,
                                 group = "5ed75ad48e14e76fe3c5febc",
                                 organisation = "5e27908010cfeaa15c9cee93",
-                                createdAt = read "2023-12-29 12:03:15.126 UTC",
-                                updatedAt = read "2023-12-29 12:03:32.849 UTC",
-                                timestamp = read "2024-01-01 00:00:00 UTC",
+                                createdAt = read @UTCTime "2023-12-29 12:03:15.126 UTC",
+                                updatedAt = read @UTCTime "2023-12-29 12:03:32.849 UTC",
+                                timestamp = read @UTCTime "2024-01-01 00:00:00 UTC",
                                 id = "658eb5838f94c6007edfa96e",
                                 fraction = "5e4e84d1bab65e9819d714d2",
                                 exception =
@@ -318,8 +318,8 @@ spec = describe "API responses" $ do
                           )
                           ( CollectionReplacementReason
                               { id = "5d610b87162c063cc0400102",
-                                createdAt = read "2020-02-03 11:06:44.291 UTC",
-                                updatedAt = read "2020-03-03 16:17:29.678 UTC",
+                                createdAt = read @UTCTime "2020-02-03 11:06:44.291 UTC",
+                                updatedAt = read @UTCTime "2020-03-03 16:17:29.678 UTC",
                                 name = Translated {en = "Public holiday", nl = "Feestdag", fr = "Jour f\233ri\233", de = "Feiertag"}
                               }
                           )
