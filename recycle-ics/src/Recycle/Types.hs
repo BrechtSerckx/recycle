@@ -121,8 +121,7 @@ partitionCollectionEvents =
 
 data Fraction = Fraction
   { id :: FractionId,
-    name :: Translated Text,
-    variations :: [Aeson.Value]
+    name :: Translated Text
   }
   deriving stock (Generic, Show, Eq)
   deriving anyclass (FromJSON, ToJSON)
@@ -133,7 +132,6 @@ data FullFraction = FullFraction
     nationalRef :: Maybe Text,
     datatankRef :: Maybe Text,
     name :: Translated Text,
-    variations :: (),
     organisation :: Text,
     createdAt :: Maybe UTCTime,
     updatedAt :: Maybe UTCTime
