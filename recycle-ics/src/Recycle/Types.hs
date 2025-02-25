@@ -128,11 +128,7 @@ data Fraction = Fraction
 
 data FullFraction = FullFraction
   { id :: FractionId,
-    national :: Maybe Bool,
-    nationalRef :: Maybe Text,
-    datatankRef :: Maybe Text,
     name :: Translated Text,
-    organisation :: Text,
     createdAt :: Maybe UTCTime,
     updatedAt :: Maybe UTCTime
   }
@@ -169,8 +165,6 @@ instance ToJSON CollectionException where
 data ExceptionalFractionCollection innerException = ExceptionalFractionCollection
   { isDeleted :: Maybe Bool,
     timestamp :: UTCTime,
-    group :: Text,
-    organisation :: Text,
     createdAt :: UTCTime,
     updatedAt :: UTCTime,
     fraction :: Text,

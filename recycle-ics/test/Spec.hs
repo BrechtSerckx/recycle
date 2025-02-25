@@ -171,11 +171,7 @@ spec = describe "API responses" $ do
                   fraction =
                     FullFraction
                       { id = "5e4e84d1bab65e9819d714d2",
-                        national = Just True,
-                        nationalRef = Just "5d610b87173c063cc0400103",
-                        datatankRef = Nothing,
                         name = Translated {en = "PMD", nl = "PMD", fr = "PMC", de = "PMD"},
-                        organisation = "5e27908010cfeaa15c9cee93",
                         createdAt = Just $ read @UTCTime "2020-02-20 13:08:32.883 UTC",
                         updatedAt = Just $ read @UTCTime "2021-09-30 15:16:36.595 UTC"
                       },
@@ -216,11 +212,7 @@ spec = describe "API responses" $ do
                   fraction =
                     FullFraction
                       { id = "5e4e84d1bab65e9819d714d2",
-                        national = Just True,
-                        nationalRef = Just "5d610b87173c063cc0400103",
-                        datatankRef = Nothing,
                         name = Translated {en = "PMD", nl = "PMD", fr = "PMC", de = "PMK"},
-                        organisation = "5e27908010cfeaa15c9cee93",
                         createdAt = Just $ read @UTCTime "2020-02-20 13:08:32.883 UTC",
                         updatedAt = Just $ read @UTCTime "2024-01-24 13:24:35.213 UTC"
                       },
@@ -229,8 +221,6 @@ spec = describe "API responses" $ do
                       ( ReplacedBy
                           ( ExceptionalFractionCollection
                               { isDeleted = Just False,
-                                group = "5ed75ad48e14e76fe3c5febc",
-                                organisation = "5e27908010cfeaa15c9cee93",
                                 createdAt = read @UTCTime "2023-12-29 12:03:32.838 UTC",
                                 updatedAt = read @UTCTime "2023-12-29 12:03:32.838 UTC",
                                 fraction = "5e4e84d1bab65e9819d714d2",
@@ -257,11 +247,7 @@ spec = describe "API responses" $ do
                   fraction =
                     FullFraction
                       { id = "5e4e84d1bab65e9819d714d2",
-                        national = Just True,
-                        nationalRef = Just "5d610b87173c063cc0400103",
-                        datatankRef = Nothing,
                         name = Translated {en = "PMD", nl = "PMD", fr = "PMC", de = "PMK"},
-                        organisation = "5e27908010cfeaa15c9cee93",
                         createdAt = Just $ read @UTCTime "2020-02-20 13:08:32.883 UTC",
                         updatedAt = Just $ read @UTCTime "2024-01-24 13:24:35.213 UTC"
                       },
@@ -270,8 +256,6 @@ spec = describe "API responses" $ do
                       ( Replaces
                           ( ExceptionalFractionCollection
                               { isDeleted = Just False,
-                                group = "5ed75ad48e14e76fe3c5febc",
-                                organisation = "5e27908010cfeaa15c9cee93",
                                 createdAt = read @UTCTime "2023-12-29 12:03:15.126 UTC",
                                 updatedAt = read @UTCTime "2023-12-29 12:03:32.849 UTC",
                                 timestamp = read @UTCTime "2024-01-01 00:00:00 UTC",
