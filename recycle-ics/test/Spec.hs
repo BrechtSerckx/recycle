@@ -175,16 +175,6 @@ spec = describe "API responses" $ do
                         nationalRef = Just "5d610b87173c063cc0400103",
                         datatankRef = Nothing,
                         name = Translated {en = "PMD", nl = "PMD", fr = "PMC", de = "PMD"},
-                        logo =
-                          FullLogo
-                            { regular = Map.fromList [("1x", "5ef36735da06b266d294b3b9"), ("2x", "5ef36735da06b298a894b3ba"), ("3x", "5ef36735da06b23db894b3bb")],
-                              reversed = Map.fromList [("1x", "5ef36735da06b25d5e94b3bc"), ("2x", "5ef36735da06b2a1a594b3bd"), ("3x", "5ef36735da06b2093194b3be")],
-                              name = Translated {de = "PMD", en = "PMD", fr = "PMC", nl = "PMD"},
-                              id = "5d610b86162c063cc0400125",
-                              createdAt = Just $ read @UTCTime "2020-02-20 13:08:25.556 UTC",
-                              updatedAt = Just $ read @UTCTime "2020-06-24 14:46:14.194 UTC"
-                            },
-                        color = RGB "#60b1df",
                         variations = (),
                         organisation = "5e27908010cfeaa15c9cee93",
                         createdAt = Just $ read @UTCTime "2020-02-20 13:08:32.883 UTC",
@@ -231,16 +221,6 @@ spec = describe "API responses" $ do
                         nationalRef = Just "5d610b87173c063cc0400103",
                         datatankRef = Nothing,
                         name = Translated {en = "PMD", nl = "PMD", fr = "PMC", de = "PMK"},
-                        logo =
-                          FullLogo
-                            { regular = Map.fromList [("1x", "public/f0500f5a-5a3e-4424-9482-77cff934f693-pmd@1x.png"), ("2x", "public/7ed4065c-cb24-477c-9494-1b7cf1e7d1ec-pmd@2x.png"), ("3x", "public/d591257a-3206-41ba-93ca-cff9d1e7df54-pmd@3x.png")],
-                              reversed = Map.fromList [("1x", "public/2dcf6883-ac47-4de7-912f-20e3ee3b0b01-pmd-reversed@1x.png"), ("2x", "public/007dc7b4-d05b-481e-99d4-47614abe69ce-pmd-reversed@2x.png"), ("3x", "public/c28fda62-2d92-4cc5-81c4-3a4979ec2500-pmd-reversed@3x.png")],
-                              name = Translated {de = "PMD", en = "PMD", fr = "PMC", nl = "PMD"},
-                              id = "5d610b86162c063cc0400125",
-                              createdAt = Just $ read @UTCTime "2020-02-20 13:08:25.556 UTC",
-                              updatedAt = Just $ read @UTCTime "2020-06-24 14:46:14.194 UTC"
-                            },
-                        color = RGB "#60b1df",
                         variations = (),
                         organisation = "5e27908010cfeaa15c9cee93",
                         createdAt = Just $ read @UTCTime "2020-02-20 13:08:32.883 UTC",
@@ -283,16 +263,6 @@ spec = describe "API responses" $ do
                         nationalRef = Just "5d610b87173c063cc0400103",
                         datatankRef = Nothing,
                         name = Translated {en = "PMD", nl = "PMD", fr = "PMC", de = "PMK"},
-                        logo =
-                          FullLogo
-                            { regular = Map.fromList [("1x", "public/f0500f5a-5a3e-4424-9482-77cff934f693-pmd@1x.png"), ("2x", "public/7ed4065c-cb24-477c-9494-1b7cf1e7d1ec-pmd@2x.png"), ("3x", "public/d591257a-3206-41ba-93ca-cff9d1e7df54-pmd@3x.png")],
-                              reversed = Map.fromList [("1x", "public/2dcf6883-ac47-4de7-912f-20e3ee3b0b01-pmd-reversed@1x.png"), ("2x", "public/007dc7b4-d05b-481e-99d4-47614abe69ce-pmd-reversed@2x.png"), ("3x", "public/c28fda62-2d92-4cc5-81c4-3a4979ec2500-pmd-reversed@3x.png")],
-                              name = Translated {de = "PMD", en = "PMD", fr = "PMC", nl = "PMD"},
-                              id = "5d610b86162c063cc0400125",
-                              createdAt = Just $ read @UTCTime "2020-02-20 13:08:25.556 UTC",
-                              updatedAt = Just $ read @UTCTime "2020-06-24 14:46:14.194 UTC"
-                            },
-                        color = RGB "#60b1df",
                         variations = (),
                         organisation = "5e27908010cfeaa15c9cee93",
                         createdAt = Just $ read @UTCTime "2020-02-20 13:08:32.883 UTC",
@@ -336,30 +306,6 @@ spec = describe "API responses" $ do
             [ Fraction
                 { id = "5ed7a542a2124463cc8814e6",
                   name = Translated {en = "Gft", nl = "Gft", fr = "Gft", de = "Gft"},
-                  logo =
-                    Logo
-                      { regular =
-                          Map.fromList
-                            [ ("1x", "5ef36735da06b2747894b353"),
-                              ("2x", "5ef36735da06b2a9b994b354"),
-                              ("3x", "5ef36735da06b273b894b355")
-                            ],
-                        reversed =
-                          Map.fromList
-                            [ ("1x", "5ef36735da06b276b594b356"),
-                              ("2x", "5ef36735da06b2002c94b357"),
-                              ("3x", "5ef36735da06b22deb94b358")
-                            ],
-                        name =
-                          Translated
-                            { de = "Bioabfall",
-                              en = "Biodegradable waste",
-                              fr = "D\233chets biod\233gradables",
-                              nl = "Groente-, fruit-, tuinafval"
-                            },
-                        id = "5d610b86162c063cc0400108"
-                      },
-                  color = RGB "#C7D33B",
                   variations =
                     [ Object
                         ( Aeson.fromList

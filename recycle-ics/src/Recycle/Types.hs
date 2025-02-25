@@ -9,9 +9,6 @@ module Recycle.Types
     AuthSecret (..),
     SearchQuery (..),
     Range (..),
-    Logo (..),
-    FullLogo (..),
-    RGB (..),
     CollectionEventId (..),
     CollectionEvent (..),
     FractionId (..),
@@ -39,7 +36,6 @@ import Data.Aeson
   )
 import qualified Data.Aeson.Types as Aeson
 import Data.Foldable
-import Data.Map.Strict (Map)
 import Data.String (IsString)
 import Data.Text (Text)
 import Data.Time (Day, UTCTime)
@@ -89,28 +85,6 @@ data Range a = Range
   }
   deriving (Show)
 
-data Logo = Logo
-  { regular :: Map Text Text,
-    reversed :: Map Text Text,
-    name :: Translated Text,
-    id :: Text
-  }
-  deriving stock (Generic, Show, Eq)
-  deriving anyclass (FromJSON, ToJSON)
-
-data FullLogo = FullLogo
-  { regular :: Map Text Text,
-    reversed :: Map Text Text,
-    name :: Translated Text,
-    id :: Text,
-    createdAt :: Maybe UTCTime,
-    updatedAt :: Maybe UTCTime
-  }
-  deriving stock (Generic, Show, Eq)
-  deriving anyclass (FromJSON, ToJSON)
-
-newtype RGB = RGB Text deriving newtype (Show, FromJSON, ToJSON, Eq)
-
 -- * Collection
 
 newtype CollectionEventId = CollectionEventId {unCollectionEventId :: Text}
@@ -148,8 +122,6 @@ partitionCollectionEvents =
 data Fraction = Fraction
   { id :: FractionId,
     name :: Translated Text,
-    logo :: Logo,
-    color :: RGB,
     variations :: [Aeson.Value]
   }
   deriving stock (Generic, Show, Eq)
@@ -161,8 +133,6 @@ data FullFraction = FullFraction
     nationalRef :: Maybe Text,
     datatankRef :: Maybe Text,
     name :: Translated Text,
-    logo :: FullLogo,
-    color :: RGB,
     variations :: (),
     organisation :: Text,
     createdAt :: Maybe UTCTime,
