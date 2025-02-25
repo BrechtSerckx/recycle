@@ -1,4 +1,4 @@
-module Recycle.Types.Optparse
+module Parsers
   ( ApiClientOpts (..),
     pApiClientOpts,
     pZipcodeId,

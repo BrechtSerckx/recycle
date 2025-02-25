@@ -131,8 +131,8 @@ executable recycle-ics
   hs-source-dirs:      app
   other-modules:
     Opts
+    Parsers
     Paths_recycle_ics
-    Recycle.Types.Optparse
   autogen-modules:
     Paths_recycle_ics
   ghc-options:
