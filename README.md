@@ -18,11 +18,7 @@ Prerequisites:
 
 ## Usage
 
-The application can be used in 3 ways: an API client for the [RecycleApp.be API](recycleapp.be), an CLI ICS file generator for waste collection, and a server for generating the ICS files.
-
-### API Client
-
-See `recycle client --help`
+The application can be used in 2 ways: an CLI ICS file generator for waste collection, and a server for generating the ICS files.
 
 ### CLI app
 

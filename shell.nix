@@ -4,7 +4,6 @@ let
   nixpkgs-act = import sources.nixpkgs-act {};
 in hsPkgs.shellFor {
   packages = ps: with ps; [
-    recycle-client
     recycle-ics
   ];
 

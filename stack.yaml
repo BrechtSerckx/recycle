@@ -1,6 +1,5 @@
 flags: {}
 packages:
-  - './recycle-client/'
   - './recycle-ics/'
 extra-deps:
   - git: https://github.com/schoettl/iCalendar.git

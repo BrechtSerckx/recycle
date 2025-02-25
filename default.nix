@@ -22,7 +22,6 @@ let
         export RECYCLE_ICS_WWW_DIR=${recycle-ics-ui}
       '';
     }] else []) ++ (if release then [{
-      packages.recycle-client.components.exes.recycle-client.dontStrip = false;
       packages.recycle-ics.components.exes.recycle-ics.dontStrip = false;
     }] else
       [ ]);
@@ -32,6 +31,5 @@ let
 in {
   inherit sources nixpkgs hsPkgs recycle-ics-ui;
 
-  inherit (hsPkgs.recycle-client.components.exes) recycle-client;
   inherit (hsPkgs.recycle-ics.components.exes) recycle-ics;
 }

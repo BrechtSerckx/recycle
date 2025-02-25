@@ -60,4 +60,4 @@ jobs:
 
     # FIXME: While the NPM build is not working, I'll need to manually create
     # The recycle-ics-ui build first
-    - run: nix-build -A recycle-client -A recycle-ics
+    - run: nix-build -A recycle-ics
