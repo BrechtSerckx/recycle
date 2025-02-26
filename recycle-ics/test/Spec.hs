@@ -171,22 +171,7 @@ spec = describe "API responses" $ do
                   fraction =
                     FullFraction
                       { id = "5e4e84d1bab65e9819d714d2",
-                        national = Just True,
-                        nationalRef = Just "5d610b87173c063cc0400103",
-                        datatankRef = Nothing,
                         name = Translated {en = "PMD", nl = "PMD", fr = "PMC", de = "PMD"},
-                        logo =
-                          FullLogo
-                            { regular = Map.fromList [("1x", "5ef36735da06b266d294b3b9"), ("2x", "5ef36735da06b298a894b3ba"), ("3x", "5ef36735da06b23db894b3bb")],
-                              reversed = Map.fromList [("1x", "5ef36735da06b25d5e94b3bc"), ("2x", "5ef36735da06b2a1a594b3bd"), ("3x", "5ef36735da06b2093194b3be")],
-                              name = Translated {de = "PMD", en = "PMD", fr = "PMC", nl = "PMD"},
-                              id = "5d610b86162c063cc0400125",
-                              createdAt = Just $ read @UTCTime "2020-02-20 13:08:25.556 UTC",
-                              updatedAt = Just $ read @UTCTime "2020-06-24 14:46:14.194 UTC"
-                            },
-                        color = RGB "#60b1df",
-                        variations = (),
-                        organisation = "5e27908010cfeaa15c9cee93",
                         createdAt = Just $ read @UTCTime "2020-02-20 13:08:32.883 UTC",
                         updatedAt = Just $ read @UTCTime "2021-09-30 15:16:36.595 UTC"
                       },
@@ -227,22 +212,7 @@ spec = describe "API responses" $ do
                   fraction =
                     FullFraction
                       { id = "5e4e84d1bab65e9819d714d2",
-                        national = Just True,
-                        nationalRef = Just "5d610b87173c063cc0400103",
-                        datatankRef = Nothing,
                         name = Translated {en = "PMD", nl = "PMD", fr = "PMC", de = "PMK"},
-                        logo =
-                          FullLogo
-                            { regular = Map.fromList [("1x", "public/f0500f5a-5a3e-4424-9482-77cff934f693-pmd@1x.png"), ("2x", "public/7ed4065c-cb24-477c-9494-1b7cf1e7d1ec-pmd@2x.png"), ("3x", "public/d591257a-3206-41ba-93ca-cff9d1e7df54-pmd@3x.png")],
-                              reversed = Map.fromList [("1x", "public/2dcf6883-ac47-4de7-912f-20e3ee3b0b01-pmd-reversed@1x.png"), ("2x", "public/007dc7b4-d05b-481e-99d4-47614abe69ce-pmd-reversed@2x.png"), ("3x", "public/c28fda62-2d92-4cc5-81c4-3a4979ec2500-pmd-reversed@3x.png")],
-                              name = Translated {de = "PMD", en = "PMD", fr = "PMC", nl = "PMD"},
-                              id = "5d610b86162c063cc0400125",
-                              createdAt = Just $ read @UTCTime "2020-02-20 13:08:25.556 UTC",
-                              updatedAt = Just $ read @UTCTime "2020-06-24 14:46:14.194 UTC"
-                            },
-                        color = RGB "#60b1df",
-                        variations = (),
-                        organisation = "5e27908010cfeaa15c9cee93",
                         createdAt = Just $ read @UTCTime "2020-02-20 13:08:32.883 UTC",
                         updatedAt = Just $ read @UTCTime "2024-01-24 13:24:35.213 UTC"
                       },
@@ -251,8 +221,6 @@ spec = describe "API responses" $ do
                       ( ReplacedBy
                           ( ExceptionalFractionCollection
                               { isDeleted = Just False,
-                                group = "5ed75ad48e14e76fe3c5febc",
-                                organisation = "5e27908010cfeaa15c9cee93",
                                 createdAt = read @UTCTime "2023-12-29 12:03:32.838 UTC",
                                 updatedAt = read @UTCTime "2023-12-29 12:03:32.838 UTC",
                                 fraction = "5e4e84d1bab65e9819d714d2",
@@ -279,22 +247,7 @@ spec = describe "API responses" $ do
                   fraction =
                     FullFraction
                       { id = "5e4e84d1bab65e9819d714d2",
-                        national = Just True,
-                        nationalRef = Just "5d610b87173c063cc0400103",
-                        datatankRef = Nothing,
                         name = Translated {en = "PMD", nl = "PMD", fr = "PMC", de = "PMK"},
-                        logo =
-                          FullLogo
-                            { regular = Map.fromList [("1x", "public/f0500f5a-5a3e-4424-9482-77cff934f693-pmd@1x.png"), ("2x", "public/7ed4065c-cb24-477c-9494-1b7cf1e7d1ec-pmd@2x.png"), ("3x", "public/d591257a-3206-41ba-93ca-cff9d1e7df54-pmd@3x.png")],
-                              reversed = Map.fromList [("1x", "public/2dcf6883-ac47-4de7-912f-20e3ee3b0b01-pmd-reversed@1x.png"), ("2x", "public/007dc7b4-d05b-481e-99d4-47614abe69ce-pmd-reversed@2x.png"), ("3x", "public/c28fda62-2d92-4cc5-81c4-3a4979ec2500-pmd-reversed@3x.png")],
-                              name = Translated {de = "PMD", en = "PMD", fr = "PMC", nl = "PMD"},
-                              id = "5d610b86162c063cc0400125",
-                              createdAt = Just $ read @UTCTime "2020-02-20 13:08:25.556 UTC",
-                              updatedAt = Just $ read @UTCTime "2020-06-24 14:46:14.194 UTC"
-                            },
-                        color = RGB "#60b1df",
-                        variations = (),
-                        organisation = "5e27908010cfeaa15c9cee93",
                         createdAt = Just $ read @UTCTime "2020-02-20 13:08:32.883 UTC",
                         updatedAt = Just $ read @UTCTime "2024-01-24 13:24:35.213 UTC"
                       },
@@ -303,8 +256,6 @@ spec = describe "API responses" $ do
                       ( Replaces
                           ( ExceptionalFractionCollection
                               { isDeleted = Just False,
-                                group = "5ed75ad48e14e76fe3c5febc",
-                                organisation = "5e27908010cfeaa15c9cee93",
                                 createdAt = read @UTCTime "2023-12-29 12:03:15.126 UTC",
                                 updatedAt = read @UTCTime "2023-12-29 12:03:32.849 UTC",
                                 timestamp = read @UTCTime "2024-01-01 00:00:00 UTC",
@@ -335,129 +286,7 @@ spec = describe "API responses" $ do
         ( SingObject
             [ Fraction
                 { id = "5ed7a542a2124463cc8814e6",
-                  name = Translated {en = "Gft", nl = "Gft", fr = "Gft", de = "Gft"},
-                  logo =
-                    Logo
-                      { regular =
-                          Map.fromList
-                            [ ("1x", "5ef36735da06b2747894b353"),
-                              ("2x", "5ef36735da06b2a9b994b354"),
-                              ("3x", "5ef36735da06b273b894b355")
-                            ],
-                        reversed =
-                          Map.fromList
-                            [ ("1x", "5ef36735da06b276b594b356"),
-                              ("2x", "5ef36735da06b2002c94b357"),
-                              ("3x", "5ef36735da06b22deb94b358")
-                            ],
-                        name =
-                          Translated
-                            { de = "Bioabfall",
-                              en = "Biodegradable waste",
-                              fr = "D\233chets biod\233gradables",
-                              nl = "Groente-, fruit-, tuinafval"
-                            },
-                        id = "5d610b86162c063cc0400108"
-                      },
-                  color = RGB "#C7D33B",
-                  variations =
-                    [ Object
-                        ( Aeson.fromList
-                            [ ( "link",
-                                Object
-                                  ( Aeson.fromList
-                                      [ ( "external",
-                                          Object
-                                            ( Aeson.fromList
-                                                [ ("de", String "https://www.ecowerf.be/ophaling-aan-huis"),
-                                                  ("en", String "https://www.ecowerf.be/ophaling-aan-huis"),
-                                                  ("fr", String "https://www.ecowerf.be/ophaling-aan-huis"),
-                                                  ("nl", String "https://www.ecowerf.be/ophaling-aan-huis")
-                                                ]
-                                            )
-                                        ),
-                                        ("internal", Bool False)
-                                      ]
-                                  )
-                              ),
-                              ( "rules",
-                                Object
-                                  ( Aeson.fromList
-                                      [ ( "excludes",
-                                          Object
-                                            ( Aeson.fromList
-                                                [ ("de", String "\8226 Vloeistoffen (bv. soep, melk, koffie \8230)\n\8226 Sauzen, vet en oli\235n (uitgezonderd gerechten\nwaar een klein aandeel saus in zit)\n\8226 Theezakjes en koffiepads\n\8226 Behandeld hout (met verf, vernis of\nimpregneermiddel)\n\8226 Beenderen en dierlijk (slacht)afval\n\8226 Dierenkrengen\n\8226 Schelpen van mosselen, oesters \8230\n\8226 Kattenbakvulling en vogelkooizand\n\8226 Mest van grote huisdieren (katten, honden)\nof in grote hoeveelheden\n\8226 Stof uit de stofzuiger\n\8226 Wegwerpluier en ander hygi\235neafval\n\8226 Aarde en zand\n\8226 Kurk\n\8226 Asresten en houtskool\n\8226 Plastiek, glas, metalen\n\8226 Grof ongesnipperd snoeihout, dikke takken"),
-                                                  ("en", String "\8226 Vloeistoffen (bv. soep, melk, koffie \8230)\n\8226 Sauzen, vet en oli\235n (uitgezonderd gerechten\nwaar een klein aandeel saus in zit)\n\8226 Theezakjes en koffiepads\n\8226 Behandeld hout (met verf, vernis of\nimpregneermiddel)\n\8226 Beenderen en dierlijk (slacht)afval\n\8226 Dierenkrengen\n\8226 Schelpen van mosselen, oesters \8230\n\8226 Kattenbakvulling en vogelkooizand\n\8226 Mest van grote huisdieren (katten, honden)\nof in grote hoeveelheden\n\8226 Stof uit de stofzuiger\n\8226 Wegwerpluier en ander hygi\235neafval\n\8226 Aarde en zand\n\8226 Kurk\n\8226 Asresten en houtskool\n\8226 Plastiek, glas, metalen\n\8226 Grof ongesnipperd snoeihout, dikke takken"),
-                                                  ("fr", String "\8226 Vloeistoffen (bv. soep, melk, koffie \8230)\n\8226 Sauzen, vet en oli\235n (uitgezonderd gerechten\nwaar een klein aandeel saus in zit)\n\8226 Theezakjes en koffiepads\n\8226 Behandeld hout (met verf, vernis of\nimpregneermiddel)\n\8226 Beenderen en dierlijk (slacht)afval\n\8226 Dierenkrengen\n\8226 Schelpen van mosselen, oesters \8230\n\8226 Kattenbakvulling en vogelkooizand\n\8226 Mest van grote huisdieren (katten, honden)\nof in grote hoeveelheden\n\8226 Stof uit de stofzuiger\n\8226 Wegwerpluier en ander hygi\235neafval\n\8226 Aarde en zand\n\8226 Kurk\n\8226 Asresten en houtskool\n\8226 Plastiek, glas, metalen\n\8226 Grof ongesnipperd snoeihout, dikke takken"),
-                                                  ("nl", String "\8226 Vloeistoffen (bv. soep, melk, koffie \8230)\n\8226 Sauzen, vet en oli\235n (uitgezonderd gerechten\nwaar een klein aandeel saus in zit)\n\8226 Theezakjes en koffiepads\n\8226 Behandeld hout (met verf, vernis of\nimpregneermiddel)\n\8226 Beenderen en dierlijk (slacht)afval\n\8226 Dierenkrengen\n\8226 Schelpen van mosselen, oesters \8230\n\8226 Kattenbakvulling en vogelkooizand\n\8226 Mest van grote huisdieren (katten, honden)\nof in grote hoeveelheden\n\8226 Stof uit de stofzuiger\n\8226 Wegwerpluier en ander hygi\235neafval\n\8226 Aarde en zand\n\8226 Kurk\n\8226 Asresten en houtskool\n\8226 Plastiek, glas, metalen\n\8226 Grof ongesnipperd snoeihout, dikke takken")
-                                                ]
-                                            )
-                                        ),
-                                        ( "includes",
-                                          Object
-                                            ( Aeson.fromList
-                                                [ ("de", String "Organisch afval uit keuken en tuin:\n\8226 Schillen en resten van fruit, groenten en\naardappelen\n\8226 Dierlijk en plantaardig keukenafval en\netensresten\n\8226 Broodresten\n\8226 Koffiedik, papieren koffiefilter\n\8226 Papier van keukenrol\n\8226 Noten, pitten\n\8226 Vlees- en visresten, schaaldierresten\n(uitgezonderd mosselschelpen,\noesterschelpen \8230)\n\8226 Vaste zuivelproducten (kaasresten)\n\8226 Eieren, eierschalen\n\8226 Fijn tuin- en snoeiafval (bladeren, gras, onkruid,\nhaagscheersel, versnipperd snoeihout \8230)\n\8226 Kamer- en tuinplanten\n\8226 Schaafkrullen en zaagmeel van\nonbehandeld hout\n\8226 Mest van kleine huisdieren (cavia, konijn)"),
-                                                  ("en", String "Organisch afval uit keuken en tuin:\n\8226 Schillen en resten van fruit, groenten en\naardappelen\n\8226 Dierlijk en plantaardig keukenafval en\netensresten\n\8226 Broodresten\n\8226 Koffiedik, papieren koffiefilter\n\8226 Papier van keukenrol\n\8226 Noten, pitten\n\8226 Vlees- en visresten, schaaldierresten\n(uitgezonderd mosselschelpen,\noesterschelpen \8230)\n\8226 Vaste zuivelproducten (kaasresten)\n\8226 Eieren, eierschalen\n\8226 Fijn tuin- en snoeiafval (bladeren, gras, onkruid,\nhaagscheersel, versnipperd snoeihout \8230)\n\8226 Kamer- en tuinplanten\n\8226 Schaafkrullen en zaagmeel van\nonbehandeld hout\n\8226 Mest van kleine huisdieren (cavia, konijn)"),
-                                                  ("fr", String "Organisch afval uit keuken en tuin:\n\8226 Schillen en resten van fruit, groenten en\naardappelen\n\8226 Dierlijk en plantaardig keukenafval en\netensresten\n\8226 Broodresten\n\8226 Koffiedik, papieren koffiefilter\n\8226 Papier van keukenrol\n\8226 Noten, pitten\n\8226 Vlees- en visresten, schaaldierresten\n(uitgezonderd mosselschelpen,\noesterschelpen \8230)\n\8226 Vaste zuivelproducten (kaasresten)\n\8226 Eieren, eierschalen\n\8226 Fijn tuin- en snoeiafval (bladeren, gras, onkruid,\nhaagscheersel, versnipperd snoeihout \8230)\n\8226 Kamer- en tuinplanten\n\8226 Schaafkrullen en zaagmeel van\nonbehandeld hout\n\8226 Mest van kleine huisdieren (cavia, konijn)"),
-                                                  ("nl", String "Organisch afval uit keuken en tuin:\n\8226 Schillen en resten van fruit, groenten en\naardappelen\n\8226 Dierlijk en plantaardig keukenafval en\netensresten\n\8226 Broodresten\n\8226 Koffiedik, papieren koffiefilter\n\8226 Papier van keukenrol\n\8226 Noten, pitten\n\8226 Vlees- en visresten, schaaldierresten\n(uitgezonderd mosselschelpen,\noesterschelpen \8230)\n\8226 Vaste zuivelproducten (kaasresten)\n\8226 Eieren, eierschalen\n\8226 Fijn tuin- en snoeiafval (bladeren, gras, onkruid,\nhaagscheersel, versnipperd snoeihout \8230)\n\8226 Kamer- en tuinplanten\n\8226 Schaafkrullen en zaagmeel van\nonbehandeld hout\n\8226 Mest van kleine huisdieren (cavia, konijn)")
-                                                ]
-                                            )
-                                        ),
-                                        ( "information",
-                                          Object
-                                            ( Aeson.fromList
-                                                [ ("de", String "Plaats de groene container met een geldige sticker en met de handgreep naar de straatkant.\nContainers waarvan het deksel niet volledig gesloten is, worden niet geledigd."),
-                                                  ("en", String "Plaats de groene container met een geldige sticker en met de handgreep naar de straatkant.\nContainers waarvan het deksel niet volledig gesloten is, worden niet geledigd."),
-                                                  ("fr", String "Plaats de groene container met een geldige sticker en met de handgreep naar de straatkant.\nContainers waarvan het deksel niet volledig gesloten is, worden niet geledigd."),
-                                                  ("nl", String "Plaats de groene container met een geldige sticker en met de handgreep naar de straatkant.\nContainers waarvan het deksel niet volledig gesloten is, worden niet geledigd.")
-                                                ]
-                                            )
-                                        )
-                                      ]
-                                  )
-                              ),
-                              ( "subtitle",
-                                Object
-                                  ( Aeson.fromList
-                                      [ ("de", String "Gft"),
-                                        ("en", String "Gft"),
-                                        ("fr", String "Gft"),
-                                        ("nl", String "Gft")
-                                      ]
-                                  )
-                              ),
-                              ( "targets",
-                                Array $
-                                  V.fromList
-                                    [ String "5ed62945a212442a6588124c",
-                                      String "5eaac04536fe0b3bec4bf9be",
-                                      String "5ed6291aa212448465881249",
-                                      String "5ed753cb8e14e7a62cc5fe39",
-                                      String "5ed75ad48e14e76fe3c5febc",
-                                      String "5ed76d43a21244aa188814d7",
-                                      String "5ed76a518e14e7a3b7c5ff17",
-                                      String "5ed743e08e14e78c5fc5fdd9",
-                                      String "5ed771f38e14e78ab3c5ff20",
-                                      String "5ed7431ca2124470208813af",
-                                      String "5ed661ad8e14e78068c5fdcb",
-                                      String "5ed662e28e14e7143bc5fdcf",
-                                      String "5ed66976a2124426cc8813aa"
-                                    ]
-                              ),
-                              ( "title",
-                                Object
-                                  ( Aeson.fromList
-                                      [ ("de", String "Variante 1"),
-                                        ("en", String "Variant 1"),
-                                        ("fr", String "Variante 1"),
-                                        ("nl", String "Variant 1")
-                                      ]
-                                  )
-                              ),
-                              ("variations", Array V.empty)
-                            ]
-                        )
-                    ]
+                  name = Translated {en = "Gft", nl = "Gft", fr = "Gft", de = "Gft"}
                 }
             ]
         )
