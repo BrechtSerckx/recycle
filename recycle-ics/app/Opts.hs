@@ -4,17 +4,17 @@ module Opts
     parseOpts,
     GenerateIcsOpts (..),
     ServeIcsOpts (..),
-    module Recycle.Types.Optparse,
+    module Parsers,
   )
 where
 
 import Colog (Severity (..))
 import qualified Data.Char as Char
 import Options.Applicative
+import Parsers
 import Recycle.Ics.ICalendar
 import Recycle.Ics.Types
 import Recycle.Types
-import Recycle.Types.Optparse
 import Text.Read (readMaybe)
 
 data Opts = Opts
