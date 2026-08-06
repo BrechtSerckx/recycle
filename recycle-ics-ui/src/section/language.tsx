@@ -31,19 +31,17 @@ export function LanguageSection() {
   const { register } = useFormContext<FormInputs>();
   const languages = [
     { langCode: LangCode.NL, name: "Nederlands" },
-    { langCode: LangCode.FR, name: "Francais" },
+    { langCode: LangCode.FR, name: "Français" },
     { langCode: LangCode.DE, name: "Deutsch" },
     { langCode: LangCode.EN, name: "English" },
   ];
   return (
-    <>
-      <h3>Language</h3>
-      <p>
-        Choose in which language the waste collection titles and descriptions
-        should be.
+    <div className="card">
+      <p className="card-label">Language</p>
+      <p className="card-description">
+        Language used for waste collection titles and descriptions.
       </p>
-      <fieldset>
-        <legend>Language</legend>
+      <div className="lang-group">
         {languages.map(({ langCode, name, ...props }) => (
           <LangCodeRadio
             key={langCode}
@@ -54,7 +52,7 @@ export function LanguageSection() {
             {name}
           </LangCodeRadio>
         ))}
-      </fieldset>
-    </>
+      </div>
+    </div>
   );
 }

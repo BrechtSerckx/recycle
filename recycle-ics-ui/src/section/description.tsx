@@ -7,7 +7,7 @@ const howTos: {
   howTo: React.ReactNode;
 }[] = [
   {
-    title: "ICSDroid / ICSx5",
+    title: "ICSx⁵ / ICSDroid",
     summary: (
       <>
         See <a href="https://icsx5.bitfire.at/usage/">ICSx5 Usage</a>.
@@ -18,19 +18,14 @@ const howTos: {
         <p>You can subscribe to iCalendars (.ics files) with two methods:</p>
         <ol>
           <li>
-            Follow the webcal link in your browser or ics file in your local
-            file manager. Select “ICSx⁵” if you’re asked which app shall open
-            the link.
+            Follow the webcal link in your browser. Select "ICSx⁵" when asked
+            which app to open the link with.
           </li>
-          <li>Tap “+” in the ICSx⁵ main activity.</li>
+          <li>Tap "+" in the ICSx⁵ main activity.</li>
         </ol>
         <p>
-          In both cases, the ICSx⁵ “Add subscription” activity will appear.
-          Click on “Next”.
-        </p>
-        <p>
-          Then, enter a title and select a color for the calendar. You can
-          change title and color later.
+          The ICSx⁵ "Add subscription" activity will appear. Click "Next", then
+          enter a title and color for the calendar.
         </p>
       </>
     ),
@@ -41,7 +36,7 @@ const howTos: {
       <>
         See{" "}
         <a href="https://support.google.com/calendar/answer/37100?hl=en&co=GENIE.Platform%3DDesktop">
-          Subscribe to someone’s Google Calendar
+          Subscribe to someone's Google Calendar
         </a>
         .
       </>
@@ -50,48 +45,27 @@ const howTos: {
       <>
         <ol>
           <li>
-            On your computer, open{" "}
+            Open{" "}
             <a
               href="https://calendar.google.com/"
               rel="noreferrer"
               target="_blank"
             >
               Google Calendar
-            </a>
-            .
+            </a>{" "}
+            on your computer.
           </li>
           <li>
-            On the left, next to "Other calendars," click Add{" "}
-            <img
-              src="//lh3.googleusercontent.com/acEIXV8pLgZ5PXG23uIE9Ioz8RISJeLeAUH8WlHFipigJvssMhq20nQgEWQcqWn1iyM=w36-h36"
-              alt="Add other calendars"
-              title="Add other calendars"
-              data-mime-type="image/png"
-              data-alt-src="//lh3.googleusercontent.com/acEIXV8pLgZ5PXG23uIE9Ioz8RISJeLeAUH8WlHFipigJvssMhq20nQgEWQcqWn1iyM"
-              width="18"
-              height="18"
-            />
-            &nbsp;
-            <img
-              src="//lh3.googleusercontent.com/3_l97rr0GvhSP2XV5OoCkV2ZDTIisAOczrSdzNCBxhIKWrjXjHucxNwocghoUa39gw=w36-h36"
-              alt="and then"
-              title="and then"
-              data-mime-type="image/png"
-              data-alt-src="//lh3.googleusercontent.com/3_l97rr0GvhSP2XV5OoCkV2ZDTIisAOczrSdzNCBxhIKWrjXjHucxNwocghoUa39gw"
-              width="18"
-              height="18"
-            />{" "}
-            <strong>From URL.</strong>
+            On the left, next to "Other calendars," click Add &gt; From URL.
           </li>
           <li>Enter the link generated through this form.</li>
           <li>
-            Click <strong>Add calendar. </strong>The calendar appears on the
-            left, under "Other calendars."
+            Click <strong>Add calendar</strong>.
           </li>
         </ol>
         <p>
-          <strong>Tip:</strong> It might take up to 12 hours for changes to show
-          in your Google Calendar.
+          <strong>Note:</strong> It can take up to 12 hours for changes to
+          appear in Google Calendar.
         </p>
       </>
     ),
@@ -104,16 +78,12 @@ const howTos: {
         <a href="https://support.microsoft.com/en-us/topic/cff1429c-5af6-41ec-a5b4-74f2c278e98c">
           Import or subscribe to a calendar in Outlook.com
         </a>
+        .
       </>
     ),
     howTo: (
       <>
-        <p>
-          <strong>Note:</strong> When you subscribe to a calendar, your calendar
-          will automatically refresh if the other calendar is updated. This can
-          sometimes take more than 24 hours.
-        </p>
-        <ol type="1">
+        <ol>
           <li>
             <a
               href="https://go.microsoft.com/fwlink/p/?linkid=843379"
@@ -121,81 +91,89 @@ const howTos: {
               rel="noreferrer"
             >
               Sign in to Outlook.com
-            </a>
-            .
+            </a>{" "}
+            and go to Calendar.
           </li>
           <li>
-            At the bottom of the page, select{" "}
-            <img
-              src="https://support.content.office.net/en-us/media/b800323e-05b6-4501-a02c-2bafa723b06b.png"
-              alt="Calendar"
-              loading="lazy"
-            />
-            .{" "}
+            In the navigation pane, select <b>Add calendar</b> &gt;{" "}
+            <b>Subscribe from web</b>.
           </li>
+          <li>Enter the URL for the calendar.</li>
           <li>
-            In the navigation pane, select <b>Add calendar</b>.
-          </li>
-          <li>
-            <p>
-              Select <b>Subscribe from web</b>.
-            </p>
-            <p>
-              <img
-                src="https://support.content.office.net/en-us/media/ee5d0e9e-dc77-4873-a5b6-841e1c3b4c41.png"
-                alt="Subscribe to a calendar"
-                loading="lazy"
-              />{" "}
-            </p>
-          </li>
-          <li>Enter the URL for the calendar. </li>
-          <li>
-            Select <b>Import</b>.{" "}
+            Select <b>Import</b>.
           </li>
         </ol>
+        <p>
+          <strong>Note:</strong> Subscribed calendars may take more than 24
+          hours to refresh.
+        </p>
       </>
     ),
   },
 ];
 
+const changelog: { date: string; entries: string[] }[] = [
+  {
+    date: "2026-08-06",
+    entries: [
+      "Switched to public Fostplus API (upstream API changed)",
+      "Better error reporting",
+      "UI overhaul",
+    ],
+  },
+  {
+    date: "Start of changelog",
+    entries: [],
+  },
+];
+
+export function ChangelogSection() {
+  return (
+    <div className="card" style={{ marginTop: "1.5rem" }}>
+      <p className="card-label">Changelog</p>
+      <div className="howto-list">
+        {changelog.map(({ date, entries }, i) => (
+          <details key={i}>
+            <summary>{date}</summary>
+            {entries.length > 0 && (
+              <div>
+                <ul>
+                  {entries.map((e, j) => (
+                    <li key={j}>{e}</li>
+                  ))}
+                </ul>
+              </div>
+            )}
+          </details>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 export default function DescriptionSection() {
   return (
-    <>
-      <section>
-        <h2>Description</h2>
-        <p>Generate ICS files and links for your waste collections.</p>
-        <p>
-          Based on recycleapp.be and the Recycle! app. Open source on{" "}
-          <a
-            href={githubUrl}
-            target="_blank"
-            rel="noreferrer"
-          >
-            GitHub
-          </a>
-          .
-        </p>
-        <p>
-          You can manually import the generated ICS files into your calendar,
-          but let a tool like ICSx5/ICSDroid or a calendar app like Google
-          Calendar or Outlook.com automatically import them for you. That way,
-          your calendar always stays up to date with the waste collections.
-          Note: ICSx5 works most reliably, Google Calendar for example does not
-          support all features.
-        </p>
-        <h2>How-to</h2>
+    <div className="card" style={{ marginBottom: "1.5rem" }}>
+      <p className="card-description" style={{ margin: "0 0 0.5rem" }}>
+        Generate ICS calendar files for waste collections from{" "}
+        <a href="https://recycleapp.be" target="_blank" rel="noreferrer">
+          recycleapp.be
+        </a>
+        . Open source on{" "}
+        <a href={githubUrl} target="_blank" rel="noreferrer">
+          GitHub
+        </a>
+        .
+      </p>
+      <p className="card-section-title">How to subscribe</p>
+      <div className="howto-list">
         {howTos.map(({ title, summary, howTo }, i) => (
-          <div key={i}>
-            <h3>{title}</h3>
-            <details>
-              <>
-                <summary>{summary}</summary>
-                {howTo}
-              </>
-            </details>
-          </div>
+          <details key={i}>
+            <summary>{title} — {summary}</summary>
+            <div>{howTo}</div>
+          </details>
         ))}
-      </section>
-    </>
+      </div>
+    </div>
   );
 }

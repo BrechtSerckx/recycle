@@ -19,11 +19,12 @@ const DateRangeRadio = React.forwardRef(
     },
     ref: React.ForwardedRef<HTMLInputElement>
   ) => (
-    <div>
+    <div className="radio-option">
       <label>
         <input ref={ref} type="radio" {...props} />
-        {label}:{children}
+        {label}
       </label>
+      <div className="option-body">{children}</div>
     </div>
   )
 );
@@ -39,7 +40,8 @@ const AbsoluteDateInput = React.forwardRef(
     ref: React.ForwardedRef<HTMLInputElement>
   ) => (
     <label>
-      {label} <input ref={ref} type="date" {...props} />
+      {label}
+      <input ref={ref} type="date" {...props} />
     </label>
   )
 );
@@ -54,14 +56,16 @@ const AbsoluteDateRangeInputs = () => {
       value={value}
       {...register("dateRangeType")}
     >
-      <p>This will get the waste collections between two dates.</p>
+      <p className="card-description" style={{ margin: "0 0 0.75rem" }}>
+        Collections between two fixed dates.
+      </p>
       <AbsoluteDateInput
-        label="From: "
+        label="From"
         disabled={!isChecked}
         {...register("absoluteDateRangeFrom", { required: isChecked })}
       />
       <AbsoluteDateInput
-        label="To: "
+        label="To"
         disabled={!isChecked}
         {...register("absoluteDateRangeTo", { required: isChecked })}
       />
@@ -96,15 +100,11 @@ const RelativeDateRangeInputs = () => {
       value="relative"
       {...register("dateRangeType")}
     >
-      <p>
-        This will get the waste collections relative to the current date. This
-        is is particularly useful when auto-importing the waste collections
-        through Google Calendar or Outlook, as it will always give the
-        collections relative to that date. The collections will always be
-        up-to-date like this.
+      <p className="card-description" style={{ margin: "0 0 0.75rem" }}>
+        Collections relative to today — stays up to date when auto-imported.
       </p>
       <RelativeDateInput
-        label="Days before:"
+        label="Days before today"
         disabled={!isChecked}
         {...register("relativeDateRangeFrom", {
           required: isChecked,
@@ -112,7 +112,7 @@ const RelativeDateRangeInputs = () => {
         })}
       />
       <RelativeDateInput
-        label="Days before:"
+        label="Days after today"
         disabled={!isChecked}
         {...register("relativeDateRangeTo", { required: isChecked, value: 28 })}
       />
@@ -122,17 +122,15 @@ const RelativeDateRangeInputs = () => {
 
 export default function DateRangeSection() {
   return (
-    <>
-      <h3>Date range</h3>
-      <p>
-        Choose a start date and an end date for which you want the waste
-        collections.
+    <div className="card">
+      <p className="card-label">Date range</p>
+      <p className="card-description">
+        The period for which to fetch waste collections.
       </p>
-      <fieldset>
-        <legend>Date range type</legend>
+      <div className="radio-options">
         <AbsoluteDateRangeInputs />
         <RelativeDateRangeInputs />
-      </fieldset>
-    </>
+      </div>
+    </div>
   );
 }
