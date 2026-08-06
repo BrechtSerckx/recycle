@@ -1,4 +1,4 @@
-import { serverUrl } from "./env";
+import { serverUrl, githubUrl } from "./env";
 
 export type ErrorCause =
   | "service_unavailable"
@@ -19,7 +19,7 @@ export function friendlyError(error: unknown): string {
       case "service_unavailable":
         return "The recycleapp.be service is temporarily unavailable. Please try again later.";
       case "decode_error":
-        return `Unexpected error (this may be a bug — please report it): ${error.message}`;
+        return `Unexpected error (this may be a bug — please report it at ${githubUrl}/issues): ${error.message}`;
       default:
         return error.message;
     }
