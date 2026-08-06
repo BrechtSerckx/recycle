@@ -54,7 +54,7 @@ const ZipcodeAutocompleter = (props: Partial<UseFormRegisterReturn>) => {
         <p className="msg-empty">No zip codes found for "{query}".</p>
       )}
       {values &&
-        values.map((v) => (
+        values.slice(0, 10).map((v) => (
           <label key={v.id}>
             <input
               type="radio"
@@ -68,6 +68,11 @@ const ZipcodeAutocompleter = (props: Partial<UseFormRegisterReturn>) => {
             </span>
           </label>
         ))}
+      {values && values.length > 10 && (
+        <p className="msg-empty">
+          Showing 10 of {values.length} results — refine your search.
+        </p>
+      )}
     </div>
   );
 };
@@ -120,12 +125,17 @@ const StreetAutocompleter = ({
         <p className="msg-empty">No streets found for "{query}".</p>
       )}
       {values &&
-        values.map((v) => (
+        values.slice(0, 10).map((v) => (
           <label key={v.id}>
             <input type="radio" value={v.id} {...register("streetId")} />
             {v.names[lc]}
           </label>
         ))}
+      {values && values.length > 10 && (
+        <p className="msg-empty">
+          Showing 10 of {values.length} results — refine your search.
+        </p>
+      )}
     </div>
   );
 };
