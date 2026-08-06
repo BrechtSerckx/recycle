@@ -1,4 +1,5 @@
 import * as React from "react";
+import { githubUrl } from "../env";
 
 const howTos: {
   title: string;
@@ -162,8 +163,18 @@ export default function DescriptionSection() {
     <>
       <section>
         <h2>Description</h2>
-        <p>Generate ICS files and links for your waste collections. </p>
-        <p> Based on recycleapp.be and the Recycle! app.</p>
+        <p>Generate ICS files and links for your waste collections.</p>
+        <p>
+          Based on recycleapp.be and the Recycle! app. Open source on{" "}
+          <a
+            href={githubUrl}
+            target="_blank"
+            rel="noreferrer"
+          >
+            GitHub
+          </a>
+          .
+        </p>
         <p>
           You can manually import the generated ICS files into your calendar,
           but let a tool like ICSx5/ICSDroid or a calendar app like Google
