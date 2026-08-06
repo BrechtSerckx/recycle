@@ -1,6 +1,7 @@
 import * as React from "react";
 import { useFormContext, useWatch } from "react-hook-form";
 import * as Api from "../api";
+import { friendlyError } from "../api";
 import { FormInputs } from "../types";
 
 export default function FilterSection() {
@@ -13,26 +14,36 @@ export default function FilterSection() {
   const allFractions = useWatch({ name: "filterAllFractions" }),
     setAllFractions = (b: boolean) => setValue("filterAllFractions", b);
   const { register, setValue } = useFormContext<FormInputs>();
-  const [fractions, setFractions] = React.useState([] as any[]);
+  const [fractions, setFractions] = React.useState<any[] | null>(null);
+  const [error, setError] = React.useState<string | null>(null);
+  const [loading, setLoading] = React.useState(false);
   const lc = useWatch({ name: "langCode" });
   React.useEffect(() => {
     if (zipcodeId && streetId && houseNumber) {
-      Api.getFractions(zipcodeId, streetId, houseNumber).then((fs: any[]) => {
-        const oldFractions = fractions || [];
-        setFractions(fs);
-        setValue(
-          "filterSelectedFractions",
-          fs
-            .map((f) => f.id)
-            .filter((f) =>
-              oldFractions.map((v) => v.id).includes(f)
-                ? selectedFractions
-                  ? selectedFractions.includes(f)
+      setError(null);
+      setLoading(true);
+      Api.getFractions(zipcodeId, streetId, houseNumber)
+        .then((fs: any[]) => {
+          const oldFractions = fractions || [];
+          setFractions(fs);
+          setValue(
+            "filterSelectedFractions",
+            fs
+              .map((f) => f.id)
+              .filter((f) =>
+                oldFractions.map((v) => v.id).includes(f)
+                  ? selectedFractions
+                    ? selectedFractions.includes(f)
+                    : allFractions
                   : allFractions
-                : allFractions
-            )
-        );
-      });
+              )
+          );
+        })
+        .catch((e: unknown) => {
+          setFractions([]);
+          setError(friendlyError(e));
+        })
+        .finally(() => setLoading(false));
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [zipcodeId, streetId, houseNumber, setValue]);
@@ -56,7 +67,9 @@ export default function FilterSection() {
                 {...register("filterAllFractions", {
                   onChange: (e: any) =>
                     e.target.checked
-                      ? setSelectedFractions(fractions.map((f) => f.id))
+                      ? setSelectedFractions(
+                          (fractions || []).map((f) => f.id)
+                        )
                       : setSelectedFractions([]),
                 })}
               />
@@ -66,8 +79,14 @@ export default function FilterSection() {
           <p>Choose which fractions need to be included.</p>
           <fieldset>
             <legend>Fractions</legend>
-            {fractions ? (
-              fractions.map((fraction) => (
+            {loading && <p>Loading…</p>}
+            {error && <p style={{ color: "red" }}>{error}</p>}
+            {fractions === null && !loading ? (
+              <p>Please fill in your address first.</p>
+            ) : !loading && fractions !== null && fractions.length === 0 && !error ? (
+              <p>No fractions found for this address.</p>
+            ) : (
+              (fractions ?? []).map((fraction) => (
                 <div key={fraction.id}>
                   <label>
                     <input
@@ -77,7 +96,7 @@ export default function FilterSection() {
                         onChange: (e: any) => {
                           if (e.target.checked) {
                             if (
-                              fractions.every(
+                              (fractions ?? []).every(
                                 (f) =>
                                   f.id === e.target.value ||
                                   selectedFractions.includes(f.id)
@@ -87,7 +106,7 @@ export default function FilterSection() {
                             }
                           } else {
                             if (
-                              fractions.every((f) =>
+                              (fractions ?? []).every((f) =>
                                 selectedFractions.includes(f.id)
                               )
                             ) {
@@ -101,8 +120,6 @@ export default function FilterSection() {
                   </label>
                 </div>
               ))
-            ) : (
-              <p>Please fill in your address first. </p>
             )}
           </fieldset>
         </div>

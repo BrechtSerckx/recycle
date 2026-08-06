@@ -9,7 +9,9 @@ module Recycle.Ics.Server
   )
 where
 
+import Control.Exception.Safe (try)
 import Control.Monad.IO.Class (liftIO)
+import qualified Data.Aeson as Aeson
 import qualified Data.ByteString.Lazy.Char8 as BSL8
 import Data.Text (Text)
 import Data.Time hiding (getZonedTime)
@@ -26,9 +28,14 @@ import Recycle.Ics.ICalendar
 import Recycle.Ics.Types
 import Recycle.Types
 import Servant.API
+import Control.Monad.Except (throwError)
 import Servant.Server
   ( Handler,
+    ServerError (..),
     ServerT,
+    err400,
+    err500,
+    err503,
     hoistServer,
     serve,
   )
@@ -83,7 +90,35 @@ recycleIcsServer dataDir =
           }
 
 recycleToHandler :: Env -> RecycleM a -> Handler a
-recycleToHandler env act = liftIO $ act `runRecycle` env
+recycleToHandler env act = do
+  result <- liftIO $ try (act `runRecycle` env)
+  case result of
+    Left (re :: RecycleError) -> throwError (toServerError re)
+    Right a -> pure a
+
+toServerError :: RecycleError -> ServerError
+toServerError re =
+  base
+    { errBody =
+        Aeson.encode $
+          Aeson.object
+            [ "cause" Aeson..= causeName re.cause,
+              "message" Aeson..= show re
+            ],
+      errHeaders = [("Content-Type", "application/json")]
+    }
+  where
+    base = case re.cause of
+      ServiceUnavailable -> err503
+      InvalidRequest _ -> err400
+      DecodeError _ -> err500
+      OtherError _ -> err500
+    causeName :: RecycleErrorCause -> Text
+    causeName = \case
+      ServiceUnavailable -> "service_unavailable"
+      InvalidRequest _ -> "invalid_request"
+      DecodeError _ -> "decode_error"
+      OtherError _ -> "other_error"
 
 recycleIcsApp :: FilePath -> Env -> Wai.Application
 recycleIcsApp wwwDir env =

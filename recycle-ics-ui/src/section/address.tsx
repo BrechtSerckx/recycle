@@ -7,6 +7,7 @@ import { debounce } from "../Autocompleter";
 import * as React from "react";
 import { FormInputs } from "../types";
 import * as Api from "../api";
+import { friendlyError } from "../api";
 
 const ZipcodeQueryInput = React.forwardRef(
   (
@@ -30,15 +31,22 @@ const ZipcodeAutocompleter = (props: Partial<UseFormRegisterReturn>) => {
   const lc = useWatch({ name: "langCode" });
   const query = useWatch({ name: "zipcodeQuery" });
   const { register, setValue } = useFormContext<FormInputs>();
-  const [values, setValues] = React.useState<any[]>([]);
+  const [values, setValues] = React.useState<any[] | null>(null);
+  const [error, setError] = React.useState<string | null>(null);
+  const [loading, setLoading] = React.useState(false);
   React.useEffect(() => {
     setValue("zipcodeId", null);
+    setValues(null);
+    setError(null);
+    setLoading(false);
     if (query) {
       debounce(() => {
         if (query.length >= 2) {
-          Api.searchZipcodes(query).then((newValues) => setValues(newValues));
-        } else {
-          setValues([]);
+          setLoading(true);
+          Api.searchZipcodes(query)
+            .then((newValues) => setValues(newValues))
+            .catch((e: unknown) => setError(friendlyError(e)))
+            .finally(() => setLoading(false));
         }
       }, 250)();
     }
@@ -47,22 +55,28 @@ const ZipcodeAutocompleter = (props: Partial<UseFormRegisterReturn>) => {
   return (
     <fieldset>
       <legend>Zip code</legend>
-      {values.map((v) => (
-        <div key={v.id}>
-          <label>
-            <input
-              type="radio"
-              value={v.id}
-              disabled={!v.available}
-              {...register("zipcodeId")}
-            />
-            <span>
-              {v.code} {(v.names[0] || v.city.names)[lc]}, {v.city.names[lc]}
-              {v.available || " (Unavailable)"}
-            </span>
-          </label>
-        </div>
-      ))}
+      {loading && <p>Loading…</p>}
+      {error && <p style={{ color: "red" }}>{error}</p>}
+      {!loading && values !== null && values.length === 0 && (
+        <p>No zip codes found for "{query}".</p>
+      )}
+      {values &&
+        values.map((v) => (
+          <div key={v.id}>
+            <label>
+              <input
+                type="radio"
+                value={v.id}
+                disabled={!v.available}
+                {...register("zipcodeId")}
+              />
+              <span>
+                {v.code} {(v.names[0] || v.city.names)[lc]}, {v.city.names[lc]}
+                {v.available || " (Unavailable)"}
+              </span>
+            </label>
+          </div>
+        ))}
     </fieldset>
   );
 };
@@ -86,17 +100,22 @@ const StreetAutocompleter = ({
   const lc = useWatch({ name: "langCode" });
   const query = useWatch({ name: "streetQuery" });
   const { register, setValue } = useFormContext<FormInputs>();
-  const [values, setValues] = React.useState<any[]>([]);
+  const [values, setValues] = React.useState<any[] | null>(null);
+  const [error, setError] = React.useState<string | null>(null);
+  const [loading, setLoading] = React.useState(false);
   React.useEffect(() => {
     setValue("streetId", null);
+    setValues(null);
+    setError(null);
+    setLoading(false);
     if (query) {
       debounce(() => {
         if (query.length >= 3) {
-          Api.searchStreets(zipcode, query).then((newValues) =>
-            setValues(newValues)
-          );
-        } else {
-          setValues([]);
+          setLoading(true);
+          Api.searchStreets(zipcode, query)
+            .then((newValues) => setValues(newValues))
+            .catch((e: unknown) => setError(friendlyError(e)))
+            .finally(() => setLoading(false));
         }
       }, 250)();
     }
@@ -105,14 +124,20 @@ const StreetAutocompleter = ({
   return (
     <fieldset>
       <legend>Street</legend>
-      {values.map((v) => (
-        <div key={v.id}>
-          <label>
-            <input type="radio" value={v.id} {...register("streetId")} />
-            {v.names[lc]}
-          </label>
-        </div>
-      ))}
+      {loading && <p>Loading…</p>}
+      {error && <p style={{ color: "red" }}>{error}</p>}
+      {!loading && values !== null && values.length === 0 && (
+        <p>No streets found for "{query}".</p>
+      )}
+      {values &&
+        values.map((v) => (
+          <div key={v.id}>
+            <label>
+              <input type="radio" value={v.id} {...register("streetId")} />
+              {v.names[lc]}
+            </label>
+          </div>
+        ))}
     </fieldset>
   );
 };
