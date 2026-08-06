@@ -6,7 +6,6 @@
 
 module Recycle.API
   ( RecycleAPI,
-    getAccessToken,
     searchZipcodes,
     searchStreets,
     getCollections,
@@ -42,27 +41,20 @@ import Servant.Client
 
 -- brittany-disable-next-binding
 type RecycleAPI =
-  "recycle-public"
-    :> "app"
+  "recyclecms"
+    :> "public"
     :> "v1"
-    :> ( "access-token"
+    :> ( "zipcodes"
            :> Header' '[Required] "X-Consumer" Consumer
-           :> Header' '[Required] "X-Secret" AuthSecret
-           :> UVerb 'GET '[JSON] '[WithStatus 200 AuthResult, WithStatus 401 ApiError]
-           :<|> "zipcodes"
-             :> Header' '[Required] "X-Consumer" Consumer
-             :> Header' '[Required] "Authorization" AccessToken
-             :> QueryParam' '[Optional] "q" (SearchQuery Natural)
-             :> UVerb 'GET '[JSON] '[WithStatus 200 (SingObject "items" [FullZipcode]), WithStatus 401 ApiError]
+           :> QueryParam' '[Optional] "q" (SearchQuery Natural)
+           :> UVerb 'GET '[JSON] '[WithStatus 200 (SingObject "items" [FullZipcode]), WithStatus 401 ApiError]
            :<|> "streets"
              :> Header' '[Required] "X-Consumer" Consumer
-             :> Header' '[Required] "Authorization" AccessToken
              :> QueryParam' '[Optional] "zipcodes" ZipcodeId
              :> QueryParam' '[Optional] "q" (SearchQuery Text)
              :> UVerb 'POST '[JSON] '[WithStatus 200 (SingObject "items" [Street]), WithStatus 401 ApiError]
            :<|> "collections"
              :> Header' '[Required] "X-Consumer" Consumer
-             :> Header' '[Required] "Authorization" AccessToken
              :> QueryParam' '[Required] "zipcodeId" ZipcodeId
              :> QueryParam' '[Required] "streetId" StreetId
              :> QueryParam' '[Required] "houseNumber" HouseNumber
@@ -71,22 +63,15 @@ type RecycleAPI =
              :> UVerb 'GET '[JSON] '[WithStatus 200 (SingObject "items" [CollectionEvent]), WithStatus 401 ApiError]
            :<|> "fractions"
              :> Header' '[Required] "X-Consumer" Consumer
-             :> Header' '[Required] "Authorization" AccessToken
              :> QueryParam' '[Required] "zipcodeId" ZipcodeId
              :> QueryParam' '[Required] "streetId" StreetId
              :> QueryParam' '[Required] "houseNumber" HouseNumber
              :> UVerb 'GET '[JSON] '[WithStatus 200 (SingObject "items" [Fraction]), WithStatus 401 ApiError]
        )
 
-getAccessToken ::
-  (HasServantClient m) =>
-  Consumer ->
-  AuthSecret ->
-  m (NS I '[WithStatus 200 AuthResult, WithStatus 401 ApiError])
 searchZipcodes ::
   (HasServantClient m) =>
   Consumer ->
-  AccessToken ->
   Maybe (SearchQuery Natural) ->
   m
     ( NS
@@ -100,7 +85,6 @@ searchZipcodes ::
 searchStreets ::
   (HasServantClient m) =>
   Consumer ->
-  AccessToken ->
   Maybe ZipcodeId ->
   Maybe (SearchQuery Text) ->
   m
@@ -115,7 +99,6 @@ searchStreets ::
 getCollections ::
   (HasServantClient m) =>
   Consumer ->
-  AccessToken ->
   ZipcodeId ->
   StreetId ->
   HouseNumber ->
@@ -136,7 +119,6 @@ getCollections ::
 getFractions ::
   (HasServantClient m) =>
   Consumer ->
-  AccessToken ->
   ZipcodeId ->
   StreetId ->
   HouseNumber ->
@@ -148,7 +130,7 @@ getFractions ::
              ApiError
          ]
     )
-getAccessToken :<|> searchZipcodes :<|> searchStreets :<|> getCollections :<|> getFractions =
+searchZipcodes :<|> searchStreets :<|> getCollections :<|> getFractions =
   hoistClient (Proxy @RecycleAPI) runClient (client $ Proxy @RecycleAPI)
 
 class (Monad m) => HasServantClient m where

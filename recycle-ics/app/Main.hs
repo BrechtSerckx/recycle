@@ -7,7 +7,6 @@ import qualified Colog
 import Control.Monad.IO.Class (MonadIO)
 import qualified Data.ByteString.Lazy.Char8 as BSL
 import Data.Functor.Compose (Compose (..))
-import Data.IORef (newIORef)
 import Data.Maybe (fromMaybe)
 import Data.String (IsString (fromString))
 import Data.Text (Text)
@@ -57,9 +56,8 @@ main = do
   let clientEnv =
         mkClientEnv httpManager $ BaseUrl Https "api.fostplus.be" 443 ""
 
-  authResult <- newIORef Nothing
   case cmd of
-    GenerateIcs GenerateIcsOpts {apiClientOpts = ApiClientOpts {..}, ..} -> do
+    GenerateIcs GenerateIcsOpts {..} -> do
       let logAction =
             Colog.cfilter
               ((>= verbosity) . Colog.msgSeverity)
@@ -79,10 +77,6 @@ main = do
         lookupEnvString
           "RECYCLE_ICS_CONSUMER"
           "X-Consumer header, get it by inspecting requests to recycleapp.be"
-      authSecret <-
-        lookupEnvString
-          "RECYCLE_ICS_SECRET"
-          "X-Authorization header, get it by inspecting requests to recycleapp.be"
       verbosity <-
         fromMaybe Colog.Warning <$> lookupEnvMRead "RECYCLE_ICS_VERBOSITY"
       mLogHook <- getCompose $ do

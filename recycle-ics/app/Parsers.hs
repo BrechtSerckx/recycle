@@ -39,8 +39,7 @@ pDateRange =
       pure Range {..}
 
 data ApiClientOpts = ApiClientOpts
-  { consumer :: Consumer,
-    authSecret :: AuthSecret
+  { consumer :: Consumer
   }
 
 pApiClientOpts :: Parser ApiClientOpts
@@ -52,11 +51,6 @@ pApiClientOpts = do
           <> value defaultConsumer
           <> showDefault
       )
-  authSecret <-
-    strOption $
-      long "secret"
-        <> help
-          "Authentication secret. Get from inspecting the requests on browsing `recycleapp.be`."
   pure ApiClientOpts {..}
 
 defaultConsumer :: Consumer
