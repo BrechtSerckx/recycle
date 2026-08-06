@@ -54,7 +54,7 @@ pCmd =
 data GenerateIcsOpts = GenerateIcsOpts
   { outputFile :: Maybe FilePath,
     collectionQuery :: CollectionQuery,
-    apiClientOpts :: ApiClientOpts,
+    consumer :: Consumer,
     verbosity :: Severity
   }
 
@@ -66,7 +66,7 @@ pGenerateIcsOpts = do
         <> help
           "output file"
   collectionQuery <- pCollectionQuery
-  apiClientOpts <- pApiClientOpts
+  consumer <- (.consumer) <$> pApiClientOpts
   verbosity <-
     option
       auto

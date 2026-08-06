@@ -4,8 +4,6 @@ module Main
 where
 
 import qualified Colog
-import Control.Exception (SomeException, displayException, throwIO, try)
-import Data.IORef (newIORef)
 import Data.String (fromString)
 import Data.Time (addDays, getCurrentTime, utctDay)
 import Network.HTTP.Client.TLS
@@ -37,18 +35,12 @@ testHouseNumber = HouseNumber 1
 main :: IO ()
 main = do
   mConsumer <- Env.lookupEnv "RECYCLE_ICS_CONSUMER"
-  mSecret <- Env.lookupEnv "RECYCLE_ICS_SECRET"
-  case (fromString <$> mConsumer, fromString <$> mSecret) of
-    (Just consumer, Just secret) -> do
-      env <- mkTestEnv consumer secret
-      hspec $ apiSpec env
-    _ ->
-      hspec $
-        it "API tests" $
-          pendingWith "set RECYCLE_ICS_CONSUMER and RECYCLE_ICS_SECRET to run API tests"
+  let consumer = fromString $ maybe "recycleapp.be" id mConsumer
+  env <- mkTestEnv consumer
+  hspec $ apiSpec env
 
-mkTestEnv :: Consumer -> AuthSecret -> IO Env
-mkTestEnv consumer authSecret = do
+mkTestEnv :: Consumer -> IO Env
+mkTestEnv consumer = do
   httpManager <- newTlsManagerWith tlsManagerSettings
   let clientEnv =
         mkClientEnv httpManager $
@@ -57,7 +49,6 @@ mkTestEnv consumer authSecret = do
         Colog.cfilter
           ((>= Colog.Warning) . Colog.msgSeverity)
           Colog.simpleMessageAction
-  authResult <- newIORef Nothing
   pure Env {..}
 
 run :: Env -> RecycleM a -> IO a
@@ -65,30 +56,17 @@ run env act = runRecycle act env
 
 apiSpec :: Env -> Spec
 apiSpec env = describe "Recycle API" $ do
-  eAuth <- runIO $ try @SomeException (run env Recycle.getAuthResult)
-
-  let requireAuth :: IO () -> IO ()
-      requireAuth action = case eAuth of
-        Left err -> pendingWith $ displayException err
-        Right _ -> action
-
-  describe "Authentication" $ do
-    it "fetches a valid access token" $
-      case eAuth of
-        Left err -> throwIO err
-        Right AuthResult {accessToken = AccessToken tok} -> tok `shouldNotBe` ""
-
   describe "Zip codes" $ do
-    it "returns results for a numeric zip code search" $ requireAuth $ do
+    it "returns results for a numeric zip code search" $ do
       zipcodes <- run env $ Recycle.searchZipcodes (Just $ SearchQuery 3000)
       zipcodes `shouldNotBe` []
 
-    it "finds Leuven (3000-24062) by zip code" $ requireAuth $ do
+    it "finds Leuven (3000-24062) by zip code" $ do
       zipcodes <- run env $ Recycle.searchZipcodes (Just $ SearchQuery 3000)
       map (.id) zipcodes `shouldContain` [testZipcode]
 
   describe "Streets" $ do
-    it "returns streets matching a query within a zip code" $ requireAuth $ do
+    it "returns streets matching a query within a zip code" $ do
       streets <-
         run env $
           Recycle.searchStreets
@@ -97,14 +75,14 @@ apiSpec env = describe "Recycle API" $ do
       streets `shouldNotBe` []
 
   describe "Fractions" $ do
-    it "returns fractions for a known address" $ requireAuth $ do
+    it "returns fractions for a known address" $ do
       fractions <-
         run env $
           Recycle.getFractions testZipcode testStreet testHouseNumber
       fractions `shouldNotBe` []
 
   describe "Collections" $ do
-    it "returns collections for a known address over the next 90 days" $ requireAuth $ do
+    it "returns collections for a known address over the next 90 days" $ do
       today <- utctDay <$> getCurrentTime
       let range = Range {from = today, to = addDays 90 today}
       collections <-

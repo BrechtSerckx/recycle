@@ -3,10 +3,7 @@ module Recycle.Types
     module Recycle.Types.Error,
     module Recycle.Types.LangCode,
     module Recycle.Utils,
-    AccessToken (..),
-    AuthResult (..),
     Consumer (..),
-    AuthSecret (..),
     SearchQuery (..),
     Range (..),
     CollectionEventId (..),
@@ -53,26 +50,6 @@ import Prelude hiding (id)
 -- | `X-Consumer` header value
 newtype Consumer = Consumer Text
   deriving newtype (Eq, Show, IsString, ToHttpApiData)
-
--- | `X-Secret` header value
-newtype AuthSecret = AuthSecret Text
-  deriving newtype (Eq, Show, IsString, ToHttpApiData)
-
--- | Access token
---
--- Used in `Authorization` header value
-newtype AccessToken = AccessToken Text
-  deriving newtype (Eq, Show, IsString, FromJSON, ToJSON, ToHttpApiData)
-
--- | Result of authorization
-data AuthResult = AuthResult
-  { -- | an access token
-    accessToken :: AccessToken,
-    -- | an expiry date
-    expiresAt :: UTCTime
-  }
-  deriving stock (Generic, Show, Eq)
-  deriving anyclass (FromJSON, ToJSON)
 
 newtype SearchQuery a = SearchQuery {unSearchQuery :: a}
   deriving newtype (FromHttpApiData, ToHttpApiData)

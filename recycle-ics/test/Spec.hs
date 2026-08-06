@@ -26,16 +26,6 @@ main :: IO ()
 main = hspec spec
 
 spec = describe "API responses" $ do
-  it "parses a normal `AuthResult` response" $
-    eitherDecode @AuthResult
-      (BSL.fromStrict $(embedFile "test/responses/authResult.json"))
-      `shouldBe` Right
-        ( AuthResult
-            { expiresAt = read @UTCTime "2021-10-15 09:38:17.553 UTC",
-              accessToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE2MzQyODcxNTcsImV4cCI6MTYzNDI5MDc1NywiYXVkIjoicmVjeWNsZWFwcC5iZSJ9.M71tok8T0dOms_pISu_pLzGMpH84iNtOraJ5-PI1Ktk"
-            }
-        )
-
   it "parses translations" $
     eitherDecode @(Translated Text)
       "{ \"en\": \"english\", \"nl\": \"nederlands\", \"fr\": \"francais\", \"de\": \"deutsch\"}"
