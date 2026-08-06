@@ -6,7 +6,7 @@ import FilterSection from "./section/filter";
 import DateRangeSection from "./section/daterange";
 import EncodingSection from "./section/encoding";
 import DownloadSection from "./section/download";
-import DescriptionSection from "./section/description";
+import DescriptionSection, { ChangelogSection } from "./section/description";
 import { FormInputs, defaultFormInputs } from "./types";
 import { githubUrl } from "./env";
 
@@ -44,6 +44,7 @@ export function App() {
           <DownloadSection />
         </form>
       </FormProvider>
+      <ChangelogSection />
     </div>
   );
 }

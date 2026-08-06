@@ -112,6 +112,45 @@ const howTos: {
   },
 ];
 
+const changelog: { date: string; entries: string[] }[] = [
+  {
+    date: "2026-08-06",
+    entries: [
+      "Switched to public Fostplus API (upstream API changed)",
+      "Better error reporting",
+      "UI overhaul",
+    ],
+  },
+  {
+    date: "Start of changelog",
+    entries: [],
+  },
+];
+
+export function ChangelogSection() {
+  return (
+    <div className="card" style={{ marginTop: "1.5rem" }}>
+      <p className="card-label">Changelog</p>
+      <div className="howto-list">
+        {changelog.map(({ date, entries }, i) => (
+          <details key={i}>
+            <summary>{date}</summary>
+            {entries.length > 0 && (
+              <div>
+                <ul>
+                  {entries.map((e, j) => (
+                    <li key={j}>{e}</li>
+                  ))}
+                </ul>
+              </div>
+            )}
+          </details>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 export default function DescriptionSection() {
   return (
     <div className="card" style={{ marginBottom: "1.5rem" }}>
