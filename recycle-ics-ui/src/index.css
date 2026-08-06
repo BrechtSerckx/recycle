@@ -222,9 +222,16 @@ label:has(> input[type="checkbox"]) {
   transition: border-color 0.15s, background 0.15s;
 }
 
-.radio-option:has(input[type="radio"]:checked) {
+.radio-option:has(> label > input[type="radio"]:checked) {
   border-color: var(--accent);
   background: var(--accent-light);
+}
+
+/* Don't highlight a nested option when its parent option isn't selected */
+.radio-option:not(:has(> label > input[type="radio"]:checked))
+  .radio-option:has(> label > input[type="radio"]:checked) {
+  border-color: var(--border);
+  background: transparent;
 }
 
 .radio-option > label:has(> input[type="radio"]) {
