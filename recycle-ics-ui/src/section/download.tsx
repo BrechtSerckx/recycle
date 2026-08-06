@@ -21,38 +21,53 @@ export default function DownloadSection() {
       return url;
     },
     filename = "recycle.ics";
+
   return (
-    <>
-      <section>
-        <p>
-          <textarea
-            readOnly
-            placeholder="Please fill in your address above to generate a permalink."
-            wrap="soft"
-            value={(mForm && mkWebcalLink(mForm).toString()) || ""}
-            style={{ width: "100%" }}
-          />
-        </p>
-        {mForm && (
-          <p>
-            <a download={filename} href={mkWebcalLink(mForm).toString()}>
-              Open
-            </a>
-            <span> - </span>
-            <a download={filename} href={mkHttpLink(mForm).toString()}>
-              Download
-            </a>
+    <div className="card">
+      <p className="card-label">Download</p>
+      {mForm ? (
+        <>
+          <p className="card-description">
+            Use the webcal link to subscribe — your calendar will stay up to
+            date automatically.
           </p>
-        )}
-        {nodeEnv === "development" && (
-          <>
-            <h3>Raw form:</h3>
-            <pre>{JSON.stringify(formInputs, null, 2)}</pre>
-            <h3>Structured form:</h3>
-            <pre>{JSON.stringify(mForm, null, 2)}</pre>
-          </>
-        )}
-      </section>
-    </>
+          <textarea
+            className="url-display"
+            readOnly
+            value={mkWebcalLink(mForm).toString()}
+          />
+          <div className="download-actions">
+            <a
+              className="btn btn-primary"
+              href={mkWebcalLink(mForm).toString()}
+            >
+              Subscribe (webcal)
+            </a>
+            <a
+              className="btn"
+              download={filename}
+              href={mkHttpLink(mForm).toString()}
+            >
+              Download .ics
+            </a>
+          </div>
+        </>
+      ) : (
+        <p className="msg-empty">
+          Fill in your address above to generate a link.
+        </p>
+      )}
+      {nodeEnv === "development" && (
+        <details style={{ marginTop: "1rem" }}>
+          <summary>Debug: raw form state</summary>
+          <pre style={{ fontSize: "0.75rem", overflowX: "auto" }}>
+            {JSON.stringify(formInputs, null, 2)}
+          </pre>
+          <pre style={{ fontSize: "0.75rem", overflowX: "auto" }}>
+            {JSON.stringify(mForm, null, 2)}
+          </pre>
+        </details>
+      )}
+    </div>
   );
 }

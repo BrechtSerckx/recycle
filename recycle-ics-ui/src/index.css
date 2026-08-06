@@ -1,0 +1,438 @@
+/* ── Custom properties ────────────────────────────────────────── */
+:root {
+  --bg: #f9fafb;
+  --surface: #ffffff;
+  --border: #e5e7eb;
+  --accent: #16a34a;
+  --accent-dark: #15803d;
+  --accent-light: rgb(22 163 74 / 0.08);
+  --text: #111827;
+  --text-muted: #6b7280;
+  --error: #dc2626;
+  --error-bg: #fef2f2;
+  --error-border: #fecaca;
+  --radius: 10px;
+  --radius-sm: 6px;
+  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+}
+
+/* ── Reset ────────────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica,
+    Arial, sans-serif;
+  font-size: 1rem;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ── App layout ───────────────────────────────────────────────── */
+.app {
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 2.5rem 1.25rem 5rem;
+}
+
+.app-title {
+  font-size: 1.625rem;
+  font-weight: 700;
+  margin: 0 0 1rem;
+}
+
+.app-subtitle {
+  color: var(--text-muted);
+  font-size: 0.9375rem;
+  margin: 0 0 2rem;
+}
+
+.app-subtitle a {
+  color: inherit;
+}
+
+.form-heading {
+  font-size: 0.6875rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-muted);
+  margin: 1.75rem 0 0.5rem;
+}
+
+/* ── Card ─────────────────────────────────────────────────────── */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.25rem 1.5rem 1.5rem;
+  box-shadow: var(--shadow-sm);
+  margin-bottom: 0.625rem;
+}
+
+.card-label {
+  font-size: 0.6875rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--accent);
+  margin: 0 0 0.5rem;
+}
+
+.card-description {
+  color: var(--text-muted);
+  font-size: 0.875rem;
+  margin: 0 0 1rem;
+}
+
+.card-section-title {
+  font-size: 0.9375rem;
+  font-weight: 600;
+  margin: 1.25rem 0 0.25rem;
+  color: var(--text);
+}
+
+.card-section-title:first-child {
+  margin-top: 0;
+}
+
+/* ── Fieldset / legend reset ──────────────────────────────────── */
+fieldset {
+  border: none;
+  padding: 0;
+  margin: 0;
+}
+
+legend {
+  display: none;
+}
+
+/* ── Text, number, time, date inputs ──────────────────────────── */
+input[type="text"],
+input[type="number"],
+input[type="time"],
+input[type="date"] {
+  display: block;
+  width: 100%;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  font-size: 0.9375rem;
+  font-family: inherit;
+  color: var(--text);
+  background: var(--surface);
+  transition: border-color 0.15s, box-shadow 0.15s;
+  appearance: none;
+  -webkit-appearance: none;
+}
+
+input[type="text"]:focus,
+input[type="number"]:focus,
+input[type="time"]:focus,
+input[type="date"]:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgb(22 163 74 / 0.12);
+}
+
+input[type="text"]:disabled,
+input[type="number"]:disabled,
+input[type="time"]:disabled,
+input[type="date"]:disabled {
+  background: var(--bg);
+  color: var(--text-muted);
+  cursor: not-allowed;
+}
+
+/* Stacked label layout for text/number/time/date */
+label:has(> input[type="text"]),
+label:has(> input[type="number"]),
+label:has(> input[type="time"]),
+label:has(> input[type="date"]) {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--text);
+  margin-bottom: 0.75rem;
+}
+
+/* ── Radio and checkbox ───────────────────────────────────────── */
+input[type="radio"],
+input[type="checkbox"] {
+  accent-color: var(--accent);
+  width: 1rem;
+  height: 1rem;
+  flex-shrink: 0;
+  cursor: pointer;
+  margin: 0;
+}
+
+/* Inline label layout for radio/checkbox */
+label:has(> input[type="radio"]),
+label:has(> input[type="checkbox"]) {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  font-size: 0.9375rem;
+  line-height: 1.4;
+}
+
+/* Language selector: horizontal pill group */
+.lang-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.375rem;
+}
+
+.lang-group label:has(> input[type="radio"]) {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  padding: 0.3125rem 0.75rem;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  transition: border-color 0.15s, background 0.15s;
+}
+
+.lang-group label:has(> input[type="radio"]:checked) {
+  border-color: var(--accent);
+  background: var(--accent-light);
+  color: var(--accent-dark);
+}
+
+/* Radio option cards (for date range, encoding) */
+.radio-options {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.radio-option {
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 0.75rem 1rem;
+  transition: border-color 0.15s, background 0.15s;
+}
+
+.radio-option:has(input[type="radio"]:checked) {
+  border-color: var(--accent);
+  background: var(--accent-light);
+}
+
+.radio-option > label:has(> input[type="radio"]) {
+  font-weight: 600;
+  font-size: 0.9375rem;
+}
+
+.radio-option .option-body {
+  margin-top: 0.625rem;
+  padding-top: 0.625rem;
+  border-top: 1px solid var(--border);
+}
+
+/* Checkbox group */
+.checkbox-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.375rem;
+  margin-top: 0.25rem;
+}
+
+/* ── Buttons ──────────────────────────────────────────────────── */
+button,
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  padding: 0.4375rem 0.875rem;
+  border-radius: var(--radius-sm);
+  font-size: 0.875rem;
+  font-weight: 500;
+  font-family: inherit;
+  cursor: pointer;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text);
+  text-decoration: none;
+  transition: background 0.12s, border-color 0.12s, color 0.12s;
+  line-height: 1;
+}
+
+button:hover:not(:disabled),
+.btn:hover {
+  background: var(--bg);
+  border-color: #d1d5db;
+}
+
+button:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.btn-primary {
+  background: var(--accent);
+  color: #fff;
+  border-color: var(--accent);
+}
+
+.btn-primary:hover {
+  background: var(--accent-dark);
+  border-color: var(--accent-dark);
+}
+
+.btn-danger {
+  color: var(--error);
+  border-color: var(--error-border);
+}
+
+.btn-danger:hover:not(:disabled) {
+  background: var(--error-bg);
+}
+
+/* ── Status messages ──────────────────────────────────────────── */
+.msg-error {
+  color: var(--error);
+  background: var(--error-bg);
+  border: 1px solid var(--error-border);
+  border-radius: var(--radius-sm);
+  padding: 0.5rem 0.75rem;
+  font-size: 0.875rem;
+  margin: 0.5rem 0 0;
+}
+
+.msg-loading,
+.msg-empty {
+  color: var(--text-muted);
+  font-size: 0.875rem;
+  margin: 0.375rem 0 0;
+  font-style: italic;
+}
+
+/* ── Reminder list ────────────────────────────────────────────── */
+.reminder-list {
+  list-style: none;
+  padding: 0;
+  margin: 0.5rem 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.reminder-item {
+  display: flex;
+  align-items: flex-end;
+  gap: 0.75rem;
+  padding: 0.75rem 1rem;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  flex-wrap: wrap;
+}
+
+.reminder-item label:has(> input[type="number"]) {
+  flex: 1;
+  min-width: 7rem;
+  margin-bottom: 0;
+}
+
+/* ── Download section ─────────────────────────────────────────── */
+.url-display {
+  width: 100%;
+  font-family: ui-monospace, "Cascadia Code", "Source Code Pro", Menlo,
+    Consolas, monospace;
+  font-size: 0.8125rem;
+  padding: 0.625rem 0.75rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--bg);
+  color: var(--text);
+  resize: none;
+  height: 4.5rem;
+  line-height: 1.5;
+}
+
+.download-actions {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 0.75rem;
+  flex-wrap: wrap;
+}
+
+/* ── Description / how-to ─────────────────────────────────────── */
+.description-intro {
+  color: var(--text-muted);
+  font-size: 0.9375rem;
+  margin: 0 0 1.25rem;
+}
+
+.description-intro a {
+  color: var(--accent-dark);
+}
+
+.howto-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.375rem;
+}
+
+details {
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+}
+
+details > summary {
+  padding: 0.625rem 0.875rem;
+  cursor: pointer;
+  font-weight: 500;
+  font-size: 0.9375rem;
+  list-style: none;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  user-select: none;
+}
+
+details > summary::-webkit-details-marker { display: none; }
+
+details > summary::before {
+  content: "▶";
+  font-size: 0.5em;
+  color: var(--text-muted);
+  transition: transform 0.15s;
+  flex-shrink: 0;
+}
+
+details[open] > summary::before {
+  transform: rotate(90deg);
+}
+
+details > summary + * {
+  padding: 0 1rem 1rem;
+  border-top: 1px solid var(--border);
+}
+
+details p {
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  margin: 0.5rem 0;
+}
+
+details ol,
+details ul {
+  padding-left: 1.25rem;
+  color: var(--text-muted);
+  font-size: 0.9rem;
+}
+
+details li {
+  margin: 0.25rem 0;
+}

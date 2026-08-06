@@ -47,83 +47,79 @@ export default function FilterSection() {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [zipcodeId, streetId, houseNumber, setValue]);
+
   return (
-    <>
-      <h3>Filter</h3>
-      <p>Choose which fractions and events need to be included.</p>
-      <fieldset>
-        <legend>Filter</legend>
-        <div>
-          <div>
-            <label>
-              <input type="checkbox" {...register("filterAllEvents")} />
-              All events
-            </label>
-          </div>
-          <div>
-            <label>
+    <div className="card">
+      <p className="card-label">Filter</p>
+      <p className="card-description">
+        Choose which fractions and events to include.
+      </p>
+
+      <div className="checkbox-group">
+        <label>
+          <input type="checkbox" {...register("filterAllEvents")} />
+          All events
+        </label>
+        <label>
+          <input
+            type="checkbox"
+            {...register("filterAllFractions", {
+              onChange: (e: any) =>
+                e.target.checked
+                  ? setSelectedFractions((fractions ?? []).map((f) => f.id))
+                  : setSelectedFractions([]),
+            })}
+          />
+          All fractions
+        </label>
+      </div>
+
+      <p className="card-section-title" style={{ marginTop: "1rem" }}>
+        Fractions
+      </p>
+
+      {loading && <p className="msg-loading">Loading…</p>}
+      {error && <p className="msg-error">{error}</p>}
+      {fractions === null && !loading ? (
+        <p className="msg-empty">Fill in your address above to load fractions.</p>
+      ) : !loading && fractions !== null && fractions.length === 0 && !error ? (
+        <p className="msg-empty">No fractions found for this address.</p>
+      ) : (
+        <div className="checkbox-group" style={{ marginTop: "0.25rem" }}>
+          {(fractions ?? []).map((fraction) => (
+            <label key={fraction.id}>
               <input
                 type="checkbox"
-                {...register("filterAllFractions", {
-                  onChange: (e: any) =>
-                    e.target.checked
-                      ? setSelectedFractions(
-                          (fractions || []).map((f) => f.id)
+                value={fraction.id}
+                {...register("filterSelectedFractions", {
+                  onChange: (e: any) => {
+                    if (e.target.checked) {
+                      if (
+                        (fractions ?? []).every(
+                          (f) =>
+                            f.id === e.target.value ||
+                            selectedFractions.includes(f.id)
                         )
-                      : setSelectedFractions([]),
+                      ) {
+                        setAllFractions(true);
+                      }
+                    } else {
+                      if (
+                        (fractions ?? []).every((f) =>
+                          selectedFractions.includes(f.id)
+                        )
+                      ) {
+                        setAllFractions(false);
+                      }
+                    }
+                  },
                 })}
               />
-              All fractions
+              {fraction.name[lc]}
             </label>
-          </div>
-          <p>Choose which fractions need to be included.</p>
-          <fieldset>
-            <legend>Fractions</legend>
-            {loading && <p>Loading…</p>}
-            {error && <p style={{ color: "red" }}>{error}</p>}
-            {fractions === null && !loading ? (
-              <p>Please fill in your address first.</p>
-            ) : !loading && fractions !== null && fractions.length === 0 && !error ? (
-              <p>No fractions found for this address.</p>
-            ) : (
-              (fractions ?? []).map((fraction) => (
-                <div key={fraction.id}>
-                  <label>
-                    <input
-                      type="checkbox"
-                      value={fraction.id}
-                      {...register("filterSelectedFractions", {
-                        onChange: (e: any) => {
-                          if (e.target.checked) {
-                            if (
-                              (fractions ?? []).every(
-                                (f) =>
-                                  f.id === e.target.value ||
-                                  selectedFractions.includes(f.id)
-                              )
-                            ) {
-                              setAllFractions(true);
-                            }
-                          } else {
-                            if (
-                              (fractions ?? []).every((f) =>
-                                selectedFractions.includes(f.id)
-                              )
-                            ) {
-                              setAllFractions(false);
-                            }
-                          }
-                        },
-                      })}
-                    />
-                    {fraction.name[lc]}
-                  </label>
-                </div>
-              ))
-            )}
-          </fieldset>
+          ))}
         </div>
-      </fieldset>
-    </>
+      )}
+    </div>
   );
 }
