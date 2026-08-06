@@ -2,10 +2,14 @@ import * as React from "react";
 import { useWatch } from "react-hook-form";
 import { FormInputs, inputsToForm, Form, formToParams } from "../types";
 import { serverUrl, nodeEnv } from "../env";
+import { apiFetch, friendlyError } from "../api";
+
+type PreflightState = "idle" | "checking" | "ok" | "error";
 
 export default function DownloadSection() {
   const formInputs = useWatch() as FormInputs,
     mForm = inputsToForm(formInputs);
+
   const mkHttpLink = (form: Form): URL => {
       var url = new URL("/api/generate", serverUrl);
       try {
@@ -19,6 +23,32 @@ export default function DownloadSection() {
       return mkHttpLink(form).href.replace(/^https?:/, "webcal:");
     },
     filename = "recycle.ics";
+
+  const httpUrl = mForm ? mkHttpLink(mForm).toString() : null;
+
+  const [preflight, setPreflight] = React.useState<PreflightState>("idle");
+  const [preflightError, setPreflightError] = React.useState<string | null>(null);
+
+  React.useEffect(() => {
+    if (!httpUrl) {
+      setPreflight("idle");
+      setPreflightError(null);
+      return;
+    }
+    setPreflight("checking");
+    setPreflightError(null);
+    const timer = setTimeout(() => {
+      apiFetch(httpUrl)
+        .then(() => setPreflight("ok"))
+        .catch((e: unknown) => {
+          setPreflight("error");
+          setPreflightError(friendlyError(e));
+        });
+    }, 500);
+    return () => clearTimeout(timer);
+  }, [httpUrl]);
+
+  const canDownload = preflight === "ok";
 
   return (
     <div className="card">
@@ -34,17 +64,25 @@ export default function DownloadSection() {
             readOnly
             value={mkWebcalLink(mForm)}
           />
+          {preflight === "checking" && (
+            <p className="msg-loading">Verifying…</p>
+          )}
+          {preflight === "error" && preflightError && (
+            <p className="msg-error">{preflightError}</p>
+          )}
           <div className="download-actions">
             <a
-              className="btn btn-primary"
-              href={mkWebcalLink(mForm)}
+              className={`btn btn-primary${canDownload ? "" : " btn-disabled"}`}
+              href={canDownload ? mkWebcalLink(mForm) : undefined}
+              aria-disabled={!canDownload}
             >
               Subscribe (webcal)
             </a>
             <a
-              className="btn"
-              download={filename}
-              href={mkHttpLink(mForm).toString()}
+              className={`btn${canDownload ? "" : " btn-disabled"}`}
+              download={canDownload ? filename : undefined}
+              href={canDownload ? mkHttpLink(mForm).toString() : undefined}
+              aria-disabled={!canDownload}
             >
               Download .ics
             </a>

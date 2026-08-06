@@ -28,7 +28,7 @@ export function friendlyError(error: unknown): string {
   return String(error);
 }
 
-async function apiFetch(url: string): Promise<Response> {
+export async function apiFetch(url: string): Promise<Response> {
   let response: Response;
   try {
     response = await fetch(url);

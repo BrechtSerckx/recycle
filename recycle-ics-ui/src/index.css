@@ -284,6 +284,12 @@ button:disabled {
   cursor: not-allowed;
 }
 
+.btn-disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
 .btn-primary {
   background: var(--accent);
   color: #fff;
