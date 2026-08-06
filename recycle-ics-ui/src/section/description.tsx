@@ -165,6 +165,11 @@ export default function DescriptionSection() {
         </a>
         .
       </p>
+      <p className="card-description" style={{ margin: "0 0 1rem" }}>
+        <strong>Privacy:</strong> No data is stored. The service is completely
+        stateless — your address is encoded directly in the webcal link and
+        converted to collection data on the fly. Nothing is kept on the server.
+      </p>
       <p className="card-section-title">How to subscribe</p>
       <div className="howto-list">
         {howTos.map(({ title, summary, howTo }, i) => (
