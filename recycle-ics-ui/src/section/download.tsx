@@ -15,10 +15,8 @@ export default function DownloadSection() {
       }
       return url;
     },
-    mkWebcalLink = (form: Form): URL => {
-      var url = mkHttpLink(form);
-      url.protocol = "webcal:";
-      return url;
+    mkWebcalLink = (form: Form): string => {
+      return mkHttpLink(form).href.replace(/^https?:/, "webcal:");
     },
     filename = "recycle.ics";
 
@@ -34,12 +32,12 @@ export default function DownloadSection() {
           <textarea
             className="url-display"
             readOnly
-            value={mkWebcalLink(mForm).toString()}
+            value={mkWebcalLink(mForm)}
           />
           <div className="download-actions">
             <a
               className="btn btn-primary"
-              href={mkWebcalLink(mForm).toString()}
+              href={mkWebcalLink(mForm)}
             >
               Subscribe (webcal)
             </a>
