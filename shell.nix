@@ -21,6 +21,8 @@ in hsPkgs.shellFor {
   buildInputs = (with nixpkgs; [
     niv
     (import sources.niv { }).niv
+    # task runner
+    just
     # nix formatter
     nixfmt
     # haskell ci/cd generator
