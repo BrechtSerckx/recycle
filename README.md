@@ -22,7 +22,7 @@ Prerequisites:
 
 ## Usage
 
-The application can be used in 2 ways: an CLI ICS file generator for waste collection, and a server for generating the ICS files.
+The application can be used in 2 ways: a CLI ICS file generator for waste collection, and a server for generating the ICS files.
 
 ### CLI app
 
@@ -36,8 +36,17 @@ See `recycle serve-ics --help`
 
 Prerequisites:
 - Nix
-- direnv (optional)
+- direnv
 
-1. Clone this repo.
-2. Run `cd recycle`
-3. Run `nix-shell` or `direnv allow` to install dev dependencies.
+1. Clone this repo and `cd` into it.
+2. Run `direnv allow` to enter the Nix dev shell.
+3. Use `just` to run common tasks — run `just` with no arguments to list them.
+
+```sh
+just build              # build frontend then backend
+just serve              # start server at http://localhost:3332
+just dev                # frontend dev server with hot reload
+just test               # run all tests
+just fmt                # format all sources (ormolu, cabal-fmt, prettier)
+just lint               # lint all sources (hlint, tsc)
+```
