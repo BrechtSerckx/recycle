@@ -8,6 +8,18 @@ default:
 build-backend:
     cabal build all
 
+# Build the Haskell backend with hot-reload
+dev-backend:
+    cd recycle-ics && ghcid
+
+# Build the Haskell backend tests with hot-reload
+dev-backend-test:
+    cd recycle-ics && ghcid -c 'cabal repl recycle-ics-test'
+
+# Build the Haskell backend api tests with hot-reload
+dev-backend-api-test:
+    cd recycle-ics && ghcid -c 'cabal repl recycle-ics-api-test'
+
 # Run backend tests
 test-backend:
     cabal test recycle-ics-test
@@ -39,7 +51,7 @@ build-frontend:
     cd recycle-ics-ui && npm run build
 
 # Start the frontend dev server with hot reload
-dev:
+dev-frontend:
     cd recycle-ics-ui && npm start
 
 # Format frontend sources with prettier
