@@ -5,8 +5,6 @@
 
 # Consumer
 :consumer = recycleapp.be
-# Secret
-:secret = <REDACTED>
 
 # Search zip code id
 :query = 3000
