@@ -10,6 +10,7 @@ import GHC.Generics (Generic)
 import Recycle.Utils (LowerCase)
 import Web.HttpApiData
   ( FromHttpApiData (..),
+    ToHttpApiData (..),
     parseBoundedTextData,
   )
 
@@ -31,3 +32,6 @@ langCodeJSONKeyOptions =
 
 instance FromHttpApiData LangCode where
   parseUrlPiece = parseBoundedTextData . T.toUpper
+
+instance ToHttpApiData LangCode where
+  toUrlPiece = T.pack . show

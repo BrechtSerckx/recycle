@@ -52,5 +52,8 @@ instance Accept ICalendar where
 instance MimeRender ICalendar BSL.ByteString where
   mimeRender Proxy = id
 
+instance MimeUnrender ICalendar BSL.ByteString where
+  mimeUnrender Proxy = Right
+
 pRecycleIcsAPI :: Proxy RecycleIcsAPI
 pRecycleIcsAPI = Proxy
