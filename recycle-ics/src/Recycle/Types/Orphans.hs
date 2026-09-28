@@ -2,14 +2,17 @@
 
 module Recycle.Types.Orphans () where
 
+import qualified Data.HashMap.Strict as HM
 import Data.Text (Text)
 import Recycle.Types (DateRange (..), Range (..))
 import Web.FormUrlEncoded
-  ( FromForm (..),
+  ( Form (..),
+    FromForm (..),
+    ToForm (..),
     lookupUnique,
     parseUnique,
   )
-import Web.HttpApiData (FromHttpApiData (..))
+import Web.HttpApiData (FromHttpApiData (..), ToHttpApiData (..))
 
 instance FromForm DateRange where
   fromForm f =
@@ -22,3 +25,12 @@ instance FromForm DateRange where
           "absolute" -> AbsoluteDateRange <$> lookupRange
           "relative" -> RelativeDateRange <$> lookupRange
           t -> Left $ "Must be one of [absolute,relative]: " <> t
+
+instance ToForm DateRange where
+  toForm (AbsoluteDateRange Range {from, to}) =
+    pairsToForm [("drt", "absolute"), ("f", toQueryParam from), ("t", toQueryParam to)]
+  toForm (RelativeDateRange Range {from, to}) =
+    pairsToForm [("drt", "relative"), ("f", toQueryParam from), ("t", toQueryParam to)]
+
+pairsToForm :: [(Text, Text)] -> Form
+pairsToForm = Form . HM.fromListWith (++) . map (\(k, v) -> (k, [v]))

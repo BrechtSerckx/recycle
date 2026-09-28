@@ -52,7 +52,7 @@ newtype Consumer = Consumer Text
   deriving newtype (Eq, Show, IsString, ToHttpApiData)
 
 newtype SearchQuery a = SearchQuery {unSearchQuery :: a}
-  deriving newtype (FromHttpApiData, ToHttpApiData)
+  deriving newtype (Show, FromHttpApiData, ToHttpApiData)
 
 deriving newtype instance IsString (SearchQuery Text)
 
@@ -195,3 +195,4 @@ data InnerEvent = InnerEvent
 -- * DateRange
 
 data DateRange = AbsoluteDateRange (Range Day) | RelativeDateRange (Range Integer)
+  deriving (Show)

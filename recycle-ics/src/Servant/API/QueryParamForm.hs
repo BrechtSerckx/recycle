@@ -1,5 +1,6 @@
 {-# LANGUAGE TypeFamilies #-}
 {-# LANGUAGE TypeOperators #-}
+{-# LANGUAGE UndecidableInstances #-}
 
 module Servant.API.QueryParamForm
   ( QueryParamForm,
@@ -8,13 +9,17 @@ where
 
 import qualified Data.ByteString as BS
 import qualified Data.ByteString.Lazy as BSL
+import qualified Data.HashMap.Strict as HM
 import Data.Kind (Type)
 import Data.Proxy
-import qualified Data.Text.Encoding as T
+import qualified Data.Text.Encoding as TE
 import Network.Wai
 import Servant.API
+import Servant.Client.Core (HasClient (..))
+import Servant.Client.Core.Request (appendToQueryString)
 import Servant.Server
 import Servant.Server.Internal
+import Web.FormUrlEncoded (Form (..), ToForm (..))
 import qualified Web.FormUrlEncoded as Form
 
 data QueryParamForm (a :: Type)
@@ -41,7 +46,7 @@ instance
                     err400
                       { errBody =
                           BSL.fromStrict
-                            . T.encodeUtf8
+                            . TE.encodeUtf8
                             $ "Error: parsing query parameter form failed. "
                               <> err
                       }
@@ -50,3 +55,16 @@ instance
         delayed =
           addParameterCheck subserver . withRequest $ \req -> parseParamForm req
      in route (Proxy :: Proxy api) context delayed
+
+instance
+  (ToForm a, HasClient m api) =>
+  HasClient m (QueryParamForm a :> api)
+  where
+  type Client m (QueryParamForm a :> api) = a -> Client m api
+  clientWithRoute pm _ req a =
+    clientWithRoute pm (Proxy :: Proxy api) $
+      foldr
+        (\(k, v) r -> appendToQueryString k (Just (TE.encodeUtf8 v)) r)
+        req
+        (HM.toList (unForm (toForm a)) >>= \(k, vs) -> map (k,) vs)
+  hoistClientMonad pm _ nt s = hoistClientMonad pm (Proxy :: Proxy api) nt . s

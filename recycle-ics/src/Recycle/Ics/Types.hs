@@ -7,16 +7,20 @@ module Recycle.Ics.Types
   )
 where
 
+import qualified Data.HashMap.Strict as HM
 import Data.Text (Text)
 import Data.Time
 import Recycle.Types
 import Recycle.Types.Orphans ()
 import Web.FormUrlEncoded
-  ( FromForm (..),
+  ( Form (..),
+    FromForm (..),
+    ToForm (..),
     lookupUnique,
     parseAll,
     parseUnique,
   )
+import Web.HttpApiData (ToHttpApiData (..))
 
 data FractionEncoding
   = EncodeFractionAsVEvent (Range TimeOfDay) [Reminder]
@@ -44,6 +48,18 @@ instance FromForm FractionEncoding where
         pure $ EncodeFractionAsVEvent range reminders
       "todo" -> EncodeFractionAsVTodo <$> fromForm f
       t -> Left $ "Must be one of [event,todo]: " <> t
+
+instance ToForm FractionEncoding where
+  toForm (EncodeFractionAsVEvent Range {from, to} reminders) =
+    pairsToForm $
+      [("fe", "event"), ("es", toQueryParam from), ("ee", toQueryParam to)]
+        ++ map (\r -> ("rdb", toQueryParam r.daysBefore)) reminders
+        ++ map (\r -> ("rhb", toQueryParam r.hoursBefore)) reminders
+        ++ map (\r -> ("rmb", toQueryParam r.minutesBefore)) reminders
+  toForm (EncodeFractionAsVTodo (TodoDueDate d)) =
+    pairsToForm [("fe", "todo"), ("tdt", "date"), ("tdb", toQueryParam d)]
+  toForm (EncodeFractionAsVTodo (TodoDueDateTime d t)) =
+    pairsToForm [("fe", "todo"), ("tdt", "datetime"), ("tdb", toQueryParam d), ("tt", toQueryParam t)]
 
 data Reminder = Reminder
   { daysBefore :: Int,
@@ -97,3 +113,14 @@ instance FromForm Filter where
           fractions =
             if "f" `elem` fi then Nothing else Just fractions
         }
+
+instance ToForm Filter where
+  toForm Filter {events, fractions} =
+    pairsToForm $
+      (if events then [("fi", "e")] else [])
+        ++ case fractions of
+          Nothing -> [("fi", "f")]
+          Just fs -> map (\(FractionId fid) -> ("fif", fid)) fs
+
+pairsToForm :: [(Text, Text)] -> Form
+pairsToForm = Form . HM.fromListWith (++) . map (\(k, v) -> (k, [v]))
