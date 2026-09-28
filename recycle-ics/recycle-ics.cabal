@@ -71,10 +71,10 @@ library
     Recycle.Ics.Types
     Recycle.Ics.API
     Recycle.Ics.Server
+    Servant.API.QueryParamForm
   other-modules:
     Paths_recycle_ics
     Recycle.Types.Orphans
-    Servant.API.QueryParamForm
   autogen-modules:
     Paths_recycle_ics
   build-depends:
@@ -113,7 +113,9 @@ library
     , http-types
     , servant
     , servant-client
+    , servant-client-core
     , servant-server
+    , unordered-containers
     , wai
     , wai-app-static
     , wai-extra
@@ -195,6 +197,33 @@ test-suite recycle-ics-test
     , text
     , time
     , vector
+
+test-suite recycle-ics-server-test
+  import: common-default-extensions
+  type: exitcode-stdio-1.0
+  main-is: ServerSpec.hs
+  hs-source-dirs: test-server
+  ghc-options:
+    -threaded
+    -rtsopts
+    -with-rtsopts=-N
+  build-depends:
+      recycle-ics
+    , base
+    , QuickCheck
+    , aeson
+    , aeson-extra
+    , bytestring
+    , file-embed
+    , hspec
+    , http-client
+    , servant
+    , servant-client
+    , servant-server
+    , text
+    , time
+    , wai
+    , warp
 
 test-suite recycle-ics-api-test
   import: common-default-extensions
