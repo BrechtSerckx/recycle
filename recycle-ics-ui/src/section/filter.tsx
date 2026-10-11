@@ -81,7 +81,9 @@ export default function FilterSection() {
       {loading && <p className="msg-loading">Loading…</p>}
       {error && <p className="msg-error">{error}</p>}
       {fractions === null && !loading ? (
-        <p className="msg-empty">Fill in your address above to load fractions.</p>
+        <p className="msg-empty">
+          Fill in your address above to load fractions.
+        </p>
       ) : !loading && fractions !== null && fractions.length === 0 && !error ? (
         <p className="msg-empty">No fractions found for this address.</p>
       ) : (

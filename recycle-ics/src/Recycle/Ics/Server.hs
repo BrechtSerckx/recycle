@@ -10,6 +10,7 @@ module Recycle.Ics.Server
 where
 
 import Control.Exception.Safe (try)
+import Control.Monad.Except (throwError)
 import Control.Monad.IO.Class (liftIO)
 import qualified Data.Aeson as Aeson
 import qualified Data.ByteString.Lazy.Char8 as BSL8
@@ -28,7 +29,6 @@ import Recycle.Ics.ICalendar
 import Recycle.Ics.Types
 import Recycle.Types
 import Servant.API
-import Control.Monad.Except (throwError)
 import Servant.Server
   ( Handler,
     ServerError (..),

@@ -27,7 +27,9 @@ export default function DownloadSection() {
   const httpUrl = mForm ? mkHttpLink(mForm).toString() : null;
 
   const [preflight, setPreflight] = React.useState<PreflightState>("idle");
-  const [preflightError, setPreflightError] = React.useState<string | null>(null);
+  const [preflightError, setPreflightError] = React.useState<string | null>(
+    null
+  );
 
   React.useEffect(() => {
     if (!httpUrl) {

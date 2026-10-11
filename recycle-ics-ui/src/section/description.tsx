@@ -174,7 +174,9 @@ export default function DescriptionSection() {
       <div className="howto-list">
         {howTos.map(({ title, summary, howTo }, i) => (
           <details key={i}>
-            <summary>{title} — {summary}</summary>
+            <summary>
+              {title} — {summary}
+            </summary>
             <div>{howTo}</div>
           </details>
         ))}

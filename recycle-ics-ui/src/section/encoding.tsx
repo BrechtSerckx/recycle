@@ -70,7 +70,11 @@ const EventInputs = () => {
     remove,
   } = useFieldArray({ control, name: "reminders" });
   return (
-    <EncodingRadio label="Event" value={value} {...register("fractionEncodingType")}>
+    <EncodingRadio
+      label="Event"
+      value={value}
+      {...register("fractionEncodingType")}
+    >
       <p className="card-description" style={{ margin: "0 0 0.75rem" }}>
         Represent waste collections as calendar events.
       </p>
@@ -200,7 +204,11 @@ const TodoInputs = () => {
   const value = "todo";
   var isChecked = useWatch({ name: "fractionEncodingType" }) === value;
   return (
-    <EncodingRadio value={value} label="Todo" {...register("fractionEncodingType")}>
+    <EncodingRadio
+      value={value}
+      label="Todo"
+      {...register("fractionEncodingType")}
+    >
       <p className="card-description" style={{ margin: "0 0 0.75rem" }}>
         Represent waste collections as tasks/todos.{" "}
         <strong>Not supported by Google Calendar.</strong>

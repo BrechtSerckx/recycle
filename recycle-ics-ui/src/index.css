@@ -17,7 +17,11 @@
 }
 
 /* ── Reset ────────────────────────────────────────────────────── */
-*, *::before, *::after { box-sizing: border-box; }
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
 
 body {
   margin: 0;
@@ -359,8 +363,8 @@ button:disabled {
 /* ── Download section ─────────────────────────────────────────── */
 .url-display {
   width: 100%;
-  font-family: ui-monospace, "Cascadia Code", "Source Code Pro", Menlo,
-    Consolas, monospace;
+  font-family: ui-monospace, "Cascadia Code", "Source Code Pro", Menlo, Consolas,
+    monospace;
   font-size: 0.8125rem;
   padding: 0.625rem 0.75rem;
   border: 1px solid var(--border);
@@ -414,7 +418,9 @@ details > summary {
   user-select: none;
 }
 
-details > summary::-webkit-details-marker { display: none; }
+details > summary::-webkit-details-marker {
+  display: none;
+}
 
 details > summary::before {
   content: "▶";

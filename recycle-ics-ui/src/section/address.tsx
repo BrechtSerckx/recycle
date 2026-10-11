@@ -16,7 +16,13 @@ const ZipcodeQueryInput = React.forwardRef(
   ) => (
     <label>
       Search your zip code
-      <input ref={ref} type="text" inputMode="numeric" placeholder="3000" {...props} />
+      <input
+        ref={ref}
+        type="text"
+        inputMode="numeric"
+        placeholder="3000"
+        {...props}
+      />
     </label>
   )
 );

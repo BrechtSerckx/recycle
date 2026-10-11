@@ -49,15 +49,19 @@ data RecycleError = RecycleError
 instance Show RecycleError where
   show RecycleError {operation, context, cause} =
     T.unpack $
-      "Failed to " <> operation
+      "Failed to "
+        <> operation
         <> if null context
           then ""
-          else " [" <> T.intercalate ", " [k <> ": " <> v | (k, v) <- context] <> "]"
-        <> ": "
-        <> case cause of
-          ServiceUnavailable -> "service temporarily unavailable"
-          InvalidRequest msg -> "invalid request — " <> msg
-          DecodeError msg -> "unexpected response format, please report this bug — " <> msg
-          OtherError msg -> msg
+          else
+            " ["
+              <> T.intercalate ", " [k <> ": " <> v | (k, v) <- context]
+              <> "]"
+              <> ": "
+              <> case cause of
+                ServiceUnavailable -> "service temporarily unavailable"
+                InvalidRequest msg -> "invalid request — " <> msg
+                DecodeError msg -> "unexpected response format, please report this bug — " <> msg
+                OtherError msg -> msg
 
 instance Exception RecycleError
