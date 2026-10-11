@@ -16,6 +16,7 @@ export type FormInputs = {
   relativeDateRangeFrom: number;
   relativeDateRangeTo: number;
   fractionEncodingType: "event" | "todo";
+  fractionEncodingTimezone: string;
   feEventStart: string;
   feEventEnd: string;
   reminders: { rdb: number; rhb: number; rmb: number }[];
@@ -36,7 +37,7 @@ export type Form = {
   dateRange:
     | { type: "absolute"; from: string; to: string }
     | { type: "relative"; from: number; to: number };
-  fractionEncoding:
+  fractionEncoding: { timezone: string } & (
     | {
         type: "event";
         start: string;
@@ -48,7 +49,8 @@ export type Form = {
         due:
           | { type: "date"; date: number }
           | { type: "datetime"; date: number; time: string };
-      };
+      }
+  );
 };
 export const inputsToForm = ({
   langCode,
@@ -64,6 +66,7 @@ export const inputsToForm = ({
   relativeDateRangeFrom,
   relativeDateRangeTo,
   fractionEncodingType,
+  fractionEncodingTimezone,
   feEventStart,
   feEventEnd,
   reminders,
@@ -102,6 +105,7 @@ export const inputsToForm = ({
         start: feEventStart,
         end: feEventEnd,
         reminders,
+        timezone: fractionEncodingTimezone,
       };
       break;
     case "todo":
@@ -123,7 +127,11 @@ export const inputsToForm = ({
         default:
           return null;
       }
-      fractionEncoding = { type: fractionEncodingType as "todo", due: todoDue };
+      fractionEncoding = {
+        type: fractionEncodingType as "todo",
+        due: todoDue,
+        timezone: fractionEncodingTimezone,
+      };
       break;
     default:
       return null;
@@ -145,6 +153,7 @@ export const defaultFormInputs: Partial<FormInputs> = {
   langCode: LangCode.NL,
   dateRangeType: "relative",
   fractionEncodingType: "event",
+  fractionEncodingTimezone: "Europe/Brussels",
   feEventStart: "07:00",
   feEventEnd: "10:00",
   reminders: [],
@@ -196,6 +205,7 @@ export const formToParams = ({
       break;
   }
 
+  params.append("tz", fractionEncoding.timezone);
   params.append("fe", fractionEncoding.type);
   switch (fractionEncoding.type) {
     case "event":

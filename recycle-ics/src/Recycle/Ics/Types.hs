@@ -1,5 +1,6 @@
 module Recycle.Ics.Types
-  ( FractionEncoding (..),
+  ( EncodingSettings (..),
+    FractionEncoding (..),
     Reminder (..),
     TodoDue (..),
     CollectionQuery (..),
@@ -7,16 +8,40 @@ module Recycle.Ics.Types
   )
 where
 
+import Data.List (find)
 import Data.Text (Text)
+import qualified Data.Text.Encoding as TE
 import Data.Time
+import Data.Time.Zones.All (TZLabel, toTZName)
+import qualified Data.Time.Zones.All as TZ
 import Recycle.Types
 import Recycle.Types.Orphans ()
 import Web.FormUrlEncoded
-  ( FromForm (..),
+  ( Form,
+    FromForm (..),
     lookupUnique,
     parseAll,
     parseUnique,
   )
+
+data EncodingSettings = EncodingSettings
+  { timezone :: TZLabel,
+    fractionEncoding :: FractionEncoding
+  }
+  deriving (Show)
+
+instance FromForm EncodingSettings where
+  fromForm f = do
+    timezone <- parseTZLabel f
+    fractionEncoding <- fromForm f
+    pure EncodingSettings {..}
+
+parseTZLabel :: Form -> Either Text TZLabel
+parseTZLabel f = case lookupUnique "tz" f of
+  Right tzText ->
+    maybe (Left $ "Unknown timezone: " <> tzText) Right $
+      find (\l -> TE.decodeUtf8 (toTZName l) == tzText) [minBound .. maxBound]
+  Left _ -> Right TZ.Europe__Brussels
 
 data FractionEncoding
   = EncodeFractionAsVEvent (Range TimeOfDay) [Reminder]
@@ -24,7 +49,7 @@ data FractionEncoding
   deriving (Show)
 
 instance FromForm FractionEncoding where
-  fromForm f =
+  fromForm f = do
     lookupUnique "fe" f >>= \case
       "event" -> do
         range <- do
@@ -72,7 +97,7 @@ instance FromForm TodoDue where
 data CollectionQuery = CollectionQuery
   { dateRange :: DateRange,
     langCode :: LangCode,
-    fractionEncoding :: FractionEncoding,
+    encodingSettings :: EncodingSettings,
     zipcode :: ZipcodeId,
     street :: StreetId,
     houseNumber :: HouseNumber,

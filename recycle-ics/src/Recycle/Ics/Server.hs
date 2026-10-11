@@ -71,13 +71,13 @@ recycleIcsServer dataDir =
     generateCollection ::
       DateRange ->
       LangCode ->
-      FractionEncoding ->
+      EncodingSettings ->
       ZipcodeId ->
       StreetId ->
       HouseNumber ->
       Filter ->
       m (Union '[WithStatus 200 BSL8.ByteString])
-    generateCollection dateRange langCode fractionEncoding zipcode street houseNumber filter' =
+    generateCollection dateRange langCode encodingSettings zipcode street houseNumber filter' =
       do
         let collectionQuery = CollectionQuery {filter = filter', ..}
         collections <- runCollectionQuery collectionQuery
@@ -131,7 +131,7 @@ runCollectionQuery ::
 runCollectionQuery CollectionQuery {filter = filter', ..} = do
   range <- calculateDateRange dateRange
   collections <- Recycle.getCollections zipcode street houseNumber range
-  pure $ mkVCalendar langCode fractionEncoding filter' collections
+  pure $ mkVCalendar langCode encodingSettings filter' collections
 
 calculateDateRange :: (HasTime m) => DateRange -> m (Range Day)
 calculateDateRange = \case

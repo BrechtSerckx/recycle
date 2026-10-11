@@ -34,7 +34,7 @@ type RecycleIcsAPI =
              :<|> "generate"
                :> QueryParamForm DateRange
                :> QueryParam' '[Required] "lc" LangCode
-               :> QueryParamForm FractionEncoding
+               :> QueryParamForm EncodingSettings
                :> QueryParam' '[Required] "z" ZipcodeId
                :> QueryParam' '[Required] "s" StreetId
                :> QueryParam' '[Required] "hn" HouseNumber

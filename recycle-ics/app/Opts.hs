@@ -10,6 +10,10 @@ where
 
 import Colog (Severity (..))
 import qualified Data.Char as Char
+import Data.List (find)
+import qualified Data.Text as T
+import qualified Data.Text.Encoding as TE
+import Data.Time.Zones.All (TZLabel (..), toTZName)
 import Options.Applicative
 import Parsers
 import Recycle.Ics.ICalendar
@@ -89,7 +93,7 @@ pCollectionQuery = do
         <> value EN
         <> showDefault
         <> help "Preferred language for titles and descriptions"
-  fractionEncoding <- pFractionEncoding
+  encodingSettings <- pEncodingSettings
   zipcode <- pZipcodeId
   street <- pStreetId
   houseNumber <- pHouseNumber
@@ -103,6 +107,17 @@ pCollectionQuery = do
           *> many (strOption $ long "include-fraction" <> help "Include this fraction.")
     pure Filter {..}
   pure CollectionQuery {filter = filter', ..}
+
+pEncodingSettings :: Parser EncodingSettings
+pEncodingSettings =
+  EncodingSettings
+    <$> option
+      pTZLabelReader
+      ( long "timezone"
+          <> value Europe__Brussels
+          <> help "IANA timezone for event/due times (default: Europe/Brussels)"
+      )
+    <*> pFractionEncoding
 
 pFractionEncoding :: Parser FractionEncoding
 pFractionEncoding =
@@ -148,6 +163,12 @@ pFractionEncoding =
                 <|> (TodoDueDate <$> pDaysBefore)
         pure $ EncodeFractionAsVTodo due
    in pAsEvent <|> pAsTodo
+
+pTZLabelReader :: ReadM TZLabel
+pTZLabelReader = eitherReader $ \s ->
+  let t = T.pack s
+   in maybe (Left $ "Unknown timezone: " <> s) Right $
+        find (\l -> TE.decodeUtf8 (toTZName l) == t) [minBound .. maxBound]
 
 data ServeIcsOpts = ServeIcsOpts
 

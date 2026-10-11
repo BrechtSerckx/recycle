@@ -45,6 +45,29 @@ const TimeInput = React.forwardRef(
   )
 );
 
+const timezones: string[] = (Intl as any).supportedValuesOf("timeZone");
+
+const TimezoneSelect = React.forwardRef(
+  (
+    {
+      label,
+      ...props
+    }: Partial<UseFormRegisterReturn> & { label: React.ReactNode },
+    ref: React.ForwardedRef<HTMLSelectElement>
+  ) => (
+    <label>
+      {label}
+      <select ref={ref} {...props}>
+        {timezones.map((tz) => (
+          <option key={tz} value={tz}>
+            {tz}
+          </option>
+        ))}
+      </select>
+    </label>
+  )
+);
+
 const NumberInput = React.forwardRef(
   (
     {
@@ -225,12 +248,17 @@ const TodoInputs = () => {
 };
 
 export default function EncodingSection() {
+  const { register } = useFormContext<FormInputs>();
   return (
     <div className="card">
       <p className="card-label">Encoding</p>
       <p className="card-description">
         How to represent waste collections in the calendar.
       </p>
+      <TimezoneSelect
+        label="Timezone"
+        {...register("fractionEncodingTimezone", { required: true })}
+      />
       <div className="radio-options">
         <EventInputs />
         <TodoInputs />
