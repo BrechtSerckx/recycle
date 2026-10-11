@@ -5,6 +5,7 @@ module Recycle.Ics.ICalendar
     printVCalendar,
     VCalendar,
     DateRange (..),
+    EncodingSettings (..),
     FractionEncoding (..),
     Reminder (..),
     TodoDue (..),
@@ -22,6 +23,8 @@ import Data.Text (Text)
 import qualified Data.Text as T
 import qualified Data.Text.Lazy as TL
 import Data.Time
+import Data.Time.Zones (LocalToUTCResult (..), localTimeToUTCFull)
+import Data.Time.Zones.All (TZLabel, tzByLabel)
 import Data.Version (Version (..))
 import Recycle.Ics.Types
 import Recycle.Types
@@ -38,17 +41,17 @@ getByLangCode lc m = case lc of
 
 mkVCalendar ::
   LangCode ->
-  FractionEncoding ->
+  EncodingSettings ->
   Filter ->
   [CollectionEvent] ->
   VCalendar
-mkVCalendar langCode fractionEncoding filter' ces =
+mkVCalendar langCode EncodingSettings {..} filter' ces =
   let (collections, events) =
         bimap filterFractions filterEvents $
           partitionCollectionEvents ces
    in case fractionEncoding of
         EncodeFractionAsVEvent timeslot reminders ->
-          let encodeCollection = collectionToVEvent langCode timeslot reminders
+          let encodeCollection = collectionToVEvent langCode timeslot timezone reminders
               encodeEvent = eventToVEvent langCode
            in (emptyVCalendar "recycle")
                 { vcEvents =
@@ -56,8 +59,8 @@ mkVCalendar langCode fractionEncoding filter' ces =
                       <> mkMapWith encodeEvent events,
                   vcTodos = Map.empty
                 }
-        EncodeFractionAsVTodo reminder ->
-          let encodeCollection = collectionToVTodo langCode reminder
+        EncodeFractionAsVTodo due ->
+          let encodeCollection = collectionToVTodo langCode timezone due
               encodeEvent = eventToVEvent langCode
            in (emptyVCalendar "recycle")
                 { vcEvents = mkMapWith encodeEvent events,
@@ -158,11 +161,17 @@ mkFractionCollectionDescription langCode fractionCollection =
 collectionToVEvent ::
   LangCode ->
   Range TimeOfDay ->
+  TZLabel ->
   [Reminder] ->
   FractionCollection ->
   VEvent
-collectionToVEvent langCode range reminders fractionCollection =
+collectionToVEvent langCode range tzLabel reminders fractionCollection =
   let description = mkFractionCollectionDescription langCode fractionCollection
+      collectionDay = utctDay fractionCollection.timestamp
+      toUTC tod = case localTimeToUTCFull (tzByLabel tzLabel) (LocalTime collectionDay tod) of
+        LTUUnique t _ -> t
+        LTUAmbiguous t _ _ _ -> t
+        LTUNone t _ -> t
    in (emptyVEvent fractionCollection.id.unCollectionEventId fractionCollection.timestamp)
         { veDescription = Just description,
           veSummary =
@@ -171,22 +180,14 @@ collectionToVEvent langCode range reminders fractionCollection =
           veDTStart =
             Just
               DTStartDateTime
-                { dtStartDateTimeValue =
-                    UTCDateTime
-                      fractionCollection.timestamp
-                        { utctDayTime = timeOfDayToTime range.from
-                        },
+                { dtStartDateTimeValue = UTCDateTime (toUTC range.from),
                   dtStartOther = def
                 },
           veDTEndDuration =
             Just $
               Left
                 DTEndDateTime
-                  { dtEndDateTimeValue =
-                      UTCDateTime
-                        fractionCollection.timestamp
-                          { utctDayTime = timeOfDayToTime range.to
-                          },
+                  { dtEndDateTimeValue = UTCDateTime (toUTC range.to),
                     dtEndOther = def
                   },
           veAlarms =
@@ -199,32 +200,30 @@ collectionToVEvent langCode range reminders fractionCollection =
         }
 
 collectionToVTodo ::
-  LangCode -> TodoDue -> FractionCollection -> VTodo
-collectionToVTodo langCode due fractionCollection =
+  LangCode -> TZLabel -> TodoDue -> FractionCollection -> VTodo
+collectionToVTodo langCode tzLabel due fractionCollection =
   ( emptyVTodo fractionCollection.id.unCollectionEventId fractionCollection.timestamp
   )
     { vtDescription =
         Just $ mkFractionCollectionDescription langCode fractionCollection,
       vtSummary =
         Just $ mkFractionCollectionSummary langCode fractionCollection,
-      vtDueDuration = Just . Left $ makeDue fractionCollection.timestamp due,
+      vtDueDuration = Just . Left $ makeDue tzLabel fractionCollection.timestamp due,
       vtStatus = case fractionCollection.exception of
         Just (ReplacedBy _) -> Just (CancelledTodo def)
         _ -> Nothing
     }
 
-makeDue :: UTCTime -> TodoDue -> Due
-makeDue ts = \case
+makeDue :: TZLabel -> UTCTime -> TodoDue -> Due
+makeDue tzLabel ts = \case
   TodoDueDateTime daysBefore timeOfDay ->
-    DueDateTime
-      { dueDateTimeValue =
-          UTCDateTime
-            UTCTime
-              { utctDay = addDays (negate daysBefore) (utctDay ts),
-                utctDayTime = timeOfDayToTime timeOfDay
-              },
-        dueOther = def
-      }
+    let dueDay = addDays (negate daysBefore) (utctDay ts)
+        localDue = LocalTime dueDay timeOfDay
+        utcDue = case localTimeToUTCFull (tzByLabel tzLabel) localDue of
+          LTUUnique t _ -> t
+          LTUAmbiguous t _ _ _ -> t
+          LTUNone t _ -> t
+     in DueDateTime {dueDateTimeValue = UTCDateTime utcDue, dueOther = def}
   TodoDueDate daysBefore ->
     DueDate
       { dueDateValue =
