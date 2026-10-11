@@ -235,9 +235,8 @@ lookupZipcodeDisplay zipcodeId@(ZipcodeId t) = do
     Nothing -> pure t
     Just code -> do
       eResult <-
-        lift $
-          try $
-            API.searchZipcodes consumer (Just (SearchQuery code))
+        lift . try $
+          API.searchZipcodes consumer (Just (SearchQuery code))
       pure $ case eResult of
         Left (_ :: SomeException) -> t
         Right (Z (I (WithStatus (SingObject zips)))) ->

@@ -38,7 +38,7 @@ pDateRange =
             [long "relative-to", help "Days before today to fetch collections"]
       pure Range {..}
 
-data ApiClientOpts = ApiClientOpts
+newtype ApiClientOpts = ApiClientOpts
   { consumer :: Consumer
   }
 
