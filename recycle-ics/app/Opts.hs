@@ -21,7 +21,7 @@ import Recycle.Ics.Types
 import Recycle.Types
 import Text.Read (readMaybe)
 
-data Opts = Opts
+newtype Opts = Opts
   { cmd :: Cmd
   }
 

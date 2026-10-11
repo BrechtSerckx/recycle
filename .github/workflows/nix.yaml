@@ -52,9 +52,17 @@ jobs:
 
     - run: nix-shell --run 'echo "shell ok"'
 
+    - run: nix-shell --run 'cd recycle-ics-ui && npm install'
+
+    - name: Check formatting
+      run: nix-shell --run 'just fmt-check'
+
+    - name: Lint
+      run: nix-shell --run 'just lint'
+
     # FIXME: Build using system npm first
     # This can be deleted once the Nix build for the ui works again
-    - run: nix-shell --run 'cd recycle-ics-ui && npm install && npm run build'
+    - run: nix-shell --run 'cd recycle-ics-ui && npm run build'
 
     - run: nix-shell --run 'cabal build all'
 

@@ -4,6 +4,7 @@ module Main
 where
 
 import qualified Colog
+import Data.Maybe (fromMaybe)
 import Data.String (fromString)
 import Data.Time (addDays, getCurrentTime, utctDay)
 import Network.HTTP.Client.TLS
@@ -35,7 +36,7 @@ testHouseNumber = HouseNumber 1
 main :: IO ()
 main = do
   mConsumer <- Env.lookupEnv "RECYCLE_ICS_CONSUMER"
-  let consumer = fromString $ maybe "recycleapp.be" id mConsumer
+  let consumer = fromString $ fromMaybe "recycleapp.be" mConsumer
   env <- mkTestEnv consumer
   hspec $ apiSpec env
 
