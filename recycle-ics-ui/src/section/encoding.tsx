@@ -120,6 +120,7 @@ const EventInputs = () => {
                 disabled={!isChecked}
                 {...register(`reminders.${index}.rdb`, {
                   required: true,
+                  valueAsNumber: true,
                   value: 0,
                 })}
               />
@@ -128,6 +129,7 @@ const EventInputs = () => {
                 disabled={!isChecked}
                 {...register(`reminders.${index}.rhb`, {
                   required: true,
+                  valueAsNumber: true,
                   value: 10,
                 })}
               />
@@ -136,6 +138,7 @@ const EventInputs = () => {
                 disabled={!isChecked}
                 {...register(`reminders.${index}.rmb`, {
                   required: true,
+                  valueAsNumber: true,
                   value: 0,
                 })}
               />
