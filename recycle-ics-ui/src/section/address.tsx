@@ -85,6 +85,14 @@ const ZipcodeAutocompleter = (props: Partial<UseFormRegisterReturn>) => {
   );
 };
 
+// recycleapp.be's street search only accepts letters (incl. accented Latin
+// characters), digits, spaces, apostrophes, hyphens and dots — anything else
+// gets a 400. Strip it client-side rather than sending a request we know
+// will be rejected.
+function sanitizeStreetQuery(query: string): string {
+  return query.replace(/[^A-Za-zÀ-ÖØ-öø-ÿ0-9 '.-]/g, "");
+}
+
 const StreetQueryInput = React.forwardRef(
   (
     props: Partial<UseFormRegisterReturn>,
@@ -116,9 +124,10 @@ const StreetAutocompleter = ({
     setLoading(false);
     if (query) {
       debounced(() => {
-        if (query.length >= 3) {
+        const sanitized = sanitizeStreetQuery(query);
+        if (sanitized.length >= 3) {
           setLoading(true);
-          Api.searchStreets(zipcode, query)
+          Api.searchStreets(zipcode, sanitized)
             .then((newValues) => setValues(newValues))
             .catch((e: unknown) => setError(friendlyError(e)))
             .finally(() => setLoading(false));
