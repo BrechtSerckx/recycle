@@ -34,13 +34,15 @@ const ZipcodeAutocompleter = (props: Partial<UseFormRegisterReturn>) => {
   const [values, setValues] = React.useState<any[] | null>(null);
   const [error, setError] = React.useState<string | null>(null);
   const [loading, setLoading] = React.useState(false);
+  // Created once via useRef so the debounce timer is shared across keystrokes.
+  const debounced = React.useRef(debounce(250)).current;
   React.useEffect(() => {
     setValue("zipcodeId", null);
     setValues(null);
     setError(null);
     setLoading(false);
     if (query) {
-      debounce(() => {
+      debounced(() => {
         if (query.length >= 2) {
           setLoading(true);
           Api.searchZipcodes(query)
@@ -48,7 +50,7 @@ const ZipcodeAutocompleter = (props: Partial<UseFormRegisterReturn>) => {
             .catch((e: unknown) => setError(friendlyError(e)))
             .finally(() => setLoading(false));
         }
-      }, 250)();
+      });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [query]);
@@ -105,13 +107,15 @@ const StreetAutocompleter = ({
   const [values, setValues] = React.useState<any[] | null>(null);
   const [error, setError] = React.useState<string | null>(null);
   const [loading, setLoading] = React.useState(false);
+  // Created once via useRef so the debounce timer is shared across keystrokes.
+  const debounced = React.useRef(debounce(250)).current;
   React.useEffect(() => {
     setValue("streetId", null);
     setValues(null);
     setError(null);
     setLoading(false);
     if (query) {
-      debounce(() => {
+      debounced(() => {
         if (query.length >= 3) {
           setLoading(true);
           Api.searchStreets(zipcode, query)
@@ -119,7 +123,7 @@ const StreetAutocompleter = ({
             .catch((e: unknown) => setError(friendlyError(e)))
             .finally(() => setLoading(false));
         }
-      }, 250)();
+      });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [query, zipcode]);
