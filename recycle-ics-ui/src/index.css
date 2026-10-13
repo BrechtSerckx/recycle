@@ -150,6 +150,43 @@ input[type="date"]:disabled {
   cursor: not-allowed;
 }
 
+input[type="text"][aria-invalid="true"],
+input[type="number"][aria-invalid="true"],
+input[type="time"][aria-invalid="true"],
+input[type="date"][aria-invalid="true"] {
+  border-color: var(--error);
+}
+
+input[type="text"][aria-invalid="true"]:focus,
+input[type="number"][aria-invalid="true"]:focus,
+input[type="time"][aria-invalid="true"]:focus,
+input[type="date"][aria-invalid="true"]:focus {
+  border-color: var(--error);
+  box-shadow: 0 0 0 3px rgb(220 38 38 / 0.12);
+}
+
+.field-error {
+  color: var(--error);
+  font-size: 0.8125rem;
+  margin: 0;
+  line-height: 0;
+}
+
+.field-error:not(:empty) {
+  margin: 0.25rem 0 0;
+  line-height: 1.3;
+}
+
+/* If any reminder in this row shows an error, reserve the same space on
+   its (currently error-free) siblings too, so the row doesn't visually
+   shift out of alignment (it's aligned via `align-items: flex-end`). A
+   row with no errors at all stays fully collapsed. */
+.reminder-item:has(.field-error:not(:empty)) .field-error {
+  margin-top: 0.25rem;
+  line-height: 1.3;
+  min-height: 1.25rem;
+}
+
 /* Stacked label layout for text/number/time/date */
 label:has(> input[type="text"]),
 label:has(> input[type="number"]),
@@ -353,6 +390,12 @@ button:disabled {
   border-color: var(--error-border);
 }
 
+/* Match the reserved .field-error space under each reminder input, so
+   Remove stays lined up with the input boxes instead of the error slot. */
+.reminder-item:has(.field-error:not(:empty)) .btn-danger {
+  margin-bottom: 1.5rem;
+}
+
 .btn-danger:hover:not(:disabled) {
   background: var(--error-bg);
 }
@@ -425,6 +468,7 @@ button:disabled {
   margin-top: 0.75rem;
   flex-wrap: wrap;
 }
+
 
 /* ── Description / how-to ─────────────────────────────────────── */
 .description-intro {

@@ -72,19 +72,28 @@ const NumberInput = React.forwardRef(
   (
     {
       label,
+      error,
       ...props
-    }: Partial<UseFormRegisterReturn> & { label: React.ReactNode },
+    }: Partial<UseFormRegisterReturn> & {
+      label: React.ReactNode;
+      error?: string;
+    },
     ref: React.ForwardedRef<HTMLInputElement>
   ) => (
     <label>
       {label}
-      <input ref={ref} type="number" {...props} />
+      <input ref={ref} type="number" aria-invalid={!!error} {...props} />
+      <p className="field-error">{error}</p>
     </label>
   )
 );
 
 const EventInputs = () => {
-  const { control, register } = useFormContext<FormInputs>();
+  const {
+    control,
+    register,
+    formState: { errors },
+  } = useFormContext<FormInputs>();
   const value = "event";
   var isChecked = useWatch({ name: "fractionEncodingType" }) === value;
   const {
@@ -118,28 +127,31 @@ const EventInputs = () => {
               <NumberInput
                 label="Days before"
                 disabled={!isChecked}
+                error={errors.reminders?.[index]?.rdb?.message}
                 {...register(`reminders.${index}.rdb`, {
-                  required: true,
                   valueAsNumber: true,
                   value: 0,
+                  validate: (v) => Number.isFinite(v) || "Required",
                 })}
               />
               <NumberInput
                 label="Hours before"
                 disabled={!isChecked}
+                error={errors.reminders?.[index]?.rhb?.message}
                 {...register(`reminders.${index}.rhb`, {
-                  required: true,
                   valueAsNumber: true,
                   value: 10,
+                  validate: (v) => Number.isFinite(v) || "Required",
                 })}
               />
               <NumberInput
                 label="Minutes before"
                 disabled={!isChecked}
+                error={errors.reminders?.[index]?.rmb?.message}
                 {...register(`reminders.${index}.rmb`, {
-                  required: true,
                   valueAsNumber: true,
                   value: 0,
+                  validate: (v) => Number.isFinite(v) || "Required",
                 })}
               />
               <button
@@ -171,7 +183,10 @@ const TodoFullDayInputs = ({
 }: {
   isParentChecked: boolean;
 }) => {
-  const { register } = useFormContext<FormInputs>();
+  const {
+    register,
+    formState: { errors },
+  } = useFormContext<FormInputs>();
   const value = "date";
   var isChecked = useWatch({ name: "feTodoDueType" }) === value;
   return (
@@ -184,8 +199,11 @@ const TodoFullDayInputs = ({
       <NumberInput
         label="Days before"
         disabled={!(isParentChecked && isChecked)}
+        error={errors.feTodoDueDateDaysBefore?.message}
         {...register("feTodoDueDateDaysBefore", {
-          required: isParentChecked && isChecked,
+          valueAsNumber: true,
+          validate: (v) =>
+            !(isParentChecked && isChecked) || Number.isFinite(v) || "Required",
         })}
       />
     </EncodingRadio>
@@ -197,7 +215,10 @@ const TodoSpecificTimeInputs = ({
 }: {
   isParentChecked: boolean;
 }) => {
-  const { register } = useFormContext<FormInputs>();
+  const {
+    register,
+    formState: { errors },
+  } = useFormContext<FormInputs>();
   const value = "datetime";
   var isChecked = useWatch({ name: "feTodoDueType" }) === value;
   return (
@@ -210,8 +231,11 @@ const TodoSpecificTimeInputs = ({
       <NumberInput
         label="Days before"
         disabled={!(isParentChecked && isChecked)}
+        error={errors.feTodoDueDatetimeDaysBefore?.message}
         {...register("feTodoDueDatetimeDaysBefore", {
-          required: isParentChecked && isChecked,
+          valueAsNumber: true,
+          validate: (v) =>
+            !(isParentChecked && isChecked) || Number.isFinite(v) || "Required",
         })}
       />
       <TimeInput

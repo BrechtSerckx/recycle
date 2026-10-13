@@ -148,18 +148,29 @@ const StreetAutocompleter = ({
 
 const HouseNumberInput = React.forwardRef(
   (
-    props: Partial<UseFormRegisterReturn>,
+    { error, ...props }: Partial<UseFormRegisterReturn> & { error?: string },
     ref: React.ForwardedRef<HTMLInputElement>
   ) => (
     <label>
       House number
-      <input ref={ref} type="number" placeholder="1" min={1} {...props} />
+      <input
+        ref={ref}
+        type="number"
+        placeholder="1"
+        min={1}
+        aria-invalid={!!error}
+        {...props}
+      />
+      <p className="field-error">{error}</p>
     </label>
   )
 );
 
 export default function AddressSection() {
-  const { register } = useFormContext<FormInputs>();
+  const {
+    register,
+    formState: { errors },
+  } = useFormContext<FormInputs>();
   const zipcodeId = useWatch({ name: "zipcodeId" });
   const streetId = useWatch({ name: "streetId" });
   return (
@@ -184,7 +195,10 @@ export default function AddressSection() {
       {streetId && (
         <>
           <p className="card-section-title">House number</p>
-          <HouseNumberInput {...register("houseNumber", { required: true })} />
+          <HouseNumberInput
+            error={errors.houseNumber?.message}
+            {...register("houseNumber", { required: "Required" })}
+          />
         </>
       )}
     </div>

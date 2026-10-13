@@ -25,6 +25,7 @@ function GithubCorner() {
 export function App() {
   const formContext = useForm<FormInputs>({
     defaultValues: defaultFormInputs,
+    mode: "onChange",
   });
 
   return (
