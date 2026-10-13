@@ -11,6 +11,18 @@
         "url": "https://github.com/input-output-hk/haskell.nix/archive/03c0f0633d6fdcfdbb332bedbef5acd0b693ab04.tar.gz",
         "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
     },
+    "mcp-hoogle": {
+        "branch": "master",
+        "description": "a local hoogle as an mcp server, makes the agent be able to query local hoogle betterly",
+        "homepage": null,
+        "owner": "jappeace",
+        "repo": "mcp-hoogle",
+        "rev": "86f5cba8155440e5e04693fde5929750a8da29a2",
+        "sha256": "1w7aqnql3kw8wp9jaa62bnqljdikg3c0x5k0fsncdqisjmampv4x",
+        "type": "tarball",
+        "url": "https://github.com/jappeace/mcp-hoogle/archive/86f5cba8155440e5e04693fde5929750a8da29a2.tar.gz",
+        "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
+    },
     "niv": {
         "branch": "master",
         "description": "Easy dependency management for Nix recycles",

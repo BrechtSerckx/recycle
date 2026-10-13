@@ -2,6 +2,8 @@ let
   inherit (import ./default.nix { build = false; }) sources nixpkgs hsPkgs;
   nixpkgs-node = import sources.nixpkgs-node {};
   nixpkgs-act = import sources.nixpkgs-act {};
+  # built via its own pinned nixpkgs (npins), kept out of the recycle-ics cabal deps
+  mcp-hoogle = import sources.mcp-hoogle { };
 in hsPkgs.shellFor {
   packages = ps: with ps; [
     recycle-ics
@@ -27,7 +29,10 @@ in hsPkgs.shellFor {
     nixfmt
     # haskell ci/cd generator
     haskell-ci
-    ]) ++ (with nixpkgs-act;  [
+    ]) ++ [
+    # MCP server exposing hoogle search over local haskell deps
+    mcp-hoogle
+    ] ++ (with nixpkgs-act;  [
     # run ci/cd locally
     act
     ]) ++ (with nixpkgs-node;  [
