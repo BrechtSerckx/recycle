@@ -77,21 +77,33 @@ const RelativeDateInput = React.forwardRef(
   (
     {
       label,
+      error,
       ...props
     }: Partial<UseFormRegisterReturn> & {
       label: React.ReactNode;
+      error?: string;
     },
     ref: React.ForwardedRef<HTMLInputElement>
   ) => (
     <label>
       {label}
-      <input ref={ref} type="number" step={1} {...props} />
+      <input
+        ref={ref}
+        type="number"
+        step={1}
+        aria-invalid={!!error}
+        {...props}
+      />
+      <p className="field-error">{error}</p>
     </label>
   )
 );
 
 const RelativeDateRangeInputs = () => {
-  const { register } = useFormContext<FormInputs>();
+  const {
+    register,
+    formState: { errors },
+  } = useFormContext<FormInputs>();
   const value = "relative";
   var isChecked = useWatch({ name: "dateRangeType" }) === value;
   return (
@@ -106,15 +118,22 @@ const RelativeDateRangeInputs = () => {
       <RelativeDateInput
         label="Days before today"
         disabled={!isChecked}
+        error={errors.relativeDateRangeFrom?.message}
         {...register("relativeDateRangeFrom", {
-          required: isChecked,
+          valueAsNumber: true,
           value: -14,
+          validate: (v) => !isChecked || Number.isFinite(v) || "Required",
         })}
       />
       <RelativeDateInput
         label="Days after today"
         disabled={!isChecked}
-        {...register("relativeDateRangeTo", { required: isChecked, value: 28 })}
+        error={errors.relativeDateRangeTo?.message}
+        {...register("relativeDateRangeTo", {
+          valueAsNumber: true,
+          value: 28,
+          validate: (v) => !isChecked || Number.isFinite(v) || "Required",
+        })}
       />
     </DateRangeRadio>
   );
