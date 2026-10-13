@@ -1,14 +1,15 @@
 import * as React from "react";
-import { useWatch } from "react-hook-form";
+import { useFormContext, useWatch } from "react-hook-form";
 import { FormInputs, inputsToForm, Form, formToParams } from "../types";
 import { serverUrl, nodeEnv } from "../env";
 import { apiFetch, friendlyError } from "../api";
 
-type PreflightState = "idle" | "checking" | "ok" | "error";
+type CheckState = "idle" | "checking" | "ok" | "error";
 
 export default function DownloadSection() {
+  const { formState } = useFormContext<FormInputs>();
   const formInputs = useWatch() as FormInputs,
-    mForm = inputsToForm(formInputs);
+    mForm = formState.isValid ? inputsToForm(formInputs) : null;
 
   const mkHttpLink = (form: Form): URL => {
       var url = new URL("/api/generate", serverUrl);
@@ -26,31 +27,29 @@ export default function DownloadSection() {
 
   const httpUrl = mForm ? mkHttpLink(mForm).toString() : null;
 
-  const [preflight, setPreflight] = React.useState<PreflightState>("idle");
-  const [preflightError, setPreflightError] = React.useState<string | null>(
-    null
-  );
+  const [checkState, setCheckState] = React.useState<CheckState>("idle");
+  const [checkError, setCheckError] = React.useState<string | null>(null);
 
+  // Any change to the generated request invalidates a previous check —
+  // the user has to hit Validate again before downloading.
   React.useEffect(() => {
-    if (!httpUrl) {
-      setPreflight("idle");
-      setPreflightError(null);
-      return;
-    }
-    setPreflight("checking");
-    setPreflightError(null);
-    const timer = setTimeout(() => {
-      apiFetch(httpUrl)
-        .then(() => setPreflight("ok"))
-        .catch((e: unknown) => {
-          setPreflight("error");
-          setPreflightError(friendlyError(e));
-        });
-    }, 500);
-    return () => clearTimeout(timer);
+    setCheckState("idle");
+    setCheckError(null);
   }, [httpUrl]);
 
-  const canDownload = preflight === "ok";
+  const handleValidate = () => {
+    if (!httpUrl) return;
+    setCheckState("checking");
+    setCheckError(null);
+    apiFetch(httpUrl)
+      .then(() => setCheckState("ok"))
+      .catch((e: unknown) => {
+        setCheckState("error");
+        setCheckError(friendlyError(e));
+      });
+  };
+
+  const canDownload = checkState === "ok";
 
   return (
     <div className="card">
@@ -58,41 +57,50 @@ export default function DownloadSection() {
       {mForm ? (
         <>
           <p className="card-description">
-            Use the webcal link to subscribe — your calendar will stay up to
-            date automatically.
+            Check your address and settings, then generate your link.
           </p>
-          <textarea
-            className="url-display"
-            readOnly
-            value={mkWebcalLink(mForm)}
-          />
-          {preflight === "checking" && (
-            <p className="msg-loading">Verifying…</p>
+          <button
+            type="button"
+            className="btn btn-primary btn-validate"
+            disabled={checkState === "checking" || checkState === "ok"}
+            onClick={handleValidate}
+          >
+            {checkState === "checking" ? "Checking…" : "Validate"}
+          </button>
+          {checkState === "error" && checkError && (
+            <p className="msg-error">{checkError}</p>
           )}
-          {preflight === "error" && preflightError && (
-            <p className="msg-error">{preflightError}</p>
+          {canDownload && (
+            <>
+              <p className="card-description" style={{ marginTop: "0.75rem" }}>
+                Use the webcal link to subscribe — your calendar will stay up to
+                date automatically.
+              </p>
+              <textarea
+                className="url-display"
+                readOnly
+                value={mkWebcalLink(mForm)}
+              />
+              <div className="download-actions">
+                <a className="btn btn-primary" href={mkWebcalLink(mForm)}>
+                  Subscribe (webcal)
+                </a>
+                <a
+                  className="btn"
+                  download={filename}
+                  href={mkHttpLink(mForm).toString()}
+                >
+                  Download .ics
+                </a>
+              </div>
+            </>
           )}
-          <div className="download-actions">
-            <a
-              className={`btn btn-primary${canDownload ? "" : " btn-disabled"}`}
-              href={canDownload ? mkWebcalLink(mForm) : undefined}
-              aria-disabled={!canDownload}
-            >
-              Subscribe (webcal)
-            </a>
-            <a
-              className={`btn${canDownload ? "" : " btn-disabled"}`}
-              download={canDownload ? filename : undefined}
-              href={canDownload ? mkHttpLink(mForm).toString() : undefined}
-              aria-disabled={!canDownload}
-            >
-              Download .ics
-            </a>
-          </div>
         </>
       ) : (
         <p className="msg-empty">
-          Fill in your address above to generate a link.
+          {formState.isValid
+            ? "Fill in your address above to generate a link."
+            : "Fix the highlighted fields above to generate a link."}
         </p>
       )}
       {nodeEnv === "development" && (
