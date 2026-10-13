@@ -1,29 +1,18 @@
-// Returns a function, that, as long as it continues to be invoked, will not
-// be triggered. The function will be called after it stops being called for
-// N milliseconds. If `immediate` is passed, trigger the function on the
-// leading edge, instead of the trailing.
+// Returns a "trigger" function that, as long as it continues to be invoked,
+// will not call the function it's passed. The function is called after the
+// trigger stops being invoked for `wait` milliseconds.
+//
+// Call `debounce(wait)` ONCE to get a trigger that shares a single `timeout`
+// across all its calls (e.g. via `React.useRef`), then call that trigger
+// repeatedly with the latest callback. Calling `debounce(wait)` again for
+// each callback would give each call its own private `timeout`, defeating
+// the debounce.
 //
 // See: https://stackoverflow.com/questions/24004791/can-someone-explain-the-debounce-function-in-javascript
-export function debounce(func: () => void, wait: number): () => void {
-  // 'private' variable for instance
-  // The returned function will be able to reference this due to closure.
-  // Each call to the returned function will share this common timer.
-  var timeout: ReturnType<typeof setTimeout>;
-
-  // Calling debounce returns a new anonymous function
-  return () => {
-    // This is the basic debounce behaviour where you can call this
-    //   function several times, but it will only execute once
-    //   [before or after imposing a delay].
-    //   Each time the returned function is called, the timer starts over.
+export function debounce(wait: number): (func: () => void) => void {
+  let timeout: ReturnType<typeof setTimeout>;
+  return (func) => {
     clearTimeout(timeout);
-
-    // Set the new timeout
-    timeout = setTimeout(function () {
-      // Call the original function with apply
-      // apply lets you define the 'this' object as well as the arguments
-      //    (both captured before setTimeout)
-      func();
-    }, wait);
+    timeout = setTimeout(func, wait);
   };
 }
