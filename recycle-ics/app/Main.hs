@@ -89,9 +89,20 @@ main = do
               Colog.simpleMessageAction
               <> maybe mempty mkLogHookAction mLogHook
           env = Env {..}
+          -- Same as 'logAction' above, just fixed to 'IO' for use outside
+          -- 'RecycleM' (ApplicativeDo packs this do-block's let-bindings into
+          -- a tuple, which can't hold 'logAction' at two different types).
+          ioLogAction :: Colog.LogAction IO Colog.Message
+          ioLogAction =
+            Colog.cfilter
+              ((>= verbosity) . Colog.msgSeverity)
+              Colog.simpleMessageAction
+              <> maybe mempty mkLogHookAction mLogHook
+      logUnclassifiedErrorsMw <- logUnclassifiedErrors ioLogAction
       putStrLn "Starting server"
       run port
         . logStdoutDev
+        . logUnclassifiedErrorsMw
         . simpleCors
         $ recycleIcsApp
           $$(TH.Env.envQ' "RECYCLE_ICS_WWW_DIR")

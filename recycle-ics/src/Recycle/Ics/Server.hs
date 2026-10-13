@@ -6,19 +6,39 @@ module Recycle.Ics.Server
     recycleToHandler,
     calculateDateRange,
     runCollectionQuery,
+    logUnclassifiedErrors,
   )
 where
 
+import qualified Colog
+import Colog.Monad (usingLoggerT)
 import Control.Exception.Safe (try)
+import Control.Monad (unless)
 import Control.Monad.Except (throwError)
 import Control.Monad.IO.Class (liftIO)
 import qualified Data.Aeson as Aeson
+import qualified Data.ByteString as BS
+import Data.ByteString.Builder (toLazyByteString)
 import qualified Data.ByteString.Lazy.Char8 as BSL8
 import Data.Text (Text)
+import qualified Data.Text as T
+import Data.Text.Encoding (decodeUtf8With)
+import Data.Text.Encoding.Error (lenientDecode)
+import qualified Data.Text.Lazy as TL
+import qualified Data.Text.Lazy.Encoding as TLE
 import Data.Time hiding (getZonedTime)
+import Network.HTTP.Types (HeaderName, statusCode)
 import qualified Network.Wai as Wai
 import Network.Wai.Application.Static
   ( defaultWebAppSettings,
+  )
+import Network.Wai.Middleware.RequestLogger
+  ( Destination (Callback),
+    OutputFormat (CustomOutputFormatWithDetailsAndHeaders),
+    defaultRequestLoggerSettings,
+    destination,
+    mkRequestLogger,
+    outputFormat,
   )
 import Numeric.Natural (Natural)
 import Recycle.AppM
@@ -40,6 +60,7 @@ import Servant.Server
     serve,
   )
 import Servant.Server.StaticFiles (serveDirectoryWith)
+import System.Log.FastLogger (fromLogStr, toLogStr)
 import WaiAppStatic.Types
 
 recycleIcsServer ::
@@ -96,6 +117,12 @@ recycleToHandler env act = do
     Left (re :: RecycleError) -> throwError (toServerError re)
     Right a -> pure a
 
+-- | Tags responses built from a classified 'RecycleError', so
+-- 'logUnclassifiedErrors' can tell them apart from a response Servant
+-- rejected before our handler (and thus our logging) ever ran.
+headerErrorSource :: HeaderName
+headerErrorSource = "X-Recycle-Error-Source"
+
 toServerError :: RecycleError -> ServerError
 toServerError re =
   base
@@ -105,7 +132,7 @@ toServerError re =
             [ "cause" Aeson..= causeName re.cause,
               "message" Aeson..= show re
             ],
-      errHeaders = [("Content-Type", "application/json")]
+      errHeaders = [("Content-Type", "application/json"), (headerErrorSource, "app")]
     }
   where
     base = case re.cause of
@@ -125,6 +152,39 @@ recycleIcsApp wwwDir env =
   serve pRecycleIcsAPI
     . hoistServer pRecycleIcsAPI (recycleToHandler env)
     $ recycleIcsServer wwwDir
+
+-- | WAI middleware that logs any response with status >= 400 which wasn't
+-- already classified and logged via 'toServerError' -- most notably a
+-- Servant-level request-decode failure (a malformed query param, a
+-- 'Web.FormUrlEncoded.FromForm' parse failure), which is rejected by
+-- Servant's own routing\/parsing layer before our handler code -- and so our
+-- 'RecycleError' classification and Colog logging -- ever runs.
+logUnclassifiedErrors :: Colog.LogAction IO Colog.Message -> IO Wai.Middleware
+logUnclassifiedErrors logAction =
+  mkRequestLogger
+    defaultRequestLoggerSettings
+      { outputFormat = CustomOutputFormatWithDetailsAndHeaders formatLine,
+        destination = Callback logLine
+      }
+  where
+    formatLine _zonedDate req status _size _duration _reqBodyChunks rawResp headers
+      | statusCode status < 400 = mempty
+      | any ((== headerErrorSource) . fst) headers = mempty
+      | otherwise =
+          toLogStr $
+            "Servant rejected request before our handler ever ran: "
+              <> decodeUtf8With lenientDecode (Wai.requestMethod req)
+              <> " "
+              <> decodeUtf8With lenientDecode (Wai.rawPathInfo req)
+              <> decodeUtf8With lenientDecode (Wai.rawQueryString req)
+              <> " -> "
+              <> T.pack (show (statusCode status))
+              <> ": "
+              <> TL.toStrict (TLE.decodeUtf8With lenientDecode (toLazyByteString rawResp))
+    logLine logStr =
+      let bs = fromLogStr logStr
+       in unless (BS.null bs) . usingLoggerT logAction $
+            Colog.logError (decodeUtf8With lenientDecode bs)
 
 runCollectionQuery ::
   (HasRecycleClient m, HasTime m) => CollectionQuery -> m VCalendar
