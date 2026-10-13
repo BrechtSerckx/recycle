@@ -61,7 +61,7 @@ export default function DownloadSection() {
           </p>
           <button
             type="button"
-            className="btn btn-primary btn-validate"
+            className="btn btn-primary"
             disabled={checkState === "checking" || checkState === "ok"}
             onClick={handleValidate}
           >
