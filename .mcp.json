@@ -1,0 +1,15 @@
+{
+  "mcpServers": {
+    "mcp-hoogle": {
+      "type": "stdio",
+      "command": "direnv",
+      "args": [
+        "exec",
+        ".",
+        "mcp-hoogle",
+        "serve"
+      ],
+      "env": {}
+    }
+  }
+}

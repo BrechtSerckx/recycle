@@ -74,6 +74,16 @@ fmt-check-frontend:
 typecheck-frontend:
     cd recycle-ics-ui && npx tsc --noEmit
 
+# ── MCP (Hoogle) ──────────────────────────────────────────────────────────────
+
+# Generate the Hoogle database from local GHC packages (for mcp-hoogle)
+mcp-generate:
+    mcp-hoogle generate
+
+# Serve the Hoogle MCP server over stdio
+mcp-serve:
+    mcp-hoogle serve
+
 # ── Combined ──────────────────────────────────────────────────────────────────
 
 # Build everything (frontend first — its path is baked into the backend at compile time)
