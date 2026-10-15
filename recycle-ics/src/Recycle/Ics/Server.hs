@@ -30,14 +30,21 @@ import Recycle.Ics.Types
 import Recycle.Types
 import Servant.API
 import Servant.Server
-  ( Handler,
+  ( Context (EmptyContext, (:.)),
+    ErrorFormatter,
+    ErrorFormatters,
+    Handler,
     ServerError (..),
     ServerT,
+    bodyParserErrorFormatter,
+    defaultErrorFormatters,
     err400,
     err500,
     err503,
-    hoistServer,
-    serve,
+    headerParseErrorFormatter,
+    hoistServerWithContext,
+    serveWithContext,
+    urlParseErrorFormatter,
   )
 import Servant.Server.StaticFiles (serveDirectoryWith)
 import WaiAppStatic.Types
@@ -122,10 +129,38 @@ toServerError re =
 
 recycleIcsApp :: FilePath -> Env -> Wai.Application
 recycleIcsApp wwwDir env =
-  serve pRecycleIcsAPI
-    . hoistServer pRecycleIcsAPI (recycleToHandler env)
+  serveWithContext pRecycleIcsAPI (recycleErrorFormatters :. EmptyContext)
+    . hoistServerWithContext
+      pRecycleIcsAPI
+      (Proxy @'[ErrorFormatters])
+      (recycleToHandler env)
     $ recycleIcsServer wwwDir
 
+-- | Servant rejects a malformed query param, request body, or header before
+-- our handler code -- and so 'toServerError' -- ever runs. Match its own
+-- error responses to the same @{"cause": ..., "message": ...}@ shape ours
+-- use, tagged the same as any other request-level rejection
+-- ('InvalidRequest'\'s "invalid_request"), so 'accessLogger' logs something
+-- consistent regardless of which layer rejected the request.
+recycleErrorFormatters :: ErrorFormatters
+recycleErrorFormatters =
+  defaultErrorFormatters
+    { bodyParserErrorFormatter = jsonErrorFormatter,
+      urlParseErrorFormatter = jsonErrorFormatter,
+      headerParseErrorFormatter = jsonErrorFormatter
+    }
+  where
+    jsonErrorFormatter :: ErrorFormatter
+    jsonErrorFormatter _typeRep _req msg =
+      err400
+        { errBody =
+            Aeson.encode $
+              Aeson.object
+                [ "cause" Aeson..= ("invalid_request" :: Text),
+                  "message" Aeson..= msg
+                ],
+          errHeaders = [("Content-Type", "application/json")]
+        }
 runCollectionQuery ::
   (HasRecycleClient m, HasTime m) => CollectionQuery -> m VCalendar
 runCollectionQuery CollectionQuery {filter = filter', ..} = do
