@@ -6,19 +6,36 @@ module Recycle.Ics.Server
     recycleToHandler,
     calculateDateRange,
     runCollectionQuery,
+    accessLogger,
   )
 where
 
+import qualified Colog
+import Colog.Monad (usingLoggerT)
 import Control.Exception.Safe (try)
+import Control.Monad (unless)
 import Control.Monad.Except (throwError)
 import Control.Monad.IO.Class (liftIO)
 import qualified Data.Aeson as Aeson
+import qualified Data.ByteString as BS
 import qualified Data.ByteString.Lazy.Char8 as BSL8
 import Data.Text (Text)
+import qualified Data.Text as T
+import Data.Text.Encoding (decodeUtf8With)
+import Data.Text.Encoding.Error (lenientDecode)
 import Data.Time hiding (getZonedTime)
+import Network.HTTP.Types (statusCode)
 import qualified Network.Wai as Wai
 import Network.Wai.Application.Static
   ( defaultWebAppSettings,
+  )
+import Network.Wai.Middleware.RequestLogger
+  ( Destination (Callback),
+    OutputFormat (CustomOutputFormatWithDetailsAndHeaders),
+    defaultRequestLoggerSettings,
+    destination,
+    mkRequestLogger,
+    outputFormat,
   )
 import Numeric.Natural (Natural)
 import Recycle.AppM
@@ -47,6 +64,7 @@ import Servant.Server
     urlParseErrorFormatter,
   )
 import Servant.Server.StaticFiles (serveDirectoryWith)
+import System.Log.FastLogger (fromLogStr, toLogStr)
 import WaiAppStatic.Types
 
 recycleIcsServer ::
@@ -161,6 +179,36 @@ recycleErrorFormatters =
                 ],
           errHeaders = [("Content-Type", "application/json")]
         }
+
+-- | The application's single WAI-level access logger: every request is
+-- logged through the same Colog action the rest of the app uses, replacing
+-- wai-extra's own @logStdoutDev@ (which wrote straight to stdout,
+-- unconditionally, ignoring 'RECYCLE_ICS_VERBOSITY').
+accessLogger :: Colog.LogAction IO Colog.Message -> IO Wai.Middleware
+accessLogger logAction =
+  mkRequestLogger
+    defaultRequestLoggerSettings
+      { outputFormat = CustomOutputFormatWithDetailsAndHeaders formatLine,
+        destination = Callback logLine
+      }
+  where
+    formatLine _zonedDate req status _size duration _reqBodyChunks _rawResp _headers =
+      toLogStr $
+        decodeUtf8With lenientDecode (Wai.requestMethod req)
+          <> " "
+          <> decodeUtf8With lenientDecode (Wai.rawPathInfo req)
+          <> decodeUtf8With lenientDecode (Wai.rawQueryString req)
+          <> " -> "
+          <> T.pack (show (statusCode status))
+          <> " ("
+          <> T.pack (show duration)
+          <> ")"
+
+    logLine logStr = do
+      let bs = fromLogStr logStr
+      unless (BS.null bs) . usingLoggerT logAction $
+        Colog.logInfo (decodeUtf8With lenientDecode bs)
+
 runCollectionQuery ::
   (HasRecycleClient m, HasTime m) => CollectionQuery -> m VCalendar
 runCollectionQuery CollectionQuery {filter = filter', ..} = do

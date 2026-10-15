@@ -92,6 +92,7 @@ library
     , data-default-class
     , deriving-aeson
     , exceptions
+    , fast-logger
     , filepath
     , generic-lens
     , http-api-data
@@ -146,7 +147,6 @@ executable recycle-ics
     , typed-process
     , tz
     , wai-cors
-    , wai-extra
     , warp
 
 test-suite recycle-ics-test
