@@ -19,7 +19,6 @@ import Network.HTTP.Client.TLS
   )
 import Network.Wai.Handler.Warp
 import Network.Wai.Middleware.Cors (simpleCors)
-import Network.Wai.Middleware.RequestLogger
 import Opts
 import Recycle.AppM
 import Recycle.Ics.ICalendar
@@ -30,6 +29,7 @@ import Servant.Client
     mkClientEnv,
   )
 import qualified System.Environment as Env
+import System.IO (BufferMode (LineBuffering), hSetBuffering, stdout)
 import qualified System.Process.Typed as Proc
 import Text.Read (readMaybe)
 
@@ -51,6 +51,13 @@ mkLogHookAction LogHook {..} =
 
 main :: IO ()
 main = do
+  -- GHC block-buffers stdout by default once it's not a TTY (i.e. whenever
+  -- this runs under podman/systemd/anything piping to a file or collector,
+  -- the normal case in production). Colog's own writers don't force a
+  -- flush, so without this a SIGTERM can silently drop an entire buffer's
+  -- worth of unflushed log lines -- the previous logStdoutDev happened to
+  -- paper over this via its own auto-flushing Handle destination.
+  hSetBuffering stdout LineBuffering
   Opts {..} <- parseOpts
   httpManager <- newTlsManagerWith tlsManagerSettings
   let clientEnv =
@@ -89,9 +96,19 @@ main = do
               Colog.simpleMessageAction
               <> maybe mempty mkLogHookAction mLogHook
           env = Env {..}
+          -- Same as 'logAction' above, just fixed to 'IO' for use outside
+          -- 'RecycleM' (ApplicativeDo packs this do-block's let-bindings into
+          -- a tuple, which can't hold 'logAction' at two different types).
+          ioLogAction :: Colog.LogAction IO Colog.Message
+          ioLogAction =
+            Colog.cfilter
+              ((>= verbosity) . Colog.msgSeverity)
+              Colog.simpleMessageAction
+              <> maybe mempty mkLogHookAction mLogHook
+      accessLoggerMw <- accessLogger ioLogAction
       putStrLn "Starting server"
       run port
-        . logStdoutDev
+        . accessLoggerMw
         . simpleCors
         $ recycleIcsApp
           $$(TH.Env.envQ' "RECYCLE_ICS_WWW_DIR")
