@@ -18,13 +18,17 @@ import Control.Monad.Except (throwError)
 import Control.Monad.IO.Class (liftIO)
 import qualified Data.Aeson as Aeson
 import qualified Data.ByteString as BS
+import Data.ByteString.Builder (toLazyByteString)
 import qualified Data.ByteString.Lazy.Char8 as BSL8
 import Data.Text (Text)
 import qualified Data.Text as T
 import Data.Text.Encoding (decodeUtf8With)
 import Data.Text.Encoding.Error (lenientDecode)
+import qualified Data.Text.Lazy as TL
+import qualified Data.Text.Lazy.Encoding as TLE
 import Data.Time hiding (getZonedTime)
-import Network.HTTP.Types (statusCode)
+import GHC.Generics (Generic)
+import Network.HTTP.Types (HeaderName, statusCode)
 import qualified Network.Wai as Wai
 import Network.Wai.Application.Static
   ( defaultWebAppSettings,
@@ -121,16 +125,30 @@ recycleToHandler env act = do
     Left (re :: RecycleError) -> throwError (toServerError re)
     Right a -> pure a
 
+-- | Tags responses built from a classified 'RecycleError', so 'accessLogger'
+-- can tell them apart from a response Servant rejected before our handler
+-- (and thus our logging) ever ran.
+headerErrorSource :: HeaderName
+headerErrorSource = "X-Recycle-Error-Source"
+
+-- | The JSON shape of every error response this API returns, whether raised
+-- by our own handlers ('toServerError') or by Servant itself rejecting a
+-- request before a handler ever ran ('recycleErrorFormatters'). 'accessLogger'
+-- decodes it back to log just the human-readable 'message'.
+data ErrorResponse = ErrorResponse
+  { cause :: Text,
+    message :: Text
+  }
+  deriving stock (Generic, Show, Eq)
+  deriving anyclass (Aeson.FromJSON, Aeson.ToJSON)
+
 toServerError :: RecycleError -> ServerError
 toServerError re =
   base
     { errBody =
-        Aeson.encode $
-          Aeson.object
-            [ "cause" Aeson..= causeName re.cause,
-              "message" Aeson..= show re
-            ],
-      errHeaders = [("Content-Type", "application/json")]
+        Aeson.encode
+          ErrorResponse {cause = causeName re.cause, message = T.pack (show re)},
+      errHeaders = [("Content-Type", "application/json"), (headerErrorSource, "app")]
     }
   where
     base = case re.cause of
@@ -172,11 +190,8 @@ recycleErrorFormatters =
     jsonErrorFormatter _typeRep _req msg =
       err400
         { errBody =
-            Aeson.encode $
-              Aeson.object
-                [ "cause" Aeson..= ("invalid_request" :: Text),
-                  "message" Aeson..= msg
-                ],
+            Aeson.encode
+              ErrorResponse {cause = "invalid_request", message = T.pack msg},
           errHeaders = [("Content-Type", "application/json")]
         }
 
@@ -184,6 +199,12 @@ recycleErrorFormatters =
 -- logged through the same Colog action the rest of the app uses, replacing
 -- wai-extra's own @logStdoutDev@ (which wrote straight to stdout,
 -- unconditionally, ignoring 'RECYCLE_ICS_VERBOSITY').
+--
+-- A response status >= 400 carrying no 'headerErrorSource' tag means
+-- Servant rejected the request before our handler (and 'RecycleError'
+-- classification) ever ran -- logged at Error, with as much of the
+-- rejection as we can recover. Everything else logs as a plain access-log
+-- line at Info.
 accessLogger :: Colog.LogAction IO Colog.Message -> IO Wai.Middleware
 accessLogger logAction =
   mkRequestLogger
@@ -192,22 +213,49 @@ accessLogger logAction =
         destination = Callback logLine
       }
   where
-    formatLine _zonedDate req status _size duration _reqBodyChunks _rawResp _headers =
-      toLogStr $
-        decodeUtf8With lenientDecode (Wai.requestMethod req)
-          <> " "
-          <> decodeUtf8With lenientDecode (Wai.rawPathInfo req)
-          <> decodeUtf8With lenientDecode (Wai.rawQueryString req)
-          <> " -> "
-          <> T.pack (show (statusCode status))
-          <> " ("
-          <> T.pack (show duration)
-          <> ")"
+    requestLine req =
+      decodeUtf8With lenientDecode (Wai.requestMethod req)
+        <> " "
+        <> decodeUtf8With lenientDecode (Wai.rawPathInfo req)
+        <> decodeUtf8With lenientDecode (Wai.rawQueryString req)
+
+    -- The formatter is a pure function and can't call Colog itself, so each
+    -- line is tagged with which severity 'logLine' below should use; the
+    -- tag never reaches the actual log output.
+    --
+    -- "I\t": any response below 400, e.g. @GET /api/fractions -> 200 (12ms)@.
+    -- "E\t": a status >= 400 Servant produced on its own, before our handler
+    -- ran, e.g. @GET /api/fractions -> 400: Required@. A classified
+    -- 'RecycleError' (tagged via 'headerErrorSource') gets neither -- it's
+    -- already been logged once, by 'Recycle.AppM.runRecycle''s catch-all.
+    formatLine _zonedDate req status _size duration _reqBodyChunks rawResp headers
+      | statusCode status < 400 =
+          toLogStr $
+            "I\t"
+              <> requestLine req
+              <> " -> "
+              <> T.pack (show (statusCode status))
+              <> " ("
+              <> T.pack (show duration)
+              <> ")"
+      | any ((== headerErrorSource) . fst) headers = mempty -- already logged, classified
+      | otherwise =
+          let body = toLazyByteString rawResp
+           in toLogStr $
+                "E\t"
+                  <> maybe
+                    (TL.toStrict (TLE.decodeUtf8With lenientDecode body))
+                    (\(er :: ErrorResponse) -> er.message)
+                    (Aeson.decode body)
 
     logLine logStr = do
       let bs = fromLogStr logStr
-      unless (BS.null bs) . usingLoggerT logAction $
-        Colog.logInfo (decodeUtf8With lenientDecode bs)
+      unless (BS.null bs) $
+        let (tag, rest) = BS.splitAt 2 bs
+            message = decodeUtf8With lenientDecode rest
+         in usingLoggerT logAction $ case tag of
+              "E\t" -> Colog.logError message
+              _ -> Colog.logError message
 
 runCollectionQuery ::
   (HasRecycleClient m, HasTime m) => CollectionQuery -> m VCalendar
